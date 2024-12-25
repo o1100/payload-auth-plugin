@@ -8,7 +8,7 @@ type Auth0AuthConfig = {
 function Auth0AuthProvider(config: Auth0AuthConfig): OAuth2ProviderConfig {
   const { domain, ...restConfig } = config
   const authorization_server: oauth.AuthorizationServer = {
-    issuer: `https://${domain}`,
+    issuer: `https://${domain}/`,
     authorization_endpoint: `https://${domain}/authorize`,
     token_endpoint: `https://${domain}/oauth/token`,
     userinfo_endpoint: `https://${domain}/userinfo`,
