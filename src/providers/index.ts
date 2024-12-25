@@ -6,6 +6,7 @@ import DiscordAuthProvider from './oauth2/discord'
 import FacebookAuthProvider from './oauth2/facebook'
 import SlackAuthProvider from './oidc/slack'
 import Auth0AuthProvider from './oauth2/auth0'
+import CognitoAuthProvider from './oidc/congnito'
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -15,4 +16,5 @@ export {
   FacebookAuthProvider,
   SlackAuthProvider,
   Auth0AuthProvider,
+  CognitoAuthProvider
 }
