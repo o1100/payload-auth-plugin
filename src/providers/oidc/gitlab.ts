@@ -1,4 +1,4 @@
-import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../types'
+import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
 
 type GitLabAuthConfig = ProviderConfig
 
