@@ -7,7 +7,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 import { adminAuthPlugin } from '../../../dist'
-import { GoogleAuthProvider } from '../../../dist/providers'
+import { Auth0AuthProvider, GoogleAuthProvider } from '../../../dist/providers'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
@@ -42,6 +42,11 @@ export default buildConfig({
         GoogleAuthProvider({
           client_id: process.env.GOOGLE_CLIENT_ID!,
           client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        }),
+        Auth0AuthProvider({
+          client_id: process.env.AUTH0_CLIENT_ID!,
+          client_secret: process.env.AUTH0_CLIENT_SECRET!,
+          domain: process.env.AUTH0_DOMAIN!,
         }),
       ],
     }),
