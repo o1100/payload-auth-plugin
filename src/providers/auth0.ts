@@ -13,7 +13,6 @@ function Auth0AuthProvider(config: Auth0AuthConfig): OAuth2ProviderConfig {
     token_endpoint: `https://${domain}/oauth/token`,
     userinfo_endpoint: `https://${domain}/userinfo`,
   }
-  console.log(authorization_server)
 
   return {
     ...restConfig,
