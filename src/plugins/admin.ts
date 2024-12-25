@@ -2,7 +2,7 @@ import type { Config, Plugin } from 'payload'
 import { EndpointFactory } from '../core/endpoints'
 import { OAuthProviderConfig } from '../types'
 import { PayloadSession } from '../core/session/payload'
-import { InvalidBaseURL } from '../core/error'
+import { InvalidBaseURL, MissingUsersCollection } from '../core/error'
 import { buildAccountsCollection } from '../core/collections/admin/accounts'
 import { mapProviders } from '../providers/utils'
 
@@ -21,11 +21,6 @@ interface PluginOptions {
    * @default "accounts"
    */
   accountsCollectionSlug?: string
-  /*
-   * Users collection slug.
-   * @default "users"
-   */
-  usersCollectionSlug?: string
 }
 
 export const adminAuthPlugin =
@@ -41,19 +36,22 @@ export const adminAuthPlugin =
       throw new InvalidBaseURL()
     }
 
+    if(!config.admin?.user){
+      throw new MissingUsersCollection()
+    }
+
     config.admin = {
       ...(config.admin ?? {}),
     }
 
     const {
       accountsCollectionSlug = 'accounts',
-      usersCollectionSlug = 'users',
       providers,
     } = pluginOptions
 
     const session = new PayloadSession({
       accountsCollectionSlug: accountsCollectionSlug,
-      usersCollectionSlug: usersCollectionSlug,
+      usersCollectionSlug: config.admin.user!,
     })
 
     const endpoints = new EndpointFactory(mapProviders(providers))
@@ -61,7 +59,7 @@ export const adminAuthPlugin =
     // Create accounts collection if doesn't exists
     config.collections = [
       ...(config.collections ?? []),
-      buildAccountsCollection(accountsCollectionSlug, usersCollectionSlug),
+      buildAccountsCollection(accountsCollectionSlug, config.admin.user!),
     ]
 
     config.endpoints = [
