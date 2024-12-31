@@ -17,57 +17,62 @@ interface PluginOptions {
   providers: OAuthProviderConfig[]
 
   /*
-   * Accounts collections slug
-   * @default "accounts"
+   * Accounts collections config
    */
-  accountsCollectionSlug?: string
+  accounts?: {
+    slug?: string | undefined,
+    hidden?: boolean | undefined
+  }
 }
 
 export const adminAuthPlugin =
   (pluginOptions: PluginOptions): Plugin =>
-  (incomingConfig: Config): Config => {
-    const config = { ...incomingConfig }
+    (incomingConfig: Config): Config => {
+      const config = { ...incomingConfig }
 
-    if (pluginOptions.enabled === false) {
+      if (pluginOptions.enabled === false) {
+        return config
+      }
+
+      if (!process.env.AUTH_BASE_URL) {
+        throw new InvalidBaseURL()
+      }
+
+      if (!config.admin?.user) {
+        throw new MissingUsersCollection()
+      }
+
+      config.admin = {
+        ...(config.admin ?? {}),
+      }
+
+      const {
+        accounts,
+        providers,
+      } = pluginOptions
+
+      const session = new PayloadSession({
+        accountsCollectionSlug: accounts?.slug ?? 'accounts',
+        usersCollectionSlug: config.admin.user!,
+      })
+
+      const endpoints = new EndpointFactory(mapProviders(providers))
+
+      // Create accounts collection if doesn't exists
+      config.collections = [
+        ...(config.collections ?? []),
+        buildAccountsCollection({
+          slug: accounts?.slug ?? 'accounts',
+          hidden: accounts?.hidden ?? false
+        }, config.admin.user!),
+      ]
+
+      config.endpoints = [
+        ...(config.endpoints ?? []),
+        ...endpoints.payloadOAuthEndpoints({
+          sessionCallback: (oauthAccountInfo, scope, issuerName, basePayload) =>
+            session.createSession(oauthAccountInfo, scope, issuerName, basePayload),
+        }),
+      ]
       return config
     }
-
-    if (!process.env.AUTH_BASE_URL) {
-      throw new InvalidBaseURL()
-    }
-
-    if(!config.admin?.user){
-      throw new MissingUsersCollection()
-    }
-
-    config.admin = {
-      ...(config.admin ?? {}),
-    }
-
-    const {
-      accountsCollectionSlug = 'accounts',
-      providers,
-    } = pluginOptions
-
-    const session = new PayloadSession({
-      accountsCollectionSlug: accountsCollectionSlug,
-      usersCollectionSlug: config.admin.user!,
-    })
-
-    const endpoints = new EndpointFactory(mapProviders(providers))
-
-    // Create accounts collection if doesn't exists
-    config.collections = [
-      ...(config.collections ?? []),
-      buildAccountsCollection(accountsCollectionSlug, config.admin.user!),
-    ]
-
-    config.endpoints = [
-      ...(config.endpoints ?? []),
-      ...endpoints.payloadOAuthEndpoints({
-        sessionCallback: (oauthAccountInfo, scope, issuerName, basePayload) =>
-          session.createSession(oauthAccountInfo, scope, issuerName, basePayload),
-      }),
-    ]
-    return config
-  }

@@ -1,13 +1,17 @@
 import { CollectionConfig } from 'payload'
 
 export function buildAccountsCollection(
-  accountsCollectionSlug: string,
+  account: {
+    slug: string,
+    hidden: boolean
+  },
   usersCollectionSlug: string,
 ) {
   const accountsCollection: CollectionConfig = {
-    slug: accountsCollectionSlug,
+    slug: account.slug,
     admin: {
       useAsTitle: 'id',
+      hidden: account.hidden
     },
     access: {
       read: () => true,
