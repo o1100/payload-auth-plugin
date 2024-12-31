@@ -1,10 +1,10 @@
 import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
 
 interface KeyCloakAuthConfig extends ProviderConfig {
-  realm: string,
-  domain: string,
-  identifier: string,
-  name: string,
+  realm: string
+  domain: string
+  identifier: string
+  name: string
 }
 
 function KeyCloakAuthProvider(config: KeyCloakAuthConfig): OIDCProviderConfig {

@@ -18,5 +18,5 @@ export {
   SlackAuthProvider,
   Auth0AuthProvider,
   CognitoAuthProvider,
-  KeyCloakAuthProvider
+  KeyCloakAuthProvider,
 }
