@@ -1,12 +1,12 @@
 import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
 
-type CognitoAuthConfig = {
+interface CognitoAuthConfig extends ProviderConfig {
   domain: string,
   region: string,
-} & ProviderConfig
+}
 
 function CognitoAuthProvider(config: CognitoAuthConfig): OIDCProviderConfig {
-  const {domain, region, ...restConfig}=config
+  const { domain, region, ...restConfig } = config
   return {
     ...restConfig,
     id: 'cognito',

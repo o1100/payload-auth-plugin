@@ -1,9 +1,9 @@
 import type * as oauth from 'oauth4webapi'
 import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../../types'
 
-type Auth0AuthConfig = {
+interface Auth0AuthConfig extends ProviderConfig {
   domain: string
-} & ProviderConfig
+}
 
 function Auth0AuthProvider(config: Auth0AuthConfig): OAuth2ProviderConfig {
   const { domain, ...restConfig } = config
