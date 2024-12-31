@@ -1,5 +1,37 @@
 
 
+## [0.4.1](https://github.com/sourabpramanik/payload-auth-plugin/compare/v0.4.0...v0.4.1) (2024-12-31)
+
+### Chores
+
+* enable publish ([c02cd37](https://github.com/sourabpramanik/payload-auth-plugin/commit/c02cd37ba792c45f5e5daeb934e4c7d33e681047))
+* rm type ([63b05bd](https://github.com/sourabpramanik/payload-auth-plugin/commit/63b05bdd681530b5e4eb171ee6d2cbce861a642a))
+* rm examples dir ([a15fdc5](https://github.com/sourabpramanik/payload-auth-plugin/commit/a15fdc59a26644afc5c2c9c479348b62354864c0))
+* add missing type ([8d9f7f5](https://github.com/sourabpramanik/payload-auth-plugin/commit/8d9f7f55d987b8126a48ce399c018cecd90963e9))
+* bump version ([28d794f](https://github.com/sourabpramanik/payload-auth-plugin/commit/28d794ffde8b587c4ccd5098c0974d0d46f575e9))
+* bump version ([e658862](https://github.com/sourabpramanik/payload-auth-plugin/commit/e6588626c8a9d24a7c1665a4bda16330404c8450))
+* cleanup ([397e00b](https://github.com/sourabpramanik/payload-auth-plugin/commit/397e00b74194a425c434b385c698afbaa9ad2da0))
+
+### Bug Fixes
+
+* format ([06c4a55](https://github.com/sourabpramanik/payload-auth-plugin/commit/06c4a55712fc5974fe5787330de15ff1cc048e32))
+* type ([d6d1a10](https://github.com/sourabpramanik/payload-auth-plugin/commit/d6d1a10823cdc6cf2b84524e0738fafa609941a0))
+* use slug from config ([6dd3df2](https://github.com/sourabpramanik/payload-auth-plugin/commit/6dd3df289b0fb8f240c5e4d351cee70732a53341))
+* issuer url ([7f4246d](https://github.com/sourabpramanik/payload-auth-plugin/commit/7f4246db2bb0a9e54beeb62f4ed0db184555c1e3))
+
+### Features
+
+* updates account options ([076bf6d](https://github.com/sourabpramanik/payload-auth-plugin/commit/076bf6d46166b3650f25b98dd529bdb51aef05d4))
+* keycloak ([01707d2](https://github.com/sourabpramanik/payload-auth-plugin/commit/01707d2c694bb230b68a5462a41b83f1553d9e62))
+* adds cognito provider ([22d54f5](https://github.com/sourabpramanik/payload-auth-plugin/commit/22d54f57e32b9cce1ee3e592eec7e0bdcc0e6883))
+* update example ([cf40b96](https://github.com/sourabpramanik/payload-auth-plugin/commit/cf40b96c392a3694bb3f2de2385283ea3db8bbdf))
+* adds auth0 provider ([9080d0a](https://github.com/sourabpramanik/payload-auth-plugin/commit/9080d0a14df86620c263cc3bb6cf0affb4970c3f))
+* adds auth0 provider ([32ece67](https://github.com/sourabpramanik/payload-auth-plugin/commit/32ece67f6fc82e2e9d2a938a7a44a8bccedb1670))
+
+### Refactor
+
+* re-organize ([17ae7f6](https://github.com/sourabpramanik/payload-auth-plugin/commit/17ae7f6cf822eba0215dd085c07ab17f0aa1a158))
+
 ## [0.4.0](https://github.com/sourabpramanik/payload-auth-plugin/compare/v0.3.2...v0.4.0) (2024-11-29)
 
 ### Chores
