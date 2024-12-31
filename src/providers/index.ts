@@ -7,6 +7,7 @@ import FacebookAuthProvider from './oauth2/facebook'
 import SlackAuthProvider from './oidc/slack'
 import Auth0AuthProvider from './oauth2/auth0'
 import CognitoAuthProvider from './oidc/congnito'
+import KeyCloakAuthProvider from './oidc/keycloak'
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -16,5 +17,6 @@ export {
   FacebookAuthProvider,
   SlackAuthProvider,
   Auth0AuthProvider,
-  CognitoAuthProvider
+  CognitoAuthProvider,
+  KeyCloakAuthProvider
 }
