@@ -1,5 +1,5 @@
 
-![cover image](https://github.com/user-attachments/assets/ae16c040-1b16-4b93-8cbe-8337ebb0759c)
+![cover image](https://github.com/user-attachments/assets/cb944dbd-c716-4ce3-a1dd-b4014f8688ea)
 
 > **Note: This plugin supports all versions of Payload CMS starting from version 3.0 and above.**
 
