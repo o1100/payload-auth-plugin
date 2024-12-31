@@ -2,7 +2,7 @@ import type { Config, Plugin } from 'payload'
 import { EndpointFactory } from '../core/endpoints'
 import { OAuthProviderConfig } from '../types'
 import { PayloadSession } from '../core/session/payload'
-import { InvalidBaseURL } from '../core/error'
+import { InvalidBaseURL, MissingUsersCollection } from '../core/error'
 import { buildAccountsCollection } from '../core/collections/admin/accounts'
 import { mapProviders } from '../providers/utils'
 
@@ -17,15 +17,12 @@ interface PluginOptions {
   providers: OAuthProviderConfig[]
 
   /*
-   * Accounts collections slug
-   * @default "accounts"
+   * Accounts collections config
    */
-  accountsCollectionSlug?: string
-  /*
-   * Users collection slug.
-   * @default "users"
-   */
-  usersCollectionSlug?: string
+  accounts?: {
+    slug?: string | undefined
+    hidden?: boolean | undefined
+  }
 }
 
 export const adminAuthPlugin =
@@ -41,19 +38,19 @@ export const adminAuthPlugin =
       throw new InvalidBaseURL()
     }
 
+    if (!config.admin?.user) {
+      throw new MissingUsersCollection()
+    }
+
     config.admin = {
       ...(config.admin ?? {}),
     }
 
-    const {
-      accountsCollectionSlug = 'accounts',
-      usersCollectionSlug = 'users',
-      providers,
-    } = pluginOptions
+    const { accounts, providers } = pluginOptions
 
     const session = new PayloadSession({
-      accountsCollectionSlug: accountsCollectionSlug,
-      usersCollectionSlug: usersCollectionSlug,
+      accountsCollectionSlug: accounts?.slug ?? 'accounts',
+      usersCollectionSlug: config.admin.user!,
     })
 
     const endpoints = new EndpointFactory(mapProviders(providers))
@@ -61,7 +58,13 @@ export const adminAuthPlugin =
     // Create accounts collection if doesn't exists
     config.collections = [
       ...(config.collections ?? []),
-      buildAccountsCollection(accountsCollectionSlug, usersCollectionSlug),
+      buildAccountsCollection(
+        {
+          slug: accounts?.slug ?? 'accounts',
+          hidden: accounts?.hidden ?? false,
+        },
+        config.admin.user!,
+      ),
     ]
 
     config.endpoints = [

@@ -1,5 +1,5 @@
 import type * as oauth from 'oauth4webapi'
-import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../types'
+import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../../types'
 
 const authorization_server: oauth.AuthorizationServer = {
   issuer: 'https://www.facebook.com',

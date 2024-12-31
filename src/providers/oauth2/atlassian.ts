@@ -1,5 +1,5 @@
 import type * as oauth from 'oauth4webapi'
-import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../types'
+import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../../types'
 
 const algorithm = 'oauth2'
 

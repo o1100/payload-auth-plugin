@@ -1,10 +1,13 @@
-import GoogleAuthProvider from './google'
-import GitHubAuthProvider from './github'
-import GitLabAuthProvider from './gitlab'
-import AtlassianAuthProvider from './atlassian'
-import DiscordAuthProvider from './discord'
-import FacebookAuthProvider from './facebook'
-import SlackAuthProvider from './slack'
+import GoogleAuthProvider from './oidc/google'
+import GitHubAuthProvider from './oauth2/github'
+import GitLabAuthProvider from './oidc/gitlab'
+import AtlassianAuthProvider from './oauth2/atlassian'
+import DiscordAuthProvider from './oauth2/discord'
+import FacebookAuthProvider from './oauth2/facebook'
+import SlackAuthProvider from './oidc/slack'
+import Auth0AuthProvider from './oauth2/auth0'
+import CognitoAuthProvider from './oidc/congnito'
+import KeyCloakAuthProvider from './oidc/keycloak'
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -13,4 +16,7 @@ export {
   DiscordAuthProvider,
   FacebookAuthProvider,
   SlackAuthProvider,
+  Auth0AuthProvider,
+  CognitoAuthProvider,
+  KeyCloakAuthProvider,
 }
