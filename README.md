@@ -63,7 +63,7 @@ export const AuthComponent = () => {
     <form
       action={async () => {
         'use server'
-        signin('google')
+        signin('[AUTH_PROVIDER]') // For example 'google'
       }}
       method="POST"
       className="w-full"
@@ -87,7 +87,7 @@ import { buildConfig } from 'payload/config'
 // --- rest of the imports
 
 import { adminAuthPlugin } from 'payload-auth-plugin'
-import { [AUTH_PROVIDER] } from 'payload-auth-plugin/providers'
+import { [AUTH_PROVIDER] } from 'payload-auth-plugin/providers' // For example GoogleAuthProvider
 
 export default buildConfig({
   // --- rest of the config
@@ -105,9 +105,9 @@ export default buildConfig({
 
     adminAuthPlugin({
       providers: [
-        [AUTH_PROVIDER]({
-          client_id: process.env.[AUTH_PROVIDER_CLIENT_ID] as string,
-          client_secret: process.env.[AUTH_PROVIDER_CLIENT_SECRET] as string,
+        [AUTH_PROVIDER]({ // For example GoogleAuthProvider
+          client_id: process.env.[AUTH_PROVIDER_CLIENT_ID] as string, // For example Google_CLIENT_ID
+          client_secret: process.env.[AUTH_PROVIDER_CLIENT_SECRET] as string, // For example Google_CLIENT_SECRET
         })
       ],
     }),
