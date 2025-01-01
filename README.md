@@ -106,8 +106,8 @@ export default buildConfig({
     adminAuthPlugin({
       providers: [
         [AUTH_PROVIDER]({ // For example GoogleAuthProvider
-          client_id: process.env.[AUTH_PROVIDER_CLIENT_ID] as string, // For example Google_CLIENT_ID
-          client_secret: process.env.[AUTH_PROVIDER_CLIENT_SECRET] as string, // For example Google_CLIENT_SECRET
+          client_id: process.env.[AUTH_PROVIDER_CLIENT_ID] as string, // For example GOOGLE_CLIENT_ID
+          client_secret: process.env.[AUTH_PROVIDER_CLIENT_SECRET] as string, // For example GOOGLE_CLIENT_SECRET
         })
       ],
     }),
