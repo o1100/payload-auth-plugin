@@ -12,50 +12,49 @@ The initial goal in developing this plugin was to abstract its configurations an
 > There is a scope for future improvements to make every implementation more and more flexible and straightforward
 
 ### Collections
-This plugin creates an Accounts collection with the slug `accounts`, which includes all necessary fields. This collection establishes a one-to-one relationship with the Users collection, allowing existing users to sign in with multiple providers. The Accounts collection stores information such as the provider's name and issuer, and it links the account to the user upon first sign-in.
+This plugin creates an **Accounts** collection with the slug `accounts`(or you can use a different slug), which includes all the necessary fields. This collection establishes a one-to-one relationship with the Users collection, allowing existing users to sign in with multiple providers. The **Accounts** collection stores information such as the provider's name, issuer, etc., and creates a relation between the account to the user upon first sign-in.
 
 A single user can have multiple accounts, but each account can be associated with only one user.
 
-If you already have a collection with the slug `accounts`, it can cause a conflict and prevent the plugin from integrating successfully. To avoid this issue, make sure to change the slug before integrating this plugin.
+If you already have a collection with the slug `accounts`, it can cause a conflict and prevent the plugin from integrating successfully. To avoid this issue, make sure to use a different slug.
 
 ### Endpoints
-For every provider with different protocols, the endpoints are already configured in the plugin. So any request that comes to the `/api/oauth/**/*` route will be handled by the plugin.
+As you know Payload 3.0 is a NextJS application, there are two sides to this application. One is `admin` and another is `frontend`. This plugin right now enables authentication for the `admin` side but soon it will also support authentication for the  `frontend` side.
 
-### Signin UI component
-The auth signin component is added to the signin page when you integrate the plugin. It can be customized by passing the relevant configuration options.
+For every provider with different protocols, the endpoints are already configured in the plugin.
+
+#### Admin
+Any request that comes to the `/api/admin/oauth/**/*` route will be handled by the plugin.
+
+#### Frontend
+Coming soon...
 
 ## Usage
 
 ### Install the plugin
 ```bash
-npm install payload-auth-plugin
+npm install payload-auth-plugin@latest
 ```
 Or
 ```bash
-yarn add payload-auth-plugin
+yarn add payload-auth-plugin@latest
 ```
 Or
 ```bash
-pnpm add payload-auth-plugin
+pnpm add payload-auth-plugin@latest
 ```
+### Update `env.`
+The plugin will require the host URL to configure OAuth callbacks and session callbacks. So in your `.env` add this:
+
+```
+AUTH_BASE_URL=http://localhhost:3000 //Your NextJS app URL
+```
+
 ### Create an OAuth app
 In your desired provider, create an OAuth application. Depending on your provider, you will need to obtain the Client ID and Client Secret from the provider's console or dashboard. Please refer to the [providers list](https://github.com/sourabpramanik/plugin-payload-oauth?tab=readme-ov-file#list-of-active-and-upcoming-providers) for detailed instructions on configuring a specific provider.
 
-For example:
-To configure Google OAuth
-
-1. Add the callback/redirect URL:
-```bash
-https://[yourdomain]/api/oauth/callback/google
-```
-2. Get the Client ID and Client Secret and set the `.env` variables in your Payload CMS application:
-```text
-GOOGLE_CLIENT_ID=****************************
-GOOGLE_CLIENT_SECRET=****************************
-```
-
 ### Create a new auth UI component 
-Create a new file `/src/components/Auth/index.ts` to sign in with the chosen providers. 
+Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers. 
 ```tsx
 import { Button } from '@payloadcms/ui'
 import { signin } from 'payload-auth-plugin/client'
@@ -66,7 +65,7 @@ export const AuthComponent = () => {
         'use server'
         signin('google')
       }}
-      method="GET"
+      method="POST"
       className="w-full"
     >
       <Button type="submit" className="w-full !my-0">
@@ -88,7 +87,7 @@ import { buildConfig } from 'payload/config'
 // --- rest of the imports
 
 import { adminAuthPlugin } from 'payload-auth-plugin'
-import { GoogleAuthProvider } from 'payload-auth-plugin/providers'
+import { [AUTH_PROVIDER] } from 'payload-auth-plugin/providers'
 
 export default buildConfig({
   // --- rest of the config
@@ -106,9 +105,9 @@ export default buildConfig({
 
     adminAuthPlugin({
       providers: [
-        GoogleAuthProvider({
-          client_id: process.env.GOOGLE_CLIENT_ID as string,
-          client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
+        [AUTH_PROVIDER]({
+          client_id: process.env.[AUTH_PROVIDER_CLIENT_ID] as string,
+          client_secret: process.env.[AUTH_PROVIDER_CLIENT_SECRET] as string,
         })
       ],
     }),
@@ -118,8 +117,6 @@ export default buildConfig({
 
 And that's it, now you can run the dev server, and you can now sign in in with Google.
 
-> Checkout [examples](https://github.com/sourabpramanik/payload-auth-plugin/tree/main/example) for better understanding
-
 ## Configuration options
 Configuration options allow you to extend the plugin to customize the flow and UI based on your requirements. You can explore the available options to understand their purposes and how to use them.
 
@@ -127,8 +124,7 @@ Configuration options allow you to extend the plugin to customize the flow and U
 | --- | --- | :--: |
 | `enabled`: ***boolean*** | Disable or enable plugin | true [OPTIONAL] |
 | `providers`: ***array*** | Array of OAuth providers | [REQUIRED] |
-| `accountsCollectionSlug`: ***string*** | Accounts collection  | accounts [OPTIONAL] |
-| `usersCollectionSlug`: ***string*** | Payload users collection slug | user [OPTIONAL] |
+| `accounts`: ***object*** | Accounts collection configuration  | { slug: string [OPTIONAL], hidden: boolean [OPTIONAL]} |
 
 ## Open Authorization/OpenID Connect Protocol Based Providers
 This plugin includes multiple pre-configured Open Authorization (OAuth) and OpenID Connect protocol-based providers. These configurations streamline the developer experience and integrations, ensuring the authentication process is seamless and uniform across different providers.
@@ -146,6 +142,8 @@ Some providers may require additional domain-specific metadata that cannot be ge
 - Facebook [Doc](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
 - GitLab [Doc](https://docs.gitlab.com/ee/api/oauth2.html)
 - Slack [Doc](https://api.slack.com/authentication)
+- Auth0 [DOC](https://auth0.com/docs/authenticate)
+- AWS Cognito [DOC](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
 
 ## Roadmap
 Ordered according to the priority
