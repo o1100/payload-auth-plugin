@@ -5,7 +5,6 @@ import { OAuthHandlers } from './routeHandlers/oauth'
 export class EndpointFactory {
   readonly #providers: Record<string, ProvidersConfig>
   readonly #payloadOAuthPath: string = '/admin/oauth/:resource/:provider'
-  // readonly #appAuthPath: string = '/app/:providerType/:resource/:provider'
   constructor(providers: Record<string, ProvidersConfig>) {
     this.#providers = providers
   }
