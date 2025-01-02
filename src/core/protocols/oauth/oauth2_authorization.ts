@@ -1,21 +1,20 @@
 import * as oauth from 'oauth4webapi'
-import type { OIDCProviderConfig } from '../../types'
-import { getCallbackURL } from '../utils/cb'
+import type { OAuth2ProviderConfig } from '../../../types'
+import { getCallbackURL } from '../../utils/cb'
 
-export async function OIDCAuthorization(providerConfig: OIDCProviderConfig): Promise<Response> {
+export async function OAuth2Authorization(providerConfig: OAuth2ProviderConfig): Promise<Response> {
   const callback_url = getCallbackURL('admin', providerConfig.id)
   const code_verifier = oauth.generateRandomCodeVerifier()
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
   const code_challenge_method = 'S256'
-  const { client_id, issuer, algorithm, scope } = providerConfig
+
+  const { authorization_server, client_id, scope } = providerConfig
 
   const client: oauth.Client = {
     client_id,
   }
-  const issuer_url = new URL(issuer)
-  const as = await oauth
-    .discoveryRequest(issuer_url, { algorithm })
-    .then(response => oauth.processDiscoveryResponse(issuer_url, response))
+
+  const as = authorization_server
 
   const cookies: string[] = []
   const cookieMaxage = new Date(Date.now() + 300 * 1000)
@@ -29,10 +28,10 @@ export async function OIDCAuthorization(providerConfig: OIDCProviderConfig): Pro
   authorizationURL.searchParams.set('code_challenge_method', code_challenge_method)
 
   if (as.code_challenge_methods_supported?.includes('S256') !== true) {
-    const nonce = oauth.generateRandomNonce()
-    authorizationURL.searchParams.set('nonce', nonce)
+    const state = oauth.generateRandomState()
+    authorizationURL.searchParams.set('state', state)
     cookies.push(
-      `__session-oauth-nonce=${nonce};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
+      `__session-oauth-state=${state};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
     )
   }
   cookies.push(
