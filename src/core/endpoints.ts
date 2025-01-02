@@ -45,40 +45,4 @@ export class EndpointFactory {
       },
     ]
   }
-  //  appAuthEndpoints({
-  //    sessionCallback,
-  //  }: {
-  //    sessionCallback: (
-  //      oauthAccountInfo: OAuthAccountInfo,
-  //      scope: string,
-  //      issuerName: string,
-  //      payload: BasePayload,
-  //    ) => Promise<Response>
-  //  }): Endpoint[] {
-  //    return [
-  //      {
-  //        path: this.#appAuthPath,
-  //        method: 'get',
-  //        handler: (request: PayloadRequest) => {
-  //          const provider = this.#providers[
-  //            request.routeParams?.provider as string
-  //          ] as OAuthProviderConfig
-  //
-  //          return OAuthHandlers(
-  //            request,
-  //            request.routeParams?.resource as string,
-  //            provider,
-  //            oauthAccountInfo => {
-  //              return sessionCallback(
-  //                oauthAccountInfo,
-  //                provider.scope,
-  //                provider.name,
-  //                request.payload,
-  //              )
-  //            },
-  //          )
-  //        },
-  //      },
-  //    ]
-  //  }
 }
