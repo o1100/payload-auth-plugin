@@ -1,6 +1,6 @@
 import type { BasePayload, Endpoint, PayloadRequest } from 'payload'
 import type { OAuthAccountInfo, OAuthProviderConfig, ProvidersConfig } from '../types'
-import { OAuthHandlers } from './routeHandlers/provider'
+import { OAuthHandlers } from './routeHandlers/oauth'
 
 export class EndpointFactory {
   readonly #providers: Record<string, ProvidersConfig>
