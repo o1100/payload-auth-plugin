@@ -46,32 +46,20 @@ export class EndpointFactory {
       },
     ]
   }
-  payloadPasskeyEndpoints({
-    rpID
-  }: {
-    rpID: string
-  }): Endpoint[] {
+  payloadPasskeyEndpoints({ rpID }: { rpID: string }): Endpoint[] {
     return [
       {
         path: this.#payloadPasskeyPath,
         method: 'get',
         handler: (request: PayloadRequest) => {
-          return PasskeyHandlers(
-            request,
-            request.routeParams?.resource as string,
-            rpID,
-          )
+          return PasskeyHandlers(request, request.routeParams?.resource as string, rpID)
         },
       },
       {
         path: this.#payloadPasskeyPath,
         method: 'post',
         handler: (request: PayloadRequest) => {
-          return PasskeyHandlers(
-            request,
-            request.routeParams?.resource as string,
-            rpID
-          )
+          return PasskeyHandlers(request, request.routeParams?.resource as string, rpID)
         },
       },
     ]
