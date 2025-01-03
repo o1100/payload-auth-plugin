@@ -77,3 +77,9 @@ export class MissingUsersCollection extends AuthError {
     super('Missing users collection', 400)
   }
 }
+
+export class InvalidPasskeyRequest extends AuthError {
+  constructor() {
+    super('Invalid or missing request', 400)
+  }
+}
