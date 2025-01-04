@@ -52,8 +52,8 @@ export const adminAuthPlugin =
         accountsCollectionSlug: accounts?.slug ?? 'accounts',
         usersCollectionSlug: config.admin.user!,
       })
-      const mappedProvider = mapProviders(providers)
-      const endpoints = new EndpointFactory(mappedProvider)
+      const mappedProviders = mapProviders(providers)
+      const endpoints = new EndpointFactory(mappedProviders)
 
       // Create accounts collection if doesn't exists
       config.collections = [
@@ -74,8 +74,8 @@ export const adminAuthPlugin =
             session.createSession(oauthAccountInfo, scope, issuerName, basePayload),
         }),
       ]
-      if (mappedProvider['passkey']) {
-        config.endpoints.concat(endpoints.payloadPasskeyEndpoints({
+      if (mappedProviders['passkey']) {
+        config.endpoints.push(...endpoints.payloadPasskeyEndpoints({
           rpID: 'localhost',
         }))
       }
