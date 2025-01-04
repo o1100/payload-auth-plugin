@@ -56,4 +56,8 @@ export interface CredentialsAccountInfo {
   email: string
 }
 
-export type ProvidersConfig = OAuthProviderConfig | CredentialsProviderConfig
+export type PasskeyProviderConfig = {
+  id: string
+}
+
+export type ProvidersConfig = OAuthProviderConfig | PasskeyProviderConfig
