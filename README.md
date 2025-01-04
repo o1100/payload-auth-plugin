@@ -43,6 +43,9 @@ Or
 ```bash
 pnpm add payload-auth-plugin@latest
 ```
+### Environment
+The plugin will require the server URL to configure endpoints and callback URLs. So follow the [Payload Doc](https://payloadcms.com/docs/configuration/environment-vars#nextjs-applications) to setup serverURL in you config:
+
 
 ### Create an OAuth app
 In your desired provider, create an OAuth application. Depending on your provider, you will need to obtain the Client ID and Client Secret from the provider's console or dashboard. Please refer to the [providers list](https://github.com/sourabpramanik/plugin-payload-oauth?tab=readme-ov-file#list-of-active-and-upcoming-providers) for detailed instructions on configuring a specific provider.
