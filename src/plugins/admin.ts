@@ -2,7 +2,7 @@ import type { Config, Plugin } from 'payload'
 import { EndpointFactory } from '../core/endpoints'
 import { ProvidersConfig } from '../types'
 import { PayloadSession } from '../core/session/payload'
-import { InvalidBaseURL, MissingUsersCollection } from '../core/error'
+import { InvalidServerURL, MissingUsersCollection } from '../core/error'
 import { buildAccountsCollection } from '../core/collections/admin/accounts'
 import { mapProviders } from '../providers/utils'
 
@@ -34,8 +34,8 @@ export const adminAuthPlugin =
         return config
       }
 
-      if (!process.env.AUTH_BASE_URL) {
-        throw new InvalidBaseURL()
+      if (!config.serverURL) {
+        throw new InvalidServerURL()
       }
 
       if (!config.admin?.user) {

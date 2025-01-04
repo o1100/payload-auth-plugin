@@ -20,9 +20,9 @@ export function OAuthHandlers(
     case 'authorization':
       switch (provider.algorithm) {
         case 'oidc':
-          return OIDCAuthorization(provider)
+          return OIDCAuthorization(request, provider)
         case 'oauth2':
-          return OAuth2Authorization(provider)
+          return OAuth2Authorization(request, provider)
         default:
           throw new InvalidOAuthAlgorithm()
       }

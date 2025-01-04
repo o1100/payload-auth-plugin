@@ -102,7 +102,7 @@ export class PayloadSession {
     cookies.push(`__session-oauth-state=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-oauth-nonce=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
-    const successURL = new URL(process.env.AUTH_BASE_URL as string)
+    const successURL = new URL(payload.config.serverURL)
     successURL.pathname = this.#successPath
     successURL.search = ''
 

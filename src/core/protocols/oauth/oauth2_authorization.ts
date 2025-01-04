@@ -1,9 +1,10 @@
 import * as oauth from 'oauth4webapi'
 import type { OAuth2ProviderConfig } from '../../../types'
 import { getCallbackURL } from '../../utils/cb'
+import { PayloadRequest } from 'payload'
 
-export async function OAuth2Authorization(providerConfig: OAuth2ProviderConfig): Promise<Response> {
-  const callback_url = getCallbackURL('admin', providerConfig.id)
+export async function OAuth2Authorization(request: PayloadRequest, providerConfig: OAuth2ProviderConfig): Promise<Response> {
+  const callback_url = getCallbackURL(request.payload.config.serverURL, 'admin', providerConfig.id)
   const code_verifier = oauth.generateRandomCodeVerifier()
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
   const code_challenge_method = 'S256'
