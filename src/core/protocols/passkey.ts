@@ -3,36 +3,28 @@ import {
   generateRegistrationOptions,
   GenerateRegistrationOptionsOpts,
 } from '@simplewebauthn/server'
-
-const user = {
-  id: '123df23124321',
-  username: 'sourab',
-  credentials: [
-    {
-      id: '',
-      transports: [],
-    },
-  ],
-}
+import { MissingEmailAPIError } from '../errors/apiErrors'
 
 export async function GeneratePasskeyRegistration(
   request: PayloadRequest,
   rpID: string,
 ): Promise<Response> {
+  // @ts-expect-error TODO: Fix undefined object method
+  const { data } = await request.json() as { data: { email: string } }
+
+  if (!data.email) {
+    throw new MissingEmailAPIError()
+  }
+
   const registrationOptions: GenerateRegistrationOptionsOpts = {
-    rpName: 'Payload WebAuthn',
+    rpName: "Payload Passkey Webauth",
     rpID,
-    userName: 'sourab',
+    userName: data.email,
     timeout: 60000,
     attestationType: 'none',
-    excludeCredentials: user.credentials.map(cred => ({
-      id: cred.id,
-      type: 'public-key',
-      transports: cred.transports,
-    })),
     authenticatorSelection: {
-      residentKey: 'discouraged',
-      userVerification: 'preferred',
+      residentKey: 'required',
+      userVerification: 'required',
     },
     supportedAlgorithmIDs: [-7, -257],
   }
