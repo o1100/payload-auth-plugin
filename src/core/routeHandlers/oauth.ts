@@ -1,6 +1,6 @@
 import type { PayloadRequest } from 'payload'
 import type { OAuthAccountInfo, OAuthProviderConfig } from '../../types'
-import { InvalidOAuthAlgorithm, InvalidOAuthResource, InvalidProvider } from '../error'
+import { InvalidOAuthAlgorithm, InvalidOAuthResource, InvalidProvider } from '../errors/consoleErrors'
 import { OIDCAuthorization } from '../protocols/oauth/oidc_authorization'
 import { OAuth2Authorization } from '../protocols/oauth/oauth2_authorization'
 import { OIDCCallback } from '../protocols/oauth/oidc_callback'

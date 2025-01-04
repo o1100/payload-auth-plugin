@@ -3,7 +3,7 @@ import * as oauth from 'oauth4webapi'
 import type { OAuthAccountInfo, OIDCProviderConfig } from '../../../types'
 import { getCallbackURL } from '../../utils/cb'
 import { parseCookies } from '../../utils/cookies'
-import { MissingOrInvalidSession } from '../../error'
+import { MissingOrInvalidSession } from '../../errors/consoleErrors'
 
 export async function OIDCCallback(
   request: PayloadRequest,

@@ -1,5 +1,5 @@
 import type { PayloadRequest } from 'payload'
-import { InvalidPasskeyRequest } from '../error'
+import { InvalidPasskeyRequest } from '../errors/consoleErrors'
 import { GeneratePasskeyRegistration } from '../protocols/passkey'
 
 export function PasskeyHandlers(

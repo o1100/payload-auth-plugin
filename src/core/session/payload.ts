@@ -1,5 +1,5 @@
 import { BasePayload, getCookieExpiration } from 'payload'
-import { UserNotFound } from '../error'
+import { UserNotFound } from '../errors/consoleErrors'
 import jwt from 'jsonwebtoken'
 import { OAuthAccountInfo } from '../../types'
 

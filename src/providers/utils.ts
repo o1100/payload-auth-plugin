@@ -1,4 +1,4 @@
-import { ProviderAlreadyExists } from '../core/error'
+import { ProviderAlreadyExists } from '../core/errors/consoleErrors'
 import { ProvidersConfig } from '../types'
 
 export function mapProviders(providers: ProvidersConfig[]) {

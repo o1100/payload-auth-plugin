@@ -2,7 +2,7 @@ import type { Config, Plugin } from 'payload'
 import { EndpointFactory } from '../core/endpoints'
 import { ProvidersConfig } from '../types'
 import { PayloadSession } from '../core/session/payload'
-import { InvalidServerURL, MissingUsersCollection } from '../core/error'
+import { InvalidServerURL, MissingUsersCollection } from '../core/errors/consoleErrors'
 import { buildAccountsCollection } from '../core/collections/admin/accounts'
 import { mapProviders } from '../providers/utils'
 
