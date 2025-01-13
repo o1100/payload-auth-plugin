@@ -106,14 +106,10 @@ export class PayloadSession {
     cookies.push(`__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
 
-    const successURL = new URL(payload.config.serverURL)
-    successURL.pathname = payload.getAdminURL()
-    successURL.search = ''
-
     const res = new Response(null, {
       status: 302,
       headers: {
-        Location: successURL.href,
+        Location: payload.getAdminURL(),
       },
     })
 
