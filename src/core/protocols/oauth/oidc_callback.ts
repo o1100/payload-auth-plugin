@@ -1,6 +1,6 @@
 import type { PayloadRequest } from 'payload'
 import * as oauth from 'oauth4webapi'
-import type { OAuthAccountInfo, OIDCProviderConfig } from '../../../types'
+import type { AccountInfo, OIDCProviderConfig } from '../../../types'
 import { getCallbackURL } from '../../utils/cb'
 import { parseCookies } from '../../utils/cookies'
 import { MissingOrInvalidSession } from '../../errors/consoleErrors'
@@ -8,7 +8,7 @@ import { MissingOrInvalidSession } from '../../errors/consoleErrors'
 export async function OIDCCallback(
   request: PayloadRequest,
   providerConfig: OIDCProviderConfig,
-  session_callback: (oauthAccountInfo: OAuthAccountInfo) => Promise<Response>,
+  session_callback: (oauthAccountInfo: AccountInfo) => Promise<Response>,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers.get('Cookie')!)
 

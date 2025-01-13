@@ -1,5 +1,5 @@
 import type { PayloadRequest } from 'payload'
-import type { OAuthAccountInfo, OAuthProviderConfig } from '../../types'
+import type { AccountInfo, OAuthProviderConfig } from '../../types'
 import { InvalidOAuthAlgorithm, InvalidOAuthResource, InvalidProvider } from '../errors/consoleErrors'
 import { OIDCAuthorization } from '../protocols/oauth/oidc_authorization'
 import { OAuth2Authorization } from '../protocols/oauth/oauth2_authorization'
@@ -10,7 +10,7 @@ export function OAuthHandlers(
   request: PayloadRequest,
   resource: string,
   provider: OAuthProviderConfig,
-  sessionCallBack: (oauthAccountInfo: OAuthAccountInfo) => Promise<Response>,
+  sessionCallBack: (oauthAccountInfo: AccountInfo) => Promise<Response>,
 ): Promise<Response> {
   if (!provider) {
     throw new InvalidProvider()

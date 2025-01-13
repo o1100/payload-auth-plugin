@@ -4,7 +4,7 @@ interface BaseProviderConfig {
   id: string
   name: string
   scope: string
-  profile: (profile: Record<string, string | number | boolean | object>) => OAuthAccountInfo
+  profile: (profile: Record<string, string | number | boolean | object>) => AccountInfo
 }
 
 export interface ProviderConfig {
@@ -34,11 +34,19 @@ export interface OAuth2ProviderConfig extends BaseProviderConfig, ProviderConfig
 
 export type OAuthProviderConfig = OIDCProviderConfig | OAuth2ProviderConfig
 
-export interface OAuthAccountInfo {
+export interface AccountInfo {
   sub: string
   name: string
   picture: string
   email: string
+  passKey?: {
+    id: string,
+    publicKey: string,
+    counter: string,
+    transports: Uint8Array,
+    deviceType: string[],
+    backedUp: boolean
+  }
 }
 
 export type CredentialsProviderConfig = {

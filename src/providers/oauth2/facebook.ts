@@ -1,5 +1,5 @@
 import type * as oauth from 'oauth4webapi'
-import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../../types'
+import type { OAuth2ProviderConfig, AccountInfo, ProviderConfig } from '../../types'
 
 const authorization_server: oauth.AuthorizationServer = {
   issuer: 'https://www.facebook.com',
@@ -18,7 +18,7 @@ function FacebookAuthProvider(config: FacebookAuthConfig): OAuth2ProviderConfig 
     authorization_server,
     name: 'Facebook',
     algorithm: 'oauth2',
-    profile: (profile): OAuthAccountInfo => {
+    profile: (profile): AccountInfo => {
       let picture
 
       if (typeof profile.picture === 'object' && profile.picture !== null) {

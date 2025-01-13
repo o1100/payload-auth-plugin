@@ -1,5 +1,5 @@
 import type { BasePayload, Endpoint, PayloadRequest } from 'payload'
-import type { OAuthAccountInfo, OAuthProviderConfig, ProvidersConfig } from '../types'
+import type { AccountInfo, OAuthProviderConfig, ProvidersConfig } from '../types'
 import { OAuthHandlers } from './routeHandlers/oauth'
 import { PasskeyHandlers } from './routeHandlers/passkey'
 
@@ -14,7 +14,7 @@ export class EndpointFactory {
     sessionCallback,
   }: {
     sessionCallback: (
-      oauthAccountInfo: OAuthAccountInfo,
+      oauthAccountInfo: AccountInfo,
       scope: string,
       issuerName: string,
       payload: BasePayload,
