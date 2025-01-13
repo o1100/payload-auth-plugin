@@ -1,4 +1,5 @@
 import { CollectionConfig } from 'payload'
+import { PasskeyFields } from './accounts/passkeyFields'
 
 export function buildAccountsCollection(
   account: {
@@ -52,6 +53,19 @@ export function buildAccountsCollection(
         type: 'text',
         required: true,
       },
+      {
+        name: 'passkey',
+        type: 'group',
+        fields: PasskeyFields,
+        admin: {
+          condition: (_data, peerData) => {
+            if (peerData.issuerName === "Passkey") {
+              return true
+            }
+            return false
+          }
+        }
+      }
     ],
   }
   return accountsCollection
