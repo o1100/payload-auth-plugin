@@ -17,3 +17,9 @@ export class EmailNotFoundAPIError extends AuthAPIError {
         super("Now user found with this email", 404)
     }
 }
+
+export class PasskeyVerificationAPIError extends AuthAPIError {
+    constructor() {
+        super("Passkey verification failed", 403)
+    }
+}
