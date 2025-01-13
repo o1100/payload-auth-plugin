@@ -64,8 +64,6 @@ export async function VerifyPasskeyRegistration(
   session_callback: (accountInfo: AccountInfo) => Promise<Response>,
 ): Promise<Response> {
   try {
-    console.log(">>>>>>>>>>>>>>>", request.headers.getSetCookie());
-
     const parsedCookies = parseCookies(request.headers)
 
     const challenge = parsedCookies.get('__session-webpk-challenge')
@@ -86,13 +84,14 @@ export async function VerifyPasskeyRegistration(
     const { credential,
       credentialDeviceType,
       credentialBackedUp, } = verification.registrationInfo!;
+
     return session_callback({
       sub: hashCode(body.data.email + request.payload.secret).toString(),
       name: '',
       picture: '',
       email: body.data.email,
       passKey: {
-        id: credential.id,
+        credentialId: credential.id,
         publicKey: credential.publicKey,
         counter: credential.counter,
         transports: credential.transports!,

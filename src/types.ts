@@ -40,7 +40,7 @@ export interface AccountInfo {
   picture: string
   email: string
   passKey?: {
-    id: string,
+    credentialId: string,
     publicKey: Uint8Array,
     counter: number,
     transports: string[],

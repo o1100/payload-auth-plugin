@@ -2,7 +2,7 @@ import { Field } from "payload";
 
 export const PasskeyFields: Field[] = [
     {
-        name: 'id',
+        name: 'credentialId',
         type: 'text',
         required: true,
     },
