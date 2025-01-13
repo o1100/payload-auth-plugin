@@ -46,7 +46,6 @@ export function buildAccountsCollection(
       {
         name: 'scope',
         type: 'text',
-        required: true,
       },
       {
         name: 'sub',

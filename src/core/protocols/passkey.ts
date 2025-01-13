@@ -5,8 +5,10 @@ import {
   RegistrationResponseJSON,
   verifyRegistrationResponse,
 } from '@simplewebauthn/server'
-import { EmailNotFoundAPIError, MissingEmailAPIError } from '../errors/apiErrors'
+import { EmailNotFoundAPIError, MissingEmailAPIError, PasskeyVerificationAPIError } from '../errors/apiErrors'
 import { MissingOrInvalidSession } from '../errors/consoleErrors'
+import { AccountInfo } from '../../types'
+import { hashCode } from '../utils/hash'
 
 export async function GeneratePasskeyRegistration(
   request: PayloadRequest,
@@ -56,9 +58,14 @@ export async function GeneratePasskeyRegistration(
   return res
 }
 
-export async function VerifyPasskeyRegistration(request: PayloadRequest,
-  rpID: string): Promise<Response> {
+export async function VerifyPasskeyRegistration(
+  request: PayloadRequest,
+  rpID: string,
+  session_callback: (accountInfo: AccountInfo) => Promise<Response>,
+): Promise<Response> {
   try {
+    console.log(">>>>>>>>>>>>>>>", request.headers.getSetCookie());
+
     const parsedCookies = parseCookies(request.headers)
 
     const challenge = parsedCookies.get('__session-webpk-challenge')
@@ -66,14 +73,33 @@ export async function VerifyPasskeyRegistration(request: PayloadRequest,
       throw new MissingOrInvalidSession()
     }
     // @ts-expect-error TODO: Fix undefined object method
-    const body = await request.json() as RegistrationResponseJSON
-    let verification = await verifyRegistrationResponse({
-      response: body,
+    const body = await request.json() as { data: { email: string, registration: RegistrationResponseJSON } }
+    const verification = await verifyRegistrationResponse({
+      response: body.data.registration,
       expectedChallenge: challenge,
-      expectedOrigin: origin,
+      expectedOrigin: request.payload.config.serverURL,
       expectedRPID: rpID,
     });
-    return Response.json({ verification })
+    if (!verification.verified) {
+      throw new PasskeyVerificationAPIError()
+    }
+    const { credential,
+      credentialDeviceType,
+      credentialBackedUp, } = verification.registrationInfo!;
+    return session_callback({
+      sub: hashCode(body.data.email + request.payload.secret).toString(),
+      name: '',
+      picture: '',
+      email: body.data.email,
+      passKey: {
+        id: credential.id,
+        publicKey: credential.publicKey,
+        counter: credential.counter,
+        transports: credential.transports!,
+        deviceType: credentialDeviceType,
+        backedUp: credentialBackedUp
+      }
+    })
   } catch (error) {
     console.error(error);
     return Response.json({})

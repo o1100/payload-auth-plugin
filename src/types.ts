@@ -41,10 +41,10 @@ export interface AccountInfo {
   email: string
   passKey?: {
     id: string,
-    publicKey: string,
-    counter: string,
-    transports: Uint8Array,
-    deviceType: string[],
+    publicKey: Uint8Array,
+    counter: number,
+    transports: string[],
+    deviceType: string,
     backedUp: boolean
   }
 }

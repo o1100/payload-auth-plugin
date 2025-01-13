@@ -46,20 +46,32 @@ export class EndpointFactory {
       },
     ]
   }
-  payloadPasskeyEndpoints({ rpID }: { rpID: string }): Endpoint[] {
+  payloadPasskeyEndpoints({ rpID, sessionCallback }: {
+    rpID: string, sessionCallback: (
+      accountInfo: AccountInfo,
+      issuerName: string,
+      payload: BasePayload,
+    ) => Promise<Response>
+  }): Endpoint[] {
     return [
-      {
-        path: this.#payloadPasskeyPath,
-        method: 'get',
-        handler: (request: PayloadRequest) => {
-          return PasskeyHandlers(request, request.routeParams?.resource as string, rpID)
-        },
-      },
+      // {
+      //   path: this.#payloadPasskeyPath,
+      //   method: 'get',
+      //   handler: (request: PayloadRequest) => {
+      //     return PasskeyHandlers(request, request.routeParams?.resource as string, rpID)
+      //   },
+      // },
       {
         path: this.#payloadPasskeyPath,
         method: 'post',
         handler: (request: PayloadRequest) => {
-          return PasskeyHandlers(request, request.routeParams?.resource as string, rpID)
+          return PasskeyHandlers(request, request.routeParams?.resource as string, rpID, accountInfo => {
+            return sessionCallback(
+              accountInfo,
+              'Passkey',
+              request.payload,
+            )
+          },)
         },
       },
     ]

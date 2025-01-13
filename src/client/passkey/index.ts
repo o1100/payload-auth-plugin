@@ -2,9 +2,7 @@ import { startRegistration } from "@simplewebauthn/browser"
 import { browserSupportsWebAuthn } from '@simplewebauthn/browser';
 export async function registration() {
     const emailInput = document.getElementById('field-email') as HTMLInputElement
-
     if (!browserSupportsWebAuthn()) {
-
         console.log(
             'It seems this browser does not support WebAuthn/Passkey. Reach out to the plugin author')
         return;
@@ -14,14 +12,18 @@ export async function registration() {
         body: JSON.stringify({ data: { email: emailInput.value } })
     });
     const optionsJSON = await resp.json();
-    let attResp;
     try {
-        // Pass the options to the authenticator and wait for a response
-        attResp = await startRegistration({ optionsJSON: optionsJSON.options });
+        const registrationResp = await startRegistration({ optionsJSON: optionsJSON.options });
+        await fetch('http://localhost:3000/api/admin/passkey/verify-registration', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ data: { email: emailInput.value, registration: registrationResp } }),
+        });
     } catch (error) {
-        // Some basic error handling
         console.log(error);
-
     }
 
 }

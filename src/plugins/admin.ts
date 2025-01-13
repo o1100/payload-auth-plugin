@@ -49,8 +49,7 @@ export const adminAuthPlugin =
       const { accounts, providers } = pluginOptions
 
       const session = new PayloadSession({
-        accountsCollectionSlug: accounts?.slug ?? 'accounts',
-        usersCollectionSlug: config.admin.user!,
+        accountsCollectionSlug: accounts?.slug ?? 'accounts'
       })
       const mappedProviders = mapProviders(providers)
       const endpoints = new EndpointFactory(mappedProviders)
@@ -77,6 +76,8 @@ export const adminAuthPlugin =
       if (mappedProviders['passkey']) {
         config.endpoints.push(...endpoints.payloadPasskeyEndpoints({
           rpID: 'localhost',
+          sessionCallback: (accountInfo, issuerName, basePayload) =>
+            session.createSession(accountInfo, "", issuerName, basePayload),
         }))
       }
       return config

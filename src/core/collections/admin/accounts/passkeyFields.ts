@@ -28,7 +28,7 @@ export const PasskeyFields: Field[] = [
     },
     {
         name: 'backedUp',
-        type: 'text',
+        type: "checkbox",
         required: true,
     }
 ]
