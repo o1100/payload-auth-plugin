@@ -48,6 +48,7 @@ export class PayloadSession {
 
     // // Add passkey payload for auth
     if (issuerName === 'Passkey' && accountInfo.passKey) {
+
       data['passkey'] = {
         ...accountInfo.passKey
       }

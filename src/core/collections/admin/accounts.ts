@@ -18,7 +18,7 @@ export function buildAccountsCollection(
       read: () => true,
       create: () => false,
       update: () => false,
-      delete: () => false,
+      delete: () => true,
     },
     fields: [
       {

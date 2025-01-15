@@ -41,9 +41,9 @@ export interface AccountInfo {
   email: string
   passKey?: {
     credentialId: string,
-    publicKey: Uint8Array,
+    publicKey?: Uint8Array,
     counter: number,
-    transports: string[],
+    transports?: string[],
     deviceType: string,
     backedUp: boolean
   }
