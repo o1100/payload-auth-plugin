@@ -54,13 +54,6 @@ export class EndpointFactory {
     ) => Promise<Response>
   }): Endpoint[] {
     return [
-      // {
-      //   path: this.#payloadPasskeyPath,
-      //   method: 'get',
-      //   handler: (request: PayloadRequest) => {
-      //     return PasskeyHandlers(request, request.routeParams?.resource as string, rpID)
-      //   },
-      // },
       {
         path: this.#payloadPasskeyPath,
         method: 'post',
