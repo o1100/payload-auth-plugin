@@ -8,7 +8,7 @@ export async function registration(email: string) {
     const optionsJSON = await resp.json();
     try {
         const registrationResp = await startRegistration({ optionsJSON: optionsJSON.options });
-        await fetch('/api/admin/passkey/verify-registration', {
+        const response = await fetch('/api/admin/passkey/verify-registration', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -16,6 +16,9 @@ export async function registration(email: string) {
             },
             body: JSON.stringify({ data: { email, registration: registrationResp } }),
         });
+        if (response.redirected) {
+            window.location.href = response.url;
+        }
     } catch (error) {
         console.log(error);
     }

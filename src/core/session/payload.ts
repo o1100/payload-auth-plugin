@@ -117,7 +117,6 @@ export class PayloadSession {
     cookies.forEach(cookie => {
       res.headers.append('Set-Cookie', cookie)
     })
-
     return res
   }
 }

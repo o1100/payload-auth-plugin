@@ -16,7 +16,7 @@ export async function authentication(passkey: {
     const optionsJSON = await resp.json();
     try {
         const authenticationResp = await startAuthentication({ optionsJSON: optionsJSON.options });
-        await fetch('/api/admin/passkey/verify-authentication', {
+        const response = await fetch('/api/admin/passkey/verify-authentication', {
             method: 'POST',
             credentials: 'include',
             headers: {
@@ -24,6 +24,10 @@ export async function authentication(passkey: {
             },
             body: JSON.stringify({ data: { email, authentication: authenticationResp, passkey } }),
         });
+
+        if (response.redirected) {
+            window.location.href = response.url; // Redirect the user explicitly
+        }
     } catch (error) {
         console.log(error);
     }
