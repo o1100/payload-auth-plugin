@@ -10,9 +10,10 @@ type Collections = {
 
 export class PayloadSession {
   readonly #collections: Collections
-  readonly #successPath: string = '/admin'
-  constructor(collections: Collections) {
+  readonly #successPath: string
+  constructor(collections: Collections, successPath?: string) {
     this.#collections = collections
+    this.#successPath = successPath ?? '/admin'
   }
   async #upsertAccount(
     oauthAccountInfo: OAuthAccountInfo,
