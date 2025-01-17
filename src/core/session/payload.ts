@@ -11,8 +11,10 @@ type Collections = {
 export class PayloadSession {
   readonly #collections: Collections
   readonly #successPath: string = '/admin'
-  constructor(collections: Collections) {
+  readonly #allowSignUp: boolean
+  constructor(collections: Collections, allowSignUp?: boolean) {
     this.#collections = collections
+    this.#allowSignUp = !!allowSignUp
   }
   async #upsertAccount(
     oauthAccountInfo: OAuthAccountInfo,
@@ -22,7 +24,7 @@ export class PayloadSession {
   ) {
     let userID: string = ''
 
-    const user = await payload.find({
+    const userQueryResults = await payload.find({
       collection: this.#collections.usersCollectionSlug,
       where: {
         email: {
@@ -31,10 +33,22 @@ export class PayloadSession {
       },
     })
 
-    if (user.docs.length === 0) {
-      throw new UserNotFound()
+    if (userQueryResults.docs.length === 0) {
+      if (!this.#allowSignUp) {
+        throw new UserNotFound()
+      }
+
+      const newUser = await payload.create({
+        collection: this.#collections.usersCollectionSlug,
+        data: {
+          email: oauthAccountInfo.email,
+          emailVerified: true,
+        },
+      })
+      userID = newUser.id
+    } else {
+      userID = userQueryResults.docs[0].id as string
     }
-    userID = user.docs[0].id as string
 
     const accounts = await payload.find({
       collection: this.#collections.accountsCollectionSlug,

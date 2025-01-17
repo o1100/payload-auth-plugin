@@ -20,6 +20,7 @@ export function buildUsersCollection(usersCollectionSlug: string) {
           return Boolean(z.string().email().safeParse(val)) || 'Invalid email'
         },
         required: true,
+        unique: true,
       },
       {
         name: 'emailVerified',

@@ -23,6 +23,11 @@ interface PluginOptions {
     slug?: string | undefined
     hidden?: boolean | undefined
   }
+
+  /* Enable or disable user creation. WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.
+   * @default false
+   */
+  allowSignUp?: boolean
 }
 
 export const adminAuthPlugin =
@@ -48,10 +53,13 @@ export const adminAuthPlugin =
 
     const { accounts, providers } = pluginOptions
 
-    const session = new PayloadSession({
-      accountsCollectionSlug: accounts?.slug ?? 'accounts',
-      usersCollectionSlug: config.admin.user!,
-    })
+    const session = new PayloadSession(
+      {
+        accountsCollectionSlug: accounts?.slug ?? 'accounts',
+        usersCollectionSlug: config.admin.user!,
+      },
+      pluginOptions.allowSignUp,
+    )
 
     const endpoints = new EndpointFactory(mapProviders(providers))
 

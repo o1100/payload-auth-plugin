@@ -53,8 +53,8 @@ AUTH_BASE_URL=http://localhhost:3000 //Your NextJS app URL
 ### Create an OAuth app
 In your desired provider, create an OAuth application. Depending on your provider, you will need to obtain the Client ID and Client Secret from the provider's console or dashboard. Please refer to the [providers list](https://github.com/sourabpramanik/plugin-payload-oauth?tab=readme-ov-file#list-of-active-and-upcoming-providers) for detailed instructions on configuring a specific provider.
 
-### Create a new auth UI component 
-Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers. 
+### Create a new auth UI component
+Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers.
 ```tsx
 import { Button } from '@payloadcms/ui'
 import { signin } from 'payload-auth-plugin/client'
@@ -125,6 +125,7 @@ Configuration options allow you to extend the plugin to customize the flow and U
 | `enabled`: ***boolean*** | Disable or enable plugin | true [OPTIONAL] |
 | `providers`: ***array*** | Array of OAuth providers | [REQUIRED] |
 | `accounts`: ***object*** | Accounts collection configuration  | { slug: string [OPTIONAL], hidden: boolean [OPTIONAL]} |
+| `allowSignUp`: ***boolean*** | Enable or disable user creation. *WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.*  | false [OPTIONAL] |
 
 ## Open Authorization/OpenID Connect Protocol Based Providers
 This plugin includes multiple pre-configured Open Authorization (OAuth) and OpenID Connect protocol-based providers. These configurations streamline the developer experience and integrations, ensuring the authentication process is seamless and uniform across different providers.
