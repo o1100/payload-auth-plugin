@@ -1,10 +1,9 @@
 import { BasePayload, getCookieExpiration } from 'payload'
-import { UserNotFound } from '../error'
+import { UserNotFound } from '../errors/consoleErrors'
 import jwt from 'jsonwebtoken'
-import { OAuthAccountInfo } from '../../types'
+import { AccountInfo } from '../../types'
 
 type Collections = {
-  usersCollectionSlug: string
   accountsCollectionSlug: string
 }
 
@@ -16,7 +15,7 @@ export class PayloadSession {
     this.#successPath = successPath ?? '/admin'
   }
   async #upsertAccount(
-    oauthAccountInfo: OAuthAccountInfo,
+    accountInfo: AccountInfo,
     scope: string,
     issuerName: string,
     payload: BasePayload,
@@ -24,10 +23,10 @@ export class PayloadSession {
     let userID: string = ''
 
     const user = await payload.find({
-      collection: this.#collections.usersCollectionSlug,
+      collection: payload.config.admin.user,
       where: {
         email: {
-          equals: oauthAccountInfo.email,
+          equals: accountInfo.email,
         },
       },
     })
@@ -40,9 +39,22 @@ export class PayloadSession {
     const accounts = await payload.find({
       collection: this.#collections.accountsCollectionSlug,
       where: {
-        sub: { equals: oauthAccountInfo.sub },
+        sub: { equals: accountInfo.sub },
       },
     })
+    const data: Record<string, unknown> = {
+      scope,
+      name: accountInfo.name,
+      picture: accountInfo.picture,
+    }
+
+    // // Add passkey payload for auth
+    if (issuerName === 'Passkey' && accountInfo.passKey) {
+
+      data['passkey'] = {
+        ...accountInfo.passKey
+      }
+    }
 
     if (accounts.docs.length > 0) {
       await payload.update({
@@ -52,39 +64,31 @@ export class PayloadSession {
             equals: accounts.docs[0].id,
           },
         },
-        data: {
-          scope,
-          name: oauthAccountInfo.name,
-          picture: oauthAccountInfo.picture,
-        },
+        data,
       })
     } else {
+      data['sub'] = accountInfo.sub
+      data['issuerName'] = issuerName
+      data['user'] = userID
       await payload.create({
         collection: this.#collections.accountsCollectionSlug,
-        data: {
-          sub: oauthAccountInfo.sub,
-          issuerName,
-          scope,
-          name: oauthAccountInfo.name,
-          picture: oauthAccountInfo.picture,
-          user: userID,
-        },
+        data,
       })
     }
     return userID
   }
   async createSession(
-    oauthAccountInfo: OAuthAccountInfo,
+    accountInfo: AccountInfo,
     scope: string,
     issuerName: string,
     payload: BasePayload,
   ) {
-    const userID = await this.#upsertAccount(oauthAccountInfo, scope, issuerName, payload)
+    const userID = await this.#upsertAccount(accountInfo, scope, issuerName, payload)
 
     const fieldsToSign = {
       id: userID,
-      email: oauthAccountInfo.email,
-      collection: this.#collections.usersCollectionSlug,
+      email: accountInfo.email,
+      collection: payload.config.admin.user,
     }
 
     const cookieExpiration = getCookieExpiration({
@@ -103,21 +107,18 @@ export class PayloadSession {
     cookies.push(`__session-oauth-state=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-oauth-nonce=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
-    const successURL = new URL(process.env.AUTH_BASE_URL as string)
-    successURL.pathname = this.#successPath
-    successURL.search = ''
+    cookies.push(`__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
 
     const res = new Response(null, {
       status: 302,
       headers: {
-        Location: successURL.href,
+        Location: payload.getAdminURL(),
       },
     })
 
     cookies.forEach(cookie => {
       res.headers.append('Set-Cookie', cookie)
     })
-
     return res
   }
 }
