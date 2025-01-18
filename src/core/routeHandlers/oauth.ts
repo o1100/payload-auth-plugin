@@ -1,14 +1,14 @@
 import type { PayloadRequest } from "payload"
-import type { AccountInfo, OAuthProviderConfig } from "../../types"
+import type { AccountInfo, OAuthProviderConfig } from "../../types.js"
 import {
   InvalidOAuthAlgorithm,
   InvalidOAuthResource,
   InvalidProvider,
-} from "../errors/consoleErrors"
-import { OIDCAuthorization } from "../protocols/oauth/oidc_authorization"
-import { OAuth2Authorization } from "../protocols/oauth/oauth2_authorization"
-import { OIDCCallback } from "../protocols/oauth/oidc_callback"
-import { OAuth2Callback } from "../protocols/oauth/oauth2_callback"
+} from "../errors/consoleErrors.js"
+import { OIDCAuthorization } from "../protocols/oauth/oidc_authorization.js"
+import { OAuth2Authorization } from "../protocols/oauth/oauth2_authorization.js"
+import { OIDCCallback } from "../protocols/oauth/oidc_callback.js"
+import { OAuth2Callback } from "../protocols/oauth/oauth2_callback.js"
 
 export function OAuthHandlers(
   request: PayloadRequest,

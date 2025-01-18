@@ -1,6 +1,6 @@
 import { browserSupportsWebAuthn } from "@simplewebauthn/browser"
-import { registration } from "./registration"
-import { authentication } from "./authentication"
+import { registration } from "./registration.js"
+import { authentication } from "./authentication.js"
 
 //NOTE: EXPERIMENTAL
 

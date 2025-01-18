@@ -2,7 +2,7 @@ import type {
   AccountInfo,
   OIDCProviderConfig,
   ProviderConfig,
-} from "../../types"
+} from "../../types.js"
 
 type GoogleAuthConfig = ProviderConfig
 

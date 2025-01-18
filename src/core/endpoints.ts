@@ -3,9 +3,9 @@ import type {
   AccountInfo,
   OAuthProviderConfig,
   ProvidersConfig,
-} from "../types"
-import { OAuthHandlers } from "./routeHandlers/oauth"
-import { PasskeyHandlers } from "./routeHandlers/passkey"
+} from "../types.js"
+import { OAuthHandlers } from "./routeHandlers/oauth.js"
+import { PasskeyHandlers } from "./routeHandlers/passkey.js"
 
 export class EndpointFactory {
   readonly #providers: Record<string, ProvidersConfig>
@@ -37,7 +37,7 @@ export class EndpointFactory {
             request,
             request.routeParams?.resource as string,
             provider,
-            (oauthAccountInfo) => {
+            (oauthAccountInfo: any) => {
               return sessionCallback(
                 oauthAccountInfo,
                 provider.scope,
@@ -70,7 +70,7 @@ export class EndpointFactory {
             request,
             request.routeParams?.resource as string,
             rpID,
-            (accountInfo) => {
+            (accountInfo: any) => {
               return sessionCallback(accountInfo, "Passkey", request.payload)
             },
           )

@@ -1,8 +1,8 @@
 import { BasePayload, getCookieExpiration } from "payload"
-import { UserNotFound } from "../errors/consoleErrors"
+import { UserNotFound } from "../errors/consoleErrors.js"
 import jwt from "jsonwebtoken"
-import { AccountInfo } from "../../types"
-import { hashCode } from "../utils/hash"
+import { AccountInfo } from "../../types.js"
+import { hashCode } from "../utils/hash.js"
 
 type Collections = {
   accountsCollectionSlug: string

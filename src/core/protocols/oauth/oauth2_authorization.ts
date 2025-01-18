@@ -1,6 +1,6 @@
 import * as oauth from "oauth4webapi"
-import type { OAuth2ProviderConfig } from "../../../types"
-import { getCallbackURL } from "../../utils/cb"
+import type { OAuth2ProviderConfig } from "../../../types.js"
+import { getCallbackURL } from "../../utils/cb.js"
 import { PayloadRequest } from "payload"
 
 export async function OAuth2Authorization(

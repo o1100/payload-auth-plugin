@@ -1,8 +1,8 @@
 import { parseCookies, type PayloadRequest } from "payload"
 import * as oauth from "oauth4webapi"
-import type { OAuth2ProviderConfig, AccountInfo } from "../../../types"
-import { getCallbackURL } from "../../utils/cb"
-import { MissingOrInvalidSession } from "../../errors/consoleErrors"
+import type { OAuth2ProviderConfig, AccountInfo } from "../../../types.js"
+import { getCallbackURL } from "../../utils/cb.js"
+import { MissingOrInvalidSession } from "../../errors/consoleErrors.js"
 
 export async function OAuth2Callback(
   request: PayloadRequest,
@@ -23,7 +23,7 @@ export async function OAuth2Callback(
   }
   const clientAuth = oauth.ClientSecretPost(providerConfig.client_secret)
 
-  const current_url = new URL(request.url as string)
+  const current_url = new URL(request.url as string) as URL
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
     "admin",
@@ -53,6 +53,6 @@ export async function OAuth2Callback(
     client,
     token_result.access_token,
   )
-  const userInfo = await userInfoResponse.json()
+  const userInfo = (await userInfoResponse.json()) as Record<string, string>
   return session_callback(providerConfig.profile(userInfo))
 }

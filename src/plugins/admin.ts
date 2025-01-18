@@ -1,13 +1,13 @@
 import type { Config, Plugin } from "payload"
-import { EndpointFactory } from "../core/endpoints"
-import { ProvidersConfig } from "../types"
-import { PayloadSession } from "../core/session/payload"
+import { EndpointFactory } from "../core/endpoints.js"
+import { ProvidersConfig } from "../types.js"
+import { PayloadSession } from "../core/session/payload.js"
 import {
   InvalidServerURL,
   MissingUsersCollection,
-} from "../core/errors/consoleErrors"
-import { buildAccountsCollection } from "../core/collections/admin/accounts"
-import { mapProviders } from "../providers/utils"
+} from "../core/errors/consoleErrors.js"
+import { buildAccountsCollection } from "../core/collections/admin/accounts.js"
+import { mapProviders } from "../providers/utils.js"
 
 interface PluginOptions {
   /* Enable or disable plugin

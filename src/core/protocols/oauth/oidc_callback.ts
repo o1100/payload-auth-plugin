@@ -1,8 +1,8 @@
 import { parseCookies, type PayloadRequest } from "payload"
 import * as oauth from "oauth4webapi"
-import type { AccountInfo, OIDCProviderConfig } from "../../../types"
-import { getCallbackURL } from "../../utils/cb"
-import { MissingOrInvalidSession } from "../../errors/consoleErrors"
+import type { AccountInfo, OIDCProviderConfig } from "../../../types.js"
+import { getCallbackURL } from "../../utils/cb.js"
+import { MissingOrInvalidSession } from "../../errors/consoleErrors.js"
 
 export async function OIDCCallback(
   request: PayloadRequest,
@@ -26,13 +26,13 @@ export async function OIDCCallback(
 
   const clientAuth = oauth.ClientSecretPost(client_secret)
 
-  const current_url = new URL(request.url as string)
+  const current_url = new URL(request.url as string) as URL
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
     "admin",
     providerConfig.id,
   )
-  const issuer_url = new URL(issuer)
+  const issuer_url = new URL(issuer) as URL
 
   const as = await oauth
     .discoveryRequest(issuer_url, { algorithm })

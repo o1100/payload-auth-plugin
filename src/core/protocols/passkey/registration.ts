@@ -5,10 +5,10 @@ import {
   RegistrationResponseJSON,
   verifyRegistrationResponse,
 } from "@simplewebauthn/server"
-import { PasskeyVerificationAPIError } from "../../errors/apiErrors"
-import { MissingOrInvalidSession } from "../../errors/consoleErrors"
-import { AccountInfo } from "../../../types"
-import { hashCode } from "../../utils/hash"
+import { PasskeyVerificationAPIError } from "../../errors/apiErrors.js"
+import { MissingOrInvalidSession } from "../../errors/consoleErrors.js"
+import { AccountInfo } from "../../../types.js"
+import { hashCode } from "../../utils/hash.js"
 
 export async function GeneratePasskeyRegistration(
   request: PayloadRequest,

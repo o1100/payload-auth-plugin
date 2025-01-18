@@ -1,4 +1,4 @@
-import { init } from "./passkey"
+import { init } from "./passkey/index.js"
 
 type Provider = "google" | "github" | "passkey"
 

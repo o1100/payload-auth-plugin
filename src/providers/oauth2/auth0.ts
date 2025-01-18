@@ -3,7 +3,7 @@ import type {
   OAuth2ProviderConfig,
   AccountInfo,
   ProviderConfig,
-} from "../../types"
+} from "../../types.js"
 
 interface Auth0AuthConfig extends ProviderConfig {
   domain: string

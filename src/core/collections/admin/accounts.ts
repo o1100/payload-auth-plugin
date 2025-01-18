@@ -1,5 +1,5 @@
 import { CollectionConfig } from "payload"
-import { PasskeyFields } from "./accounts/passkeyFields"
+import { PasskeyFields } from "./accounts/passkeyFields.js"
 
 export function buildAccountsCollection(
   account: {

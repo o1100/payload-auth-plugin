@@ -3,7 +3,7 @@ import type {
   AccountInfo,
   OAuth2ProviderConfig,
   ProviderConfig,
-} from "../../types"
+} from "../../types.js"
 
 type AppleAuthConfig = ProviderConfig
 

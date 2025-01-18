@@ -1,4 +1,4 @@
-import { CredentialsProviderConfig } from "../types"
+import { CredentialsProviderConfig } from "../types.js"
 
 function CredentialsProvider(): CredentialsProviderConfig {
   return {

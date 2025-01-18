@@ -1,6 +1,6 @@
 import { PayloadRequest } from "payload"
-import { MissingEmailAPIError } from "../../errors/apiErrors"
-import { hashCode } from "../../utils/hash"
+import { MissingEmailAPIError } from "../../errors/apiErrors.js"
+import { hashCode } from "../../utils/hash.js"
 
 export async function InitPasskey(request: PayloadRequest): Promise<Response> {
   // @ts-expect-error TODO: Fix undefined object method

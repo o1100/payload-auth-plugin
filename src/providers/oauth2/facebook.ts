@@ -3,7 +3,7 @@ import type {
   OAuth2ProviderConfig,
   AccountInfo,
   ProviderConfig,
-} from "../../types"
+} from "../../types.js"
 
 const authorization_server: oauth.AuthorizationServer = {
   issuer: "https://www.facebook.com",

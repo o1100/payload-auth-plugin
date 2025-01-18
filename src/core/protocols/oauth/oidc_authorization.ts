@@ -1,6 +1,6 @@
 import * as oauth from "oauth4webapi"
-import type { OIDCProviderConfig } from "../../../types"
-import { getCallbackURL } from "../../utils/cb"
+import type { OIDCProviderConfig } from "../../../types.js"
+import { getCallbackURL } from "../../utils/cb.js"
 import { PayloadRequest } from "payload"
 
 export async function OIDCAuthorization(
@@ -20,7 +20,7 @@ export async function OIDCAuthorization(
   const client: oauth.Client = {
     client_id,
   }
-  const issuer_url = new URL(issuer)
+  const issuer_url = new URL(issuer) as URL
   const as = await oauth
     .discoveryRequest(issuer_url, { algorithm })
     .then((response) => oauth.processDiscoveryResponse(issuer_url, response))
