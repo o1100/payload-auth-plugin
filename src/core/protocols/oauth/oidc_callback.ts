@@ -1,8 +1,7 @@
-import type { PayloadRequest } from 'payload'
+import { parseCookies, type PayloadRequest } from 'payload'
 import * as oauth from 'oauth4webapi'
 import type { AccountInfo, OIDCProviderConfig } from '../../../types'
 import { getCallbackURL } from '../../utils/cb'
-import { parseCookies } from '../../utils/cookies'
 import { MissingOrInvalidSession } from '../../errors/consoleErrors'
 
 export async function OIDCCallback(
@@ -10,10 +9,10 @@ export async function OIDCCallback(
   providerConfig: OIDCProviderConfig,
   session_callback: (oauthAccountInfo: AccountInfo) => Promise<Response>,
 ): Promise<Response> {
-  const parsedCookies = parseCookies(request.headers.get('Cookie')!)
+  const parsedCookies = parseCookies(request.headers)
 
-  const code_verifier = parsedCookies['__session-code-verifier']
-  const nonce = parsedCookies['__session-oauth-nonce']
+  const code_verifier = parsedCookies.get('__session-code-verifier')
+  const nonce = parsedCookies.get('__session-oauth-nonce')
 
   if (!code_verifier) {
     throw new MissingOrInvalidSession()
