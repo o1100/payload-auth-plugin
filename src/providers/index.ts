@@ -8,6 +8,8 @@ import SlackAuthProvider from './oidc/slack'
 import Auth0AuthProvider from './oauth2/auth0'
 import CognitoAuthProvider from './oidc/congnito'
 import KeyCloakAuthProvider from './oidc/keycloak'
+import PasskeyAuthProvider from './passkey'
+import AppleAuthProvider from './oidc/apple'
 import MicrosoftEntraAuthProvider from './oidc/microsoft-entra'
 export {
   GoogleAuthProvider,
@@ -20,5 +22,7 @@ export {
   Auth0AuthProvider,
   CognitoAuthProvider,
   KeyCloakAuthProvider,
+  PasskeyAuthProvider,
+  AppleAuthProvider
   MicrosoftEntraAuthProvider
 }

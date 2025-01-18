@@ -1,14 +1,14 @@
 import type { PayloadRequest } from 'payload'
 import * as oauth from 'oauth4webapi'
-import type { OAuth2ProviderConfig, OAuthAccountInfo } from '../../types'
-import { getCallbackURL } from '../utils/cb'
-import { parseCookies } from '../utils/cookies'
-import { MissingOrInvalidSession } from '../error'
+import type { OAuth2ProviderConfig, AccountInfo } from '../../../types'
+import { getCallbackURL } from '../../utils/cb'
+import { parseCookies } from '../../utils/cookies'
+import { MissingOrInvalidSession } from '../../errors/consoleErrors'
 
 export async function OAuth2Callback(
   request: PayloadRequest,
   providerConfig: OAuth2ProviderConfig,
-  session_callback: (oauthAccountInfo: OAuthAccountInfo) => Promise<Response>,
+  session_callback: (oauthAccountInfo: AccountInfo) => Promise<Response>,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers.get('Cookie')!)
 
@@ -25,7 +25,7 @@ export async function OAuth2Callback(
   const clientAuth = oauth.ClientSecretPost(providerConfig.client_secret)
 
   const current_url = new URL(request.url as string)
-  const callback_url = getCallbackURL('admin', providerConfig.id)
+  const callback_url = getCallbackURL(request.payload.config.serverURL, 'admin', providerConfig.id)
   const as = providerConfig.authorization_server
 
   const params = oauth.validateAuthResponse(as, client, current_url, state!)

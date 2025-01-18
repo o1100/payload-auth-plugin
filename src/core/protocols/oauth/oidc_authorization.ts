@@ -1,9 +1,10 @@
 import * as oauth from 'oauth4webapi'
-import type { OIDCProviderConfig } from '../../types'
-import { getCallbackURL } from '../utils/cb'
+import type { OIDCProviderConfig } from '../../../types'
+import { getCallbackURL } from '../../utils/cb'
+import { PayloadRequest } from 'payload'
 
-export async function OIDCAuthorization(providerConfig: OIDCProviderConfig): Promise<Response> {
-  const callback_url = getCallbackURL('admin', providerConfig.id)
+export async function OIDCAuthorization(request: PayloadRequest, providerConfig: OIDCProviderConfig): Promise<Response> {
+  const callback_url = getCallbackURL(request.payload.config.serverURL, 'admin', providerConfig.id)
   const code_verifier = oauth.generateRandomCodeVerifier()
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
   const code_challenge_method = 'S256'
