@@ -38,22 +38,20 @@
   ],
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/esm/index.js",
+      "types": "./dist/types/index.d.ts"
     },
     "./providers": {
-      "import": "./dist/providers/index.js",
-      "types": "./dist/providers/index.d.ts",
-      "default": "./dist/providers/index.js"
+      "import": "./dist/esm/providers/index.js",
+      "types": "./dist/types/providers/index.d.ts"
     },
     "./client": {
-      "import": "./dist/client/index.js",
-      "types": "./dist/client/index.d.ts",
-      "default": "./dist/client/index.js"
+      "import": "./dist/esm/client/index.js",
+      "types": "./dist/types/client/index.d.ts"
     }
   },
   "files": [
+    "src",
     "dist"
   ],
   "scripts": {
