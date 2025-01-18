@@ -15,10 +15,10 @@ export function buildAccountsCollection(
       hidden: account.hidden,
     },
     access: {
-      read: () => true,
+      read: ({ req: { user } }) => Boolean(user),
       create: () => false,
       update: () => false,
-      delete: () => true,
+      delete: () => false,
     },
     fields: [
       {
