@@ -1,12 +1,13 @@
 
 import { startRegistration } from "@simplewebauthn/browser"
 export async function registration(email: string) {
-    const resp = await fetch('/api/admin/passkey/generate-registration-options', {
-        method: 'POST',
-        body: JSON.stringify({ data: { email } })
-    });
-    const optionsJSON = await resp.json();
     try {
+        const resp = await fetch('/api/admin/passkey/generate-registration-options', {
+            method: 'POST',
+            body: JSON.stringify({ data: { email } })
+        });
+        const optionsJSON = await resp.json();
+
         const registrationResp = await startRegistration({ optionsJSON: optionsJSON.options });
         const response = await fetch('/api/admin/passkey/verify-registration', {
             method: 'POST',
