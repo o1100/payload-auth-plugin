@@ -56,7 +56,8 @@
   ],
   "scripts": {
     "build": "bun run script/build.ts",
-    "format": "./script/format"
+    "format": "./script/format",
+    "release": "bun run build && changeset publish"
   },
   "peerDependencies": {
     "payload": "latest"
