@@ -1,16 +1,16 @@
 import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
 
-type EntraAuthConfig = ProviderConfig & {
-    tenant_id: string
-  }
+type MicrosoftEntraAuthConfig = ProviderConfig & {
+  tenant_id: string
+}
 
-function EntraAuthProvider(config: EntraAuthConfig): OIDCProviderConfig {
+function MicrosoftEntraAuthProvider(config: MicrosoftEntraAuthConfig): OIDCProviderConfig {
   return {
     ...config,
-    id: 'entra',
+    id: 'msft-entra',
     scope: 'openid profile email offline_access',
     issuer: `https://login.microsoftonline.com/${config.tenant_id}/v2.0`,
-    name: 'Entra',
+    name: 'Microsoft Entra',
     algorithm: 'oidc',
     profile: (profile): OAuthAccountInfo => {
       return {
@@ -23,4 +23,4 @@ function EntraAuthProvider(config: EntraAuthConfig): OIDCProviderConfig {
   }
 }
 
-export default EntraAuthProvider
+export default MicrosoftEntraAuthProvider
