@@ -9,7 +9,8 @@ import Auth0AuthProvider from './oauth2/auth0'
 import CognitoAuthProvider from './oidc/congnito'
 import KeyCloakAuthProvider from './oidc/keycloak'
 import PasskeyAuthProvider from './passkey'
-import AppleAuthProvider from './oidc/apple'
+import AppleOIDCAuthProvider from './oidc/apple'
+import AppleOAuth2Provider from "./oauth2/apple"
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -22,5 +23,6 @@ export {
   CognitoAuthProvider,
   KeyCloakAuthProvider,
   PasskeyAuthProvider,
-  AppleAuthProvider
+  AppleOIDCAuthProvider,
+  AppleOAuth2Provider
 }

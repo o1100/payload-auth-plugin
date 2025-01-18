@@ -2,11 +2,11 @@ import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../type
 
 type AppleAuthConfig = ProviderConfig
 
-function AppleAuthProvider(config: AppleAuthConfig): OIDCProviderConfig {
+function AppleOIDCAuthProvider(config: AppleAuthConfig): OIDCProviderConfig {
     return {
         ...config,
         id: 'apple',
-        scope: 'name email',
+        scope: 'openid name email',
         issuer: 'https://appleid.apple.com',
         name: 'Apple',
         algorithm: 'oidc',
@@ -21,4 +21,4 @@ function AppleAuthProvider(config: AppleAuthConfig): OIDCProviderConfig {
     }
 }
 
-export default AppleAuthProvider
+export default AppleOIDCAuthProvider
