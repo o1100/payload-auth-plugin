@@ -124,6 +124,7 @@ Configuration options allow you to extend the plugin to customize the flow and U
 | `enabled`: ***boolean*** | Disable or enable plugin | true [OPTIONAL] |
 | `providers`: ***array*** | Array of OAuth providers | [REQUIRED] |
 | `accounts`: ***object*** | Accounts collection configuration  | { slug: string [OPTIONAL], hidden: boolean [OPTIONAL]} |
+| `successPath`: ***string*** | The path to redirect users after successfull signin or signup ***(only if allowed)***  | `/admin` [OPTIONAL] |
 | `allowSignUp`: ***boolean*** | Enable or disable user creation. *WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.*  | false [OPTIONAL] |
 
 ## Open Authorization/OpenID Connect Protocol Based Providers
@@ -142,18 +143,10 @@ Some providers may require additional domain-specific metadata that cannot be ge
 - Facebook [Doc](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
 - GitLab [Doc](https://docs.gitlab.com/ee/api/oauth2.html)
 - Slack [Doc](https://api.slack.com/authentication)
-- Auth0 [DOC](https://auth0.com/docs/authenticate)
-- AWS Cognito [DOC](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
-
-## Roadmap
-Ordered according to the priority
-
-- Support multiple providers [Feat] ✅
-- Add options to customize the sign-in button [Feat] ✅
-- Handle errors gracefully [Fix] ✅
-- Support magic link [Feat] ⚙
-- Support Passkey sign-in [Feat]❓
-- Support front-end app authentication [Feat] ⚙
+- Auth0 [Doc](https://auth0.com/docs/authenticate)
+- AWS Cognito [Doc](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
+- Apple [Doc](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api), [Retrieve User Info](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple) and [Creating the Client Secret](https://developer.apple.com/documentation/accountorganizationaldatasharing/creating-a-client-secret)
+- Passkey(Experimental)
 
 ## 🤝 Contributing
 If you want to add contributions to this repository, please follow the instructions in [contributing.md](./CONTRIBUTING.md).
