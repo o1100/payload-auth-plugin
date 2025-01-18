@@ -29,6 +29,11 @@ interface PluginOptions {
    * @defuault /admin 
    */
   successPath?: string
+
+  /* Enable or disable user creation. WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.
+   * @default false
+   */
+  allowSignUp?: boolean
 }
 
 export const adminAuthPlugin =

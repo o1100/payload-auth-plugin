@@ -52,6 +52,8 @@ In your desired provider, create an OAuth application. Depending on your provide
 
 ### Create a new auth UI component
 Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers.
+### Create a new auth UI component
+Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers.
 ```tsx
 import { Button } from '@payloadcms/ui'
 import { signin } from 'payload-auth-plugin/client'
@@ -122,7 +124,7 @@ Configuration options allow you to extend the plugin to customize the flow and U
 | `enabled`: ***boolean*** | Disable or enable plugin | true [OPTIONAL] |
 | `providers`: ***array*** | Array of OAuth providers | [REQUIRED] |
 | `accounts`: ***object*** | Accounts collection configuration  | { slug: string [OPTIONAL], hidden: boolean [OPTIONAL]} |
-| `successPath`: ***string*** | Path to be redirected to upon successful login | '/admin' [OPTIONAL] |
+| `allowSignUp`: ***boolean*** | Enable or disable user creation. *WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.*  | false [OPTIONAL] |
 
 ## Open Authorization/OpenID Connect Protocol Based Providers
 This plugin includes multiple pre-configured Open Authorization (OAuth) and OpenID Connect protocol-based providers. These configurations streamline the developer experience and integrations, ensuring the authentication process is seamless and uniform across different providers.
