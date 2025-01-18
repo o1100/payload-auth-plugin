@@ -1,7 +1,9 @@
 import type { PayloadRequest } from 'payload'
 import { InvalidPasskeyRequest } from '../errors/consoleErrors'
-import { GeneratePasskeyAuthentication, GeneratePasskeyRegistration, InitPasskey, VerifyPasskeyAuthentication, VerifyPasskeyRegistration } from '../protocols/passkey'
+import { InitPasskey } from '../protocols/passkey'
 import { AccountInfo } from '../../types'
+import { GeneratePasskeyRegistration, VerifyPasskeyRegistration } from '../protocols/passkey/registration'
+import { GeneratePasskeyAuthentication, VerifyPasskeyAuthentication } from '../protocols/passkey/authentication'
 
 export function PasskeyHandlers(
     request: PayloadRequest,
