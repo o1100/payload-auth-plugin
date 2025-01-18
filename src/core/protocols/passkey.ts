@@ -10,7 +10,7 @@ import {
   verifyAuthenticationResponse,
   verifyRegistrationResponse,
 } from '@simplewebauthn/server'
-import { EmailNotFoundAPIError, MissingEmailAPIError, PasskeyVerificationAPIError } from '../errors/apiErrors'
+import { MissingEmailAPIError, PasskeyVerificationAPIError } from '../errors/apiErrors'
 import { MissingOrInvalidSession } from '../errors/consoleErrors'
 import { AccountInfo } from '../../types'
 import { hashCode } from '../utils/hash'
@@ -23,18 +23,6 @@ export async function InitPasskey(
 
   if (!data.email) {
     throw new MissingEmailAPIError()
-  }
-
-  const user = await request.payload.count({
-    collection: request.payload.config.admin.user,
-    where: {
-      email: {
-        equals: data.email,
-      },
-    },
-  })
-  if (user.totalDocs !== 1) {
-    throw new EmailNotFoundAPIError()
   }
 
   const existingRecord = await request.payload.find({
@@ -139,7 +127,7 @@ export async function GeneratePasskeyAuthentication(
     data: {
       passkey: {
         backedUp: boolean,
-        counter: 0,
+        counter: number,
         credentialId: string,
         deviceType: string,
         publicKey: Uint8Array,
