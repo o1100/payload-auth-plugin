@@ -1,5 +1,5 @@
-import { ProviderAlreadyExists } from '../core/errors/consoleErrors'
-import { ProvidersConfig } from '../types'
+import { ProviderAlreadyExists } from "../core/errors/consoleErrors"
+import { ProvidersConfig } from "../types"
 
 export function mapProviders(providers: ProvidersConfig[]) {
   const providerRecords = providers.reduce(

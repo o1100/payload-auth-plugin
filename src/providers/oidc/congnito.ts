@@ -1,4 +1,8 @@
-import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
+import type {
+  AccountInfo,
+  OIDCProviderConfig,
+  ProviderConfig,
+} from "../../types"
 
 interface CognitoAuthConfig extends ProviderConfig {
   domain: string
@@ -9,11 +13,11 @@ function CognitoAuthProvider(config: CognitoAuthConfig): OIDCProviderConfig {
   const { domain, region, ...restConfig } = config
   return {
     ...restConfig,
-    id: 'cognito',
-    scope: 'email openid profile',
+    id: "cognito",
+    scope: "email openid profile",
     issuer: `https://${domain}/${region}`,
-    name: 'Congnito',
-    algorithm: 'oidc',
+    name: "Congnito",
+    algorithm: "oidc",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

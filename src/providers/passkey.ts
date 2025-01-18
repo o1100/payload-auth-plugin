@@ -1,7 +1,7 @@
 function PasskeyAuthProvider() {
-    return {
-        id: 'passkey',
-    }
+  return {
+    id: "passkey",
+  }
 }
 
 export default PasskeyAuthProvider

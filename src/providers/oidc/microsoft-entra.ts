@@ -1,17 +1,23 @@
-import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
+import type {
+  AccountInfo,
+  OIDCProviderConfig,
+  ProviderConfig,
+} from "../../types"
 
 type MicrosoftEntraAuthConfig = ProviderConfig & {
   tenant_id: string
 }
 
-function MicrosoftEntraAuthProvider(config: MicrosoftEntraAuthConfig): OIDCProviderConfig {
+function MicrosoftEntraAuthProvider(
+  config: MicrosoftEntraAuthConfig,
+): OIDCProviderConfig {
   return {
     ...config,
-    id: 'msft-entra',
-    scope: 'openid profile email offline_access',
+    id: "msft-entra",
+    scope: "openid profile email offline_access",
     issuer: `https://login.microsoftonline.com/${config.tenant_id}/v2.0`,
-    name: 'Microsoft Entra',
-    algorithm: 'oidc',
+    name: "Microsoft Entra",
+    algorithm: "oidc",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

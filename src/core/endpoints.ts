@@ -1,12 +1,16 @@
-import type { BasePayload, Endpoint, PayloadRequest } from 'payload'
-import type { AccountInfo, OAuthProviderConfig, ProvidersConfig } from '../types'
-import { OAuthHandlers } from './routeHandlers/oauth'
-import { PasskeyHandlers } from './routeHandlers/passkey'
+import type { BasePayload, Endpoint, PayloadRequest } from "payload"
+import type {
+  AccountInfo,
+  OAuthProviderConfig,
+  ProvidersConfig,
+} from "../types"
+import { OAuthHandlers } from "./routeHandlers/oauth"
+import { PasskeyHandlers } from "./routeHandlers/passkey"
 
 export class EndpointFactory {
   readonly #providers: Record<string, ProvidersConfig>
-  readonly #payloadOAuthPath: string = '/admin/oauth/:resource/:provider'
-  readonly #payloadPasskeyPath: string = '/admin/passkey/:resource'
+  readonly #payloadOAuthPath: string = "/admin/oauth/:resource/:provider"
+  readonly #payloadPasskeyPath: string = "/admin/passkey/:resource"
   constructor(providers: Record<string, ProvidersConfig>) {
     this.#providers = providers
   }
@@ -23,7 +27,7 @@ export class EndpointFactory {
     return [
       {
         path: this.#payloadOAuthPath,
-        method: 'get',
+        method: "get",
         handler: (request: PayloadRequest) => {
           const provider = this.#providers[
             request.routeParams?.provider as string
@@ -33,7 +37,7 @@ export class EndpointFactory {
             request,
             request.routeParams?.resource as string,
             provider,
-            oauthAccountInfo => {
+            (oauthAccountInfo) => {
               return sessionCallback(
                 oauthAccountInfo,
                 provider.scope,
@@ -46,8 +50,12 @@ export class EndpointFactory {
       },
     ]
   }
-  payloadPasskeyEndpoints({ rpID, sessionCallback }: {
-    rpID: string, sessionCallback: (
+  payloadPasskeyEndpoints({
+    rpID,
+    sessionCallback,
+  }: {
+    rpID: string
+    sessionCallback: (
       accountInfo: AccountInfo,
       issuerName: string,
       payload: BasePayload,
@@ -56,15 +64,16 @@ export class EndpointFactory {
     return [
       {
         path: this.#payloadPasskeyPath,
-        method: 'post',
+        method: "post",
         handler: (request: PayloadRequest) => {
-          return PasskeyHandlers(request, request.routeParams?.resource as string, rpID, accountInfo => {
-            return sessionCallback(
-              accountInfo,
-              'Passkey',
-              request.payload,
-            )
-          },)
+          return PasskeyHandlers(
+            request,
+            request.routeParams?.resource as string,
+            rpID,
+            (accountInfo) => {
+              return sessionCallback(accountInfo, "Passkey", request.payload)
+            },
+          )
         },
       },
     ]

@@ -1,8 +1,8 @@
-import { BasePayload, getCookieExpiration } from 'payload'
-import { UserNotFound } from '../errors/consoleErrors'
-import jwt from 'jsonwebtoken'
-import { AccountInfo } from '../../types'
-import { hashCode } from '../utils/hash'
+import { BasePayload, getCookieExpiration } from "payload"
+import { UserNotFound } from "../errors/consoleErrors"
+import jwt from "jsonwebtoken"
+import { AccountInfo } from "../../types"
+import { hashCode } from "../utils/hash"
 
 type Collections = {
   accountsCollectionSlug: string
@@ -13,7 +13,11 @@ export class PayloadSession {
   readonly #collections: Collections
   readonly #successPath: string | undefined
   readonly #allowSignUp: boolean
-  constructor(collections: Collections, allowSignUp?: boolean, successPath?: string) {
+  constructor(
+    collections: Collections,
+    allowSignUp?: boolean,
+    successPath?: string,
+  ) {
     this.#collections = collections
     this.#allowSignUp = !!allowSignUp
     this.#successPath = successPath
@@ -24,7 +28,7 @@ export class PayloadSession {
     issuerName: string,
     payload: BasePayload,
   ) {
-    let userID: string | number;
+    let userID: string | number
 
     const userQueryResults = await payload.find({
       collection: this.#collections.usersCollectionSlug,
@@ -45,7 +49,7 @@ export class PayloadSession {
         data: {
           email: accountInfo.email,
           emailVerified: true,
-          password: hashCode(accountInfo.email + payload.secret).toString()
+          password: hashCode(accountInfo.email + payload.secret).toString(),
         },
       })
       userID = newUser.id
@@ -66,10 +70,9 @@ export class PayloadSession {
     }
 
     // // Add passkey payload for auth
-    if (issuerName === 'Passkey' && accountInfo.passKey) {
-
-      data['passkey'] = {
-        ...accountInfo.passKey
+    if (issuerName === "Passkey" && accountInfo.passKey) {
+      data["passkey"] = {
+        ...accountInfo.passKey,
       }
     }
 
@@ -84,9 +87,9 @@ export class PayloadSession {
         data,
       })
     } else {
-      data['sub'] = accountInfo.sub
-      data['issuerName'] = issuerName
-      data['user'] = userID
+      data["sub"] = accountInfo.sub
+      data["issuerName"] = issuerName
+      data["user"] = userID
       await payload.create({
         collection: this.#collections.accountsCollectionSlug,
         data,
@@ -100,7 +103,12 @@ export class PayloadSession {
     issuerName: string,
     payload: BasePayload,
   ) {
-    const userID = await this.#upsertAccount(accountInfo, scope, issuerName, payload)
+    const userID = await this.#upsertAccount(
+      accountInfo,
+      scope,
+      issuerName,
+      payload,
+    )
 
     const fieldsToSign = {
       id: userID,
@@ -120,11 +128,19 @@ export class PayloadSession {
     cookies.push(
       `${payload.config.cookiePrefix!}-token=${token};Path=/;HttpOnly;SameSite=lax;Expires=${cookieExpiration.toString()}`,
     )
-    const expired = 'Thu, 01 Jan 1970 00:00:00 GMT'
-    cookies.push(`__session-oauth-state=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
-    cookies.push(`__session-oauth-nonce=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
-    cookies.push(`__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
-    cookies.push(`__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
+    const expired = "Thu, 01 Jan 1970 00:00:00 GMT"
+    cookies.push(
+      `__session-oauth-state=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`,
+    )
+    cookies.push(
+      `__session-oauth-nonce=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`,
+    )
+    cookies.push(
+      `__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`,
+    )
+    cookies.push(
+      `__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`,
+    )
 
     let redirectURL = payload.getAdminURL()
     if (this.#successPath) {
@@ -139,8 +155,8 @@ export class PayloadSession {
       },
     })
 
-    cookies.forEach(cookie => {
-      res.headers.append('Set-Cookie', cookie)
+    cookies.forEach((cookie) => {
+      res.headers.append("Set-Cookie", cookie)
     })
     return res
   }

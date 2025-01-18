@@ -1,15 +1,19 @@
-import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
+import type {
+  AccountInfo,
+  OIDCProviderConfig,
+  ProviderConfig,
+} from "../../types"
 
 type GitLabAuthConfig = ProviderConfig
 
 function GitLabAuthProvider(config: GitLabAuthConfig): OIDCProviderConfig {
-  const algorithm = 'oidc'
+  const algorithm = "oidc"
   return {
     ...config,
-    id: 'gitlab',
-    scope: 'openid email profile',
-    issuer: 'https://gitlab.com',
-    name: 'GitLab',
+    id: "gitlab",
+    scope: "openid email profile",
+    issuer: "https://gitlab.com",
+    name: "GitLab",
     algorithm,
     profile: (profile): AccountInfo => {
       return {

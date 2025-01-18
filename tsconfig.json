@@ -5,9 +5,7 @@
     "declaration": true,
     "skipLibCheck": true,
     "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "NodeNext"
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

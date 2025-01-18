@@ -1,8 +1,8 @@
-import { parseCookies, type PayloadRequest } from 'payload'
-import * as oauth from 'oauth4webapi'
-import type { AccountInfo, OIDCProviderConfig } from '../../../types'
-import { getCallbackURL } from '../../utils/cb'
-import { MissingOrInvalidSession } from '../../errors/consoleErrors'
+import { parseCookies, type PayloadRequest } from "payload"
+import * as oauth from "oauth4webapi"
+import type { AccountInfo, OIDCProviderConfig } from "../../../types"
+import { getCallbackURL } from "../../utils/cb"
+import { MissingOrInvalidSession } from "../../errors/consoleErrors"
 
 export async function OIDCCallback(
   request: PayloadRequest,
@@ -11,14 +11,15 @@ export async function OIDCCallback(
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
-  const code_verifier = parsedCookies.get('__session-code-verifier')
-  const nonce = parsedCookies.get('__session-oauth-nonce')
+  const code_verifier = parsedCookies.get("__session-code-verifier")
+  const nonce = parsedCookies.get("__session-oauth-nonce")
 
   if (!code_verifier) {
     throw new MissingOrInvalidSession()
   }
 
-  const { client_id, client_secret, issuer, algorithm, profile } = providerConfig
+  const { client_id, client_secret, issuer, algorithm, profile } =
+    providerConfig
   const client: oauth.Client = {
     client_id,
   }
@@ -26,12 +27,16 @@ export async function OIDCCallback(
   const clientAuth = oauth.ClientSecretPost(client_secret)
 
   const current_url = new URL(request.url as string)
-  const callback_url = getCallbackURL(request.payload.config.serverURL, 'admin', providerConfig.id)
+  const callback_url = getCallbackURL(
+    request.payload.config.serverURL,
+    "admin",
+    providerConfig.id,
+  )
   const issuer_url = new URL(issuer)
 
   const as = await oauth
     .discoveryRequest(issuer_url, { algorithm })
-    .then(response => oauth.processDiscoveryResponse(issuer_url, response))
+    .then((response) => oauth.processDiscoveryResponse(issuer_url, response))
 
   const params = oauth.validateAuthResponse(as, client, current_url)
 
@@ -44,15 +49,29 @@ export async function OIDCCallback(
     code_verifier,
   )
 
-  const token_result = await oauth.processAuthorizationCodeResponse(as, client, response, {
-    expectedNonce: nonce as string,
-    requireIdToken: true,
-  })
+  const token_result = await oauth.processAuthorizationCodeResponse(
+    as,
+    client,
+    response,
+    {
+      expectedNonce: nonce as string,
+      requireIdToken: true,
+    },
+  )
 
   const claims = oauth.getValidatedIdTokenClaims(token_result)!
-  const userInfoResponse = await oauth.userInfoRequest(as, client, token_result.access_token)
+  const userInfoResponse = await oauth.userInfoRequest(
+    as,
+    client,
+    token_result.access_token,
+  )
 
-  const result = await oauth.processUserInfoResponse(as, client, claims.sub, userInfoResponse)
+  const result = await oauth.processUserInfoResponse(
+    as,
+    client,
+    claims.sub,
+    userInfoResponse,
+  )
 
   return session_callback(
     profile({

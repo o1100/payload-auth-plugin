@@ -57,7 +57,8 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun run script/build.ts"
+    "build": "bun run script/build.ts",
+    "format": "./script/format"
   },
   "peerDependencies": {
     "payload": "latest"

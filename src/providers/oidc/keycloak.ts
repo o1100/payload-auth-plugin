@@ -1,4 +1,8 @@
-import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
+import type {
+  AccountInfo,
+  OIDCProviderConfig,
+  ProviderConfig,
+} from "../../types"
 
 interface KeyCloakAuthConfig extends ProviderConfig {
   realm: string
@@ -12,10 +16,10 @@ function KeyCloakAuthProvider(config: KeyCloakAuthConfig): OIDCProviderConfig {
   return {
     ...restConfig,
     id: identifier,
-    scope: 'email openid profile',
+    scope: "email openid profile",
     issuer: `https://${domain}/realms/${realm}`,
     name,
-    algorithm: 'oidc',
+    algorithm: "oidc",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

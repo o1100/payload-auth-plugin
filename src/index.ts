@@ -1,2 +1,2 @@
-import { adminAuthPlugin } from './plugins/admin'
+import { adminAuthPlugin } from "./plugins/admin"
 export { adminAuthPlugin }

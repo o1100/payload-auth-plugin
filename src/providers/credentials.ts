@@ -1,12 +1,12 @@
-import { CredentialsProviderConfig } from '../types'
+import { CredentialsProviderConfig } from "../types"
 
 function CredentialsProvider(): CredentialsProviderConfig {
   return {
-    id: 'credentials',
-    name: 'Credentials',
+    id: "credentials",
+    name: "Credentials",
     verfiyEmail: false,
     passwordless: false,
-    mfa: 'None',
+    mfa: "None",
     signinCallback: () => {},
     signupCallback: () => {},
   }

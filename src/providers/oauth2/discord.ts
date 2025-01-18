@@ -1,24 +1,28 @@
-import type * as oauth from 'oauth4webapi'
-import type { OAuth2ProviderConfig, AccountInfo, ProviderConfig } from '../../types'
+import type * as oauth from "oauth4webapi"
+import type {
+  OAuth2ProviderConfig,
+  AccountInfo,
+  ProviderConfig,
+} from "../../types"
 
 const authorization_server: oauth.AuthorizationServer = {
-  issuer: 'https://discord.com',
-  authorization_endpoint: 'https://discord.com/api/oauth2/authorize',
-  token_endpoint: 'https://discord.com/api/oauth2/token',
-  userinfo_endpoint: 'https://discord.com/api/users/@me',
+  issuer: "https://discord.com",
+  authorization_endpoint: "https://discord.com/api/oauth2/authorize",
+  token_endpoint: "https://discord.com/api/oauth2/token",
+  userinfo_endpoint: "https://discord.com/api/users/@me",
 }
 type DiscordAuthConfig = ProviderConfig
 
 function DiscordAuthProvider(config: DiscordAuthConfig): OAuth2ProviderConfig {
   return {
     ...config,
-    id: 'discord',
-    scope: 'identify email',
+    id: "discord",
+    scope: "identify email",
     authorization_server,
-    name: 'Discord',
-    algorithm: 'oauth2',
+    name: "Discord",
+    algorithm: "oauth2",
     profile: (profile): AccountInfo => {
-      const format = profile.avatar.toString().startsWith('a_') ? 'gif' : 'png'
+      const format = profile.avatar.toString().startsWith("a_") ? "gif" : "png"
 
       return {
         sub: profile.id as string,

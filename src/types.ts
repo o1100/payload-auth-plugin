@@ -1,10 +1,12 @@
-import type { AuthorizationServer } from 'oauth4webapi'
+import type { AuthorizationServer } from "oauth4webapi"
 
 interface BaseProviderConfig {
   id: string
   name: string
   scope: string
-  profile: (profile: Record<string, string | number | boolean | object>) => AccountInfo
+  profile: (
+    profile: Record<string, string | number | boolean | object>,
+  ) => AccountInfo
 }
 
 export interface ProviderConfig {
@@ -24,12 +26,14 @@ export interface ProviderConfig {
 
 export interface OIDCProviderConfig extends BaseProviderConfig, ProviderConfig {
   issuer: string
-  algorithm: 'oidc'
+  algorithm: "oidc"
 }
 
-export interface OAuth2ProviderConfig extends BaseProviderConfig, ProviderConfig {
+export interface OAuth2ProviderConfig
+  extends BaseProviderConfig,
+    ProviderConfig {
   authorization_server: AuthorizationServer
-  algorithm: 'oauth2'
+  algorithm: "oauth2"
 }
 
 export type OAuthProviderConfig = OIDCProviderConfig | OAuth2ProviderConfig
@@ -40,11 +44,11 @@ export interface AccountInfo {
   picture: string
   email: string
   passKey?: {
-    credentialId: string,
-    publicKey?: Uint8Array,
-    counter: number,
-    transports?: string[],
-    deviceType: string,
+    credentialId: string
+    publicKey?: Uint8Array
+    counter: number
+    transports?: string[]
+    deviceType: string
     backedUp: boolean
   }
 }
@@ -54,7 +58,7 @@ export type CredentialsProviderConfig = {
   name: string
   verfiyEmail?: boolean
   passwordless?: boolean
-  mfa?: 'OTP' | 'TOTP' | 'None'
+  mfa?: "OTP" | "TOTP" | "None"
   signinCallback?: () => void
   signupCallback?: () => void
 }
