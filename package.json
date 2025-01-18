@@ -12,9 +12,11 @@
   "keywords": [
     "payload",
     "cms",
+    "authentication",
     "plugin",
     "typescript",
     "react",
+    "nextjs",
     "oauth",
     "oauth2.0",
     "oidc",
