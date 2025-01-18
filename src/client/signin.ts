@@ -1,5 +1,13 @@
-import { redirect } from 'next/navigation'
+import { init } from './passkey'
 
-export function signin(provider: string) {
-  redirect('/api/admin/oauth/authorization/' + provider)
+type Provider = "google" | 'github' | 'passkey'
+
+export function signin(provider: Provider) {
+  if (provider === 'passkey') {
+    init()
+  } else {
+    const link = document.createElement('a')
+    link.href = '/api/admin/oauth/authorization/' + provider
+    link.click()
+  }
 }

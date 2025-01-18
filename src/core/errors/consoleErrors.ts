@@ -1,8 +1,6 @@
 class AuthError extends Error {
-  statusCode
   constructor(
     message: string,
-    statusCode: 200 | 201 | 301 | 307 | 400 | 401 | 403 | 404 | 409 | 500 | 501,
     cause?: string,
   ) {
     super(message)
@@ -10,70 +8,75 @@ class AuthError extends Error {
     this.message = message
     this.cause = cause
     this.stack = ''
-    this.statusCode = statusCode
   }
 }
-export class InvalidBaseURL extends AuthError {
+export class InvalidServerURL extends AuthError {
   constructor() {
-    super('Missing or invalid base URL', 500)
+    super('Missing or invalid server URL. Please set serverURL in your Payload config')
   }
 }
 export class InvalidProvider extends AuthError {
   constructor() {
-    super('Invalid Provider', 400)
+    super('Invalid Provider')
   }
 }
 
 export class ProviderAlreadyExists extends AuthError {
   constructor() {
-    super('Duplicate provider found', 409)
+    super('Duplicate provider found')
   }
 }
 
 export class InvalidOAuthAlgorithm extends AuthError {
   constructor() {
-    super('Invalid OAuth Algorithm. Plugin only support OIDC and OAuth2 algorithms', 400)
+    super('Invalid OAuth Algorithm. Plugin only support OIDC and OAuth2 algorithms')
   }
 }
 
 export class InvalidOAuthResource extends AuthError {
   constructor() {
-    super('Invalid resource request. Check docs before initiating requests', 400)
+    super('Invalid resource request. Check docs before initiating requests')
   }
 }
 
 export class MissingOrInvalidSession extends AuthError {
   constructor() {
-    super('Missing or invalid session.', 403)
+    super('Missing or invalid session.')
   }
 }
 
 export class MissingOrInvalidParams extends AuthError {
   constructor() {
-    super('Missing or invalid params', 400)
+    super('Missing or invalid params')
   }
 }
 
 export class AuthenticationFailed extends AuthError {
   constructor() {
-    super('Failed to authenticate', 401)
+    super('Failed to authenticate')
   }
 }
 
 export class UserNotFound extends AuthError {
   constructor() {
-    super('User not found', 404)
+    super('User not found')
   }
 }
 
 export class InvalidCredentials extends AuthError {
   constructor() {
-    super('Invalid credentials', 400)
+    super('Invalid credentials')
   }
 }
 
 export class MissingUsersCollection extends AuthError {
   constructor() {
-    super('Missing users collection', 400)
+    super('Missing users collection')
+  }
+}
+
+export class InvalidPasskeyRequest extends AuthError {
+  constructor() {
+    super('Invalid or missing request')
   }
 }

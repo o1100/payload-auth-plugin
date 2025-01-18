@@ -1,47 +1,77 @@
 import { BasePayload, getCookieExpiration } from 'payload'
-import { UserNotFound } from '../error'
+import { UserNotFound } from '../errors/consoleErrors'
 import jwt from 'jsonwebtoken'
-import { OAuthAccountInfo } from '../../types'
+import { AccountInfo } from '../../types'
+import { hashCode } from '../utils/hash'
 
 type Collections = {
-  usersCollectionSlug: string
   accountsCollectionSlug: string
+  usersCollectionSlug: string
 }
 
 export class PayloadSession {
   readonly #collections: Collections
-  readonly #successPath: string = '/admin'
-  constructor(collections: Collections) {
+  readonly #successPath: string | undefined
+  readonly #allowSignUp: boolean
+  constructor(collections: Collections, allowSignUp?: boolean, successPath?: string) {
     this.#collections = collections
+    this.#allowSignUp = !!allowSignUp
+    this.#successPath = successPath
   }
   async #upsertAccount(
-    oauthAccountInfo: OAuthAccountInfo,
+    accountInfo: AccountInfo,
     scope: string,
     issuerName: string,
     payload: BasePayload,
   ) {
-    let userID: string = ''
+    let userID: string | number;
 
-    const user = await payload.find({
+    const userQueryResults = await payload.find({
       collection: this.#collections.usersCollectionSlug,
       where: {
         email: {
-          equals: oauthAccountInfo.email,
+          equals: accountInfo.email,
         },
       },
     })
 
-    if (user.docs.length === 0) {
-      throw new UserNotFound()
+    if (userQueryResults.docs.length === 0) {
+      if (!this.#allowSignUp) {
+        throw new UserNotFound()
+      }
+
+      const newUser = await payload.create({
+        collection: this.#collections.usersCollectionSlug,
+        data: {
+          email: accountInfo.email,
+          emailVerified: true,
+          password: hashCode(accountInfo.email + payload.secret).toString()
+        },
+      })
+      userID = newUser.id
+    } else {
+      userID = userQueryResults.docs[0].id as string
     }
-    userID = user.docs[0].id as string
 
     const accounts = await payload.find({
       collection: this.#collections.accountsCollectionSlug,
       where: {
-        sub: { equals: oauthAccountInfo.sub },
+        sub: { equals: accountInfo.sub },
       },
     })
+    const data: Record<string, unknown> = {
+      scope,
+      name: accountInfo.name,
+      picture: accountInfo.picture,
+    }
+
+    // // Add passkey payload for auth
+    if (issuerName === 'Passkey' && accountInfo.passKey) {
+
+      data['passkey'] = {
+        ...accountInfo.passKey
+      }
+    }
 
     if (accounts.docs.length > 0) {
       await payload.update({
@@ -51,38 +81,30 @@ export class PayloadSession {
             equals: accounts.docs[0].id,
           },
         },
-        data: {
-          scope,
-          name: oauthAccountInfo.name,
-          picture: oauthAccountInfo.picture,
-        },
+        data,
       })
     } else {
+      data['sub'] = accountInfo.sub
+      data['issuerName'] = issuerName
+      data['user'] = userID
       await payload.create({
         collection: this.#collections.accountsCollectionSlug,
-        data: {
-          sub: oauthAccountInfo.sub,
-          issuerName,
-          scope,
-          name: oauthAccountInfo.name,
-          picture: oauthAccountInfo.picture,
-          user: userID,
-        },
+        data,
       })
     }
     return userID
   }
   async createSession(
-    oauthAccountInfo: OAuthAccountInfo,
+    accountInfo: AccountInfo,
     scope: string,
     issuerName: string,
     payload: BasePayload,
   ) {
-    const userID = await this.#upsertAccount(oauthAccountInfo, scope, issuerName, payload)
+    const userID = await this.#upsertAccount(accountInfo, scope, issuerName, payload)
 
     const fieldsToSign = {
       id: userID,
-      email: oauthAccountInfo.email,
+      email: accountInfo.email,
       collection: this.#collections.usersCollectionSlug,
     }
 
@@ -102,21 +124,24 @@ export class PayloadSession {
     cookies.push(`__session-oauth-state=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-oauth-nonce=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
-    const successURL = new URL(process.env.AUTH_BASE_URL as string)
-    successURL.pathname = this.#successPath
-    successURL.search = ''
+    cookies.push(`__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
 
+    let redirectURL = payload.getAdminURL()
+    if (this.#successPath) {
+      const newURL = new URL(payload.getAdminURL())
+      newURL.pathname = this.#successPath
+      redirectURL = newURL.toString()
+    }
     const res = new Response(null, {
       status: 302,
       headers: {
-        Location: successURL.href,
+        Location: redirectURL,
       },
     })
 
     cookies.forEach(cookie => {
       res.headers.append('Set-Cookie', cookie)
     })
-
     return res
   }
 }

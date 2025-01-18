@@ -43,18 +43,17 @@ Or
 ```bash
 pnpm add payload-auth-plugin@latest
 ```
-### Update `env.`
-The plugin will require the host URL to configure OAuth callbacks and session callbacks. So in your `.env` add this:
+### Environment
+The plugin will require the server URL to configure endpoints and callback URLs. So follow the [Payload Doc](https://payloadcms.com/docs/configuration/environment-vars#nextjs-applications) to setup serverURL in you config:
 
-```
-AUTH_BASE_URL=http://localhhost:3000 //Your NextJS app URL
-```
 
 ### Create an OAuth app
 In your desired provider, create an OAuth application. Depending on your provider, you will need to obtain the Client ID and Client Secret from the provider's console or dashboard. Please refer to the [providers list](https://github.com/sourabpramanik/plugin-payload-oauth?tab=readme-ov-file#list-of-active-and-upcoming-providers) for detailed instructions on configuring a specific provider.
 
-### Create a new auth UI component 
-Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers. 
+### Create a new auth UI component
+Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers.
+### Create a new auth UI component
+Create a new file `/src/components/Auth/index.ts` to sign in with the preferred providers.
 ```tsx
 import { Button } from '@payloadcms/ui'
 import { signin } from 'payload-auth-plugin/client'
@@ -125,6 +124,8 @@ Configuration options allow you to extend the plugin to customize the flow and U
 | `enabled`: ***boolean*** | Disable or enable plugin | true [OPTIONAL] |
 | `providers`: ***array*** | Array of OAuth providers | [REQUIRED] |
 | `accounts`: ***object*** | Accounts collection configuration  | { slug: string [OPTIONAL], hidden: boolean [OPTIONAL]} |
+| `successPath`: ***string*** | The path to redirect users after successfull signin or signup ***(only if allowed)***  | `/admin` [OPTIONAL] |
+| `allowSignUp`: ***boolean*** | Enable or disable user creation. *WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.*  | false [OPTIONAL] |
 
 ## Open Authorization/OpenID Connect Protocol Based Providers
 This plugin includes multiple pre-configured Open Authorization (OAuth) and OpenID Connect protocol-based providers. These configurations streamline the developer experience and integrations, ensuring the authentication process is seamless and uniform across different providers.
@@ -142,18 +143,10 @@ Some providers may require additional domain-specific metadata that cannot be ge
 - Facebook [Doc](https://developers.facebook.com/docs/facebook-login/manually-build-a-login-flow)
 - GitLab [Doc](https://docs.gitlab.com/ee/api/oauth2.html)
 - Slack [Doc](https://api.slack.com/authentication)
-- Auth0 [DOC](https://auth0.com/docs/authenticate)
-- AWS Cognito [DOC](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
-
-## Roadmap
-Ordered according to the priority
-
-- Support multiple providers [Feat] ✅
-- Add options to customize the sign-in button [Feat] ✅
-- Handle errors gracefully [Fix] ✅
-- Support magic link [Feat] ⚙
-- Support Passkey sign-in [Feat]❓
-- Support front-end app authentication [Feat] ⚙
+- Auth0 [Doc](https://auth0.com/docs/authenticate)
+- AWS Cognito [Doc](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
+- Apple [Doc](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api), [Retrieve User Info](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple) and [Creating the Client Secret](https://developer.apple.com/documentation/accountorganizationaldatasharing/creating-a-client-secret)
+- Passkey(Experimental)
 
 ## 🤝 Contributing
 If you want to add contributions to this repository, please follow the instructions in [contributing.md](./CONTRIBUTING.md).
