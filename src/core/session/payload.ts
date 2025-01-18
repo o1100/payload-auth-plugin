@@ -9,10 +9,10 @@ type Collections = {
 
 export class PayloadSession {
   readonly #collections: Collections
-  readonly #successPath: string
+  readonly #successPath: string | undefined
   constructor(collections: Collections, successPath?: string) {
     this.#collections = collections
-    this.#successPath = successPath ?? '/admin'
+    this.#successPath = successPath
   }
   async #upsertAccount(
     accountInfo: AccountInfo,
@@ -109,10 +109,16 @@ export class PayloadSession {
     cookies.push(`__session-code-verifier=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
     cookies.push(`__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
 
+    let redirectURL = payload.getAdminURL()
+    if (this.#successPath) {
+      const newURL = new URL(payload.getAdminURL())
+      newURL.pathname = this.#successPath
+      redirectURL = newURL.toString()
+    }
     const res = new Response(null, {
       status: 302,
       headers: {
-        Location: payload.getAdminURL(),
+        Location: redirectURL,
       },
     })
 
