@@ -1,4 +1,4 @@
-import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
+import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
 
 type GoogleAuthConfig = ProviderConfig
 
@@ -10,7 +10,7 @@ function GoogleAuthProvider(config: GoogleAuthConfig): OIDCProviderConfig {
     issuer: 'https://accounts.google.com',
     name: 'Google',
     algorithm: 'oidc',
-    profile: (profile): OAuthAccountInfo => {
+    profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,
         name: profile.name as string,

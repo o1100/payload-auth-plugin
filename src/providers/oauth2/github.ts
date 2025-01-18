@@ -1,5 +1,5 @@
 import type * as oauth from 'oauth4webapi'
-import type { OAuth2ProviderConfig, OAuthAccountInfo, ProviderConfig } from '../../types'
+import type { OAuth2ProviderConfig, AccountInfo, ProviderConfig } from '../../types'
 
 const authorization_server: oauth.AuthorizationServer = {
   issuer: 'https://github.com',
@@ -18,7 +18,7 @@ function GitHubAuthProvider(config: GitHubAuthConfig): OAuth2ProviderConfig {
     authorization_server,
     name: 'GitHub',
     algorithm: 'oauth2',
-    profile: (profile): OAuthAccountInfo => {
+    profile: (profile): AccountInfo => {
       return {
         sub: profile.id as string,
         name: profile.name as string,
