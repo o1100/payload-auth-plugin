@@ -57,11 +57,12 @@ export const adminAuthPlugin =
         ...(config.admin ?? {}),
       }
 
-      const { accounts, providers } = pluginOptions
+      const { accounts, providers, allowSignUp, successPath } = pluginOptions
 
       const session = new PayloadSession({
-        accountsCollectionSlug: accounts?.slug ?? 'accounts'
-      })
+        accountsCollectionSlug: accounts?.slug ?? 'accounts',
+        usersCollectionSlug: config.admin.user!
+      }, allowSignUp, successPath)
       const mappedProviders = mapProviders(providers)
       const endpoints = new EndpointFactory(mappedProviders)
 

@@ -2,9 +2,11 @@ import { BasePayload, getCookieExpiration } from 'payload'
 import { UserNotFound } from '../errors/consoleErrors'
 import jwt from 'jsonwebtoken'
 import { AccountInfo } from '../../types'
+import { hashCode } from '../utils/hash'
 
 type Collections = {
   accountsCollectionSlug: string
+  usersCollectionSlug: string
 }
 
 export class PayloadSession {
@@ -22,10 +24,10 @@ export class PayloadSession {
     issuerName: string,
     payload: BasePayload,
   ) {
-    let userID: string = ''
+    let userID: string | number;
 
     const userQueryResults = await payload.find({
-      collection: payload.config.admin.user,
+      collection: this.#collections.usersCollectionSlug,
       where: {
         email: {
           equals: accountInfo.email,
@@ -41,8 +43,9 @@ export class PayloadSession {
       const newUser = await payload.create({
         collection: this.#collections.usersCollectionSlug,
         data: {
-          email: oauthAccountInfo.email,
+          email: accountInfo.email,
           emailVerified: true,
+          password: hashCode(accountInfo.email + payload.secret).toString()
         },
       })
       userID = newUser.id
@@ -102,7 +105,7 @@ export class PayloadSession {
     const fieldsToSign = {
       id: userID,
       email: accountInfo.email,
-      collection: payload.config.admin.user,
+      collection: this.#collections.usersCollectionSlug,
     }
 
     const cookieExpiration = getCookieExpiration({
