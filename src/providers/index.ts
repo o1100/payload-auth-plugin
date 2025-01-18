@@ -23,6 +23,6 @@ export {
   CognitoAuthProvider,
   KeyCloakAuthProvider,
   PasskeyAuthProvider,
-  AppleAuthProvider
+  AppleAuthProvider,
   MicrosoftEntraAuthProvider
 }

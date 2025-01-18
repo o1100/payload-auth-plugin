@@ -1,4 +1,4 @@
-import type { OAuthAccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
+import type { AccountInfo, OIDCProviderConfig, ProviderConfig } from '../../types'
 
 type MicrosoftEntraAuthConfig = ProviderConfig & {
   tenant_id: string
@@ -12,7 +12,7 @@ function MicrosoftEntraAuthProvider(config: MicrosoftEntraAuthConfig): OIDCProvi
     issuer: `https://login.microsoftonline.com/${config.tenant_id}/v2.0`,
     name: 'Microsoft Entra',
     algorithm: 'oidc',
-    profile: (profile): OAuthAccountInfo => {
+    profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,
         name: profile.name as string,
