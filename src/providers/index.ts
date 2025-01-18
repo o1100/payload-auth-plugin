@@ -10,6 +10,7 @@ import CognitoAuthProvider from './oidc/congnito'
 import KeyCloakAuthProvider from './oidc/keycloak'
 import PasskeyAuthProvider from './passkey'
 import AppleAuthProvider from './oidc/apple'
+import MicrosoftEntraAuthProvider from './oidc/microsoft-entra'
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -22,5 +23,6 @@ export {
   CognitoAuthProvider,
   KeyCloakAuthProvider,
   PasskeyAuthProvider,
-  AppleAuthProvider
+  AppleAuthProvider,
+  MicrosoftEntraAuthProvider
 }
