@@ -1,5 +1,65 @@
 
 
+## [0.5.0](https://github.com/sourabpramanik/payload-auth-plugin/compare/v0.4.3...v0.5.0) (2025-01-18)
+
+### Bug Fixes
+
+* rm custom cookie parser ([1a2c1d6](https://github.com/sourabpramanik/payload-auth-plugin/commit/1a2c1d645d443d14a9d6c975a7bef08787930ca5))
+* update access ([078dc55](https://github.com/sourabpramanik/payload-auth-plugin/commit/078dc5515dc084ab08b8b9792e44f4b1398c3222))
+* allow user signup using passkey ([813da76](https://github.com/sourabpramanik/payload-auth-plugin/commit/813da768bad29ab1cad60cde1953ac7963aef2e4))
+* create user password ([65f0458](https://github.com/sourabpramanik/payload-auth-plugin/commit/65f0458807f1b5d5922d9ad76e9be10dbebc075c))
+* added type and keywords ([179a55d](https://github.com/sourabpramanik/payload-auth-plugin/commit/179a55db3ba193ba99a93c02b54aa75f5aec5aa8))
+* use cutom success path ([de2b07e](https://github.com/sourabpramanik/payload-auth-plugin/commit/de2b07ebe35929bc980b3d8c29fc1ed35344caf4))
+* update to v0.5.0 ([b4d5f3c](https://github.com/sourabpramanik/payload-auth-plugin/commit/b4d5f3c2929123a1c3e581de2cb30b75619f5191))
+* redirection ([adfe9a8](https://github.com/sourabpramanik/payload-auth-plugin/commit/adfe9a8e8b44b4b30826b4796f258e92030e6c7a))
+* rm nextjs and react ([f2aa433](https://github.com/sourabpramanik/payload-auth-plugin/commit/f2aa4337a2ec0b294a9f2b75b6cf013b0f3e6de2))
+* signin method ([60abcc5](https://github.com/sourabpramanik/payload-auth-plugin/commit/60abcc534beda89a968b3fc477085f7e215488bf))
+* redirect URL ([3ee7144](https://github.com/sourabpramanik/payload-auth-plugin/commit/3ee7144f38d21c8f6aed7473174c063bd73f593f))
+* hashin logic ([1a00dc2](https://github.com/sourabpramanik/payload-auth-plugin/commit/1a00dc262696aa1fdbab5b621aa8c342bf4b3f23))
+* field name ([b1f05ea](https://github.com/sourabpramanik/payload-auth-plugin/commit/b1f05ea85f1c117cd2da94733aa9c93782e8a838))
+* Update types ([c44deb1](https://github.com/sourabpramanik/payload-auth-plugin/commit/c44deb1140f3362f3315e84a0e5cfec80ab31150))
+* use email ([b36455f](https://github.com/sourabpramanik/payload-auth-plugin/commit/b36455f7956d533c098ca199140f4871a99a9ac3))
+* rm use config server URL ([4b58049](https://github.com/sourabpramanik/payload-auth-plugin/commit/4b580493f69908cf735f3250d7ef285e884a5d8c))
+* rm status code and imporve message ([639e4b2](https://github.com/sourabpramanik/payload-auth-plugin/commit/639e4b2a92c0ac46110c5ecab90b2317b3c22e5f))
+* endpoints config ([f0f1498](https://github.com/sourabpramanik/payload-auth-plugin/commit/f0f1498ba0a25ab74cfd150c39c18a0f7e83a88b))
+* rm app config ([44bbf53](https://github.com/sourabpramanik/payload-auth-plugin/commit/44bbf53a86ad01d98c1f414f0f2f2c8ac58c7c3b))
+
+### Refactor
+
+* passkey methods ([e826f92](https://github.com/sourabpramanik/payload-auth-plugin/commit/e826f9273b606478c9a4955595fbe009be0d1724))
+* update naming conventions ([b68a5ed](https://github.com/sourabpramanik/payload-auth-plugin/commit/b68a5ed888fcd97df2eec499636b46f939009265))
+* console error file ([7c0d79e](https://github.com/sourabpramanik/payload-auth-plugin/commit/7c0d79e7c4123d49490c8d576a394b9b032a502a))
+* updated dir ([ae5424b](https://github.com/sourabpramanik/payload-auth-plugin/commit/ae5424b27bf72f9ddf13c5a8761dcd36e0768b2f))
+* rename route ([53f8a2e](https://github.com/sourabpramanik/payload-auth-plugin/commit/53f8a2e1673d9df839f2ec51e85317fff60171bd))
+
+### Chores
+
+* added keywords ([70edeb6](https://github.com/sourabpramanik/payload-auth-plugin/commit/70edeb60b46c5e334ae5a6e00822feb3cc73b5d1))
+* cleanup ([54a40a4](https://github.com/sourabpramanik/payload-auth-plugin/commit/54a40a4b92b3923c4c8130e4798a8c9f67f1352c))
+* rm unused scripts ([4151776](https://github.com/sourabpramanik/payload-auth-plugin/commit/41517763282aee48ecc0ea7e3f1c362166d1b2bf))
+* cleanup ([e5b1239](https://github.com/sourabpramanik/payload-auth-plugin/commit/e5b123957aaa88cc366062f68963e16e3411bd59))
+* fmt ([512942a](https://github.com/sourabpramanik/payload-auth-plugin/commit/512942a2c184d9c38a8db46a3a9174e6d8522a0b))
+* cleanup ([95ac225](https://github.com/sourabpramanik/payload-auth-plugin/commit/95ac2254a998f9a843e7a84c341b1b5fe8aa708f))
+* dep updates ([ab60de7](https://github.com/sourabpramanik/payload-auth-plugin/commit/ab60de75abc5394c20da8425d17b7558a7dea21a))
+
+### Features
+
+* supports both alg from Apple ([a80194e](https://github.com/sourabpramanik/payload-auth-plugin/commit/a80194e84fb8fb8ba935c7df73a5e78d4ca34cb0))
+* last setup ([eb5300e](https://github.com/sourabpramanik/payload-auth-plugin/commit/eb5300ead930cda9c3285cf3a84332571a538650))
+* allow user signup ([2c89b9c](https://github.com/sourabpramanik/payload-auth-plugin/commit/2c89b9c503e086c87574e4ccc4f6419ce2bfb17e))
+* add successPath config option ([535ced0](https://github.com/sourabpramanik/payload-auth-plugin/commit/535ced07681edb4d884f86b034854ca11e3cab75))
+* apple auth ([d96d49c](https://github.com/sourabpramanik/payload-auth-plugin/commit/d96d49c966e81fa5c91cf1100f2232c92b26dd7c))
+* passkey auth flow ([1962302](https://github.com/sourabpramanik/payload-auth-plugin/commit/1962302f3a98878f1290c07d002ca5439670130a))
+* passkey reg ([0d5db6a](https://github.com/sourabpramanik/payload-auth-plugin/commit/0d5db6a83f3fbfd850cf1c553fef0c66e10f3447))
+* new error ([d4c52e1](https://github.com/sourabpramanik/payload-auth-plugin/commit/d4c52e1c288f6fba3ab27f2e94f05a6920aab34e))
+* new account fields ([0f5e293](https://github.com/sourabpramanik/payload-auth-plugin/commit/0f5e293b64a2ac02b13959b4004ce036b34001d6))
+* new hash logic ([9da235b](https://github.com/sourabpramanik/payload-auth-plugin/commit/9da235b68294426195ae7e623915ff4995a210d8))
+* new err ([4fc5c43](https://github.com/sourabpramanik/payload-auth-plugin/commit/4fc5c438de0e7aedd3bdc0eecd26403c94e537a2))
+* passkey provider ([e973340](https://github.com/sourabpramanik/payload-auth-plugin/commit/e973340321e1be68ea7c32232500cb01879583b0))
+* new error type ([832f5a3](https://github.com/sourabpramanik/payload-auth-plugin/commit/832f5a31b8a184d5437032587be017c8288c7d06))
+* adds missing browser deps ([782aa0d](https://github.com/sourabpramanik/payload-auth-plugin/commit/782aa0dd7db79ad753b6526274a0db0fec98bc8a))
+* adds passkey provider ([7f35dfa](https://github.com/sourabpramanik/payload-auth-plugin/commit/7f35dfa5054a7ee7bc432b8fd603760663a50b65))
+
 ## [0.4.3](https://github.com/sourabpramanik/payload-auth-plugin/compare/v0.4.2...v0.4.3) (2025-01-01)
 
 ### Bug Fixes
