@@ -23,6 +23,11 @@ interface PluginOptions {
     slug?: string | undefined
     hidden?: boolean | undefined
   }
+
+  /*
+   * Path to be redirected to upon successful login
+   */
+  successPath?: string
 }
 
 export const adminAuthPlugin =
@@ -53,6 +58,15 @@ export const adminAuthPlugin =
       })
       const mappedProviders = mapProviders(providers)
       const endpoints = new EndpointFactory(mappedProviders)
+      const session = new PayloadSession(
+        {
+          accountsCollectionSlug: accounts?.slug ?? 'accounts',
+          usersCollectionSlug: config.admin.user!,
+        },
+        pluginOptions.successPath,
+      )
+
+      const endpoints = new EndpointFactory(mapProviders(providers))
 
       // Create accounts collection if doesn't exists
       config.collections = [
