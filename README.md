@@ -75,18 +75,9 @@ import { Button } from "@payloadcms/ui"
 import { signin } from "payload-auth-plugin/client"
 export const AuthComponent = () => {
   return (
-    <form
-      action={async () => {
-        "use server"
-        signin("[AUTH_PROVIDER]") // For example 'google'
-      }}
-      method="POST"
-      className="w-full"
-    >
-      <Button type="submit" className="w-full !my-0">
-        Sign in with Google
-      </Button>
-    </form>
+    <Button onClick={() => signin("[AUTH_PROVIDER]")} type="button">
+      Sign in with [AUTH_PROVIDER]
+    </Button>
   )
 }
 ```
@@ -166,6 +157,7 @@ Some providers may require additional domain-specific metadata that cannot be ge
 - Auth0 [Doc](https://auth0.com/docs/authenticate)
 - AWS Cognito [Doc](https://docs.aws.amazon.com/cognito/latest/developerguide/cognito-userpools-server-contract-reference.html)
 - Apple [Doc](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api), [Retrieve User Info](https://developer.apple.com/documentation/sign_in_with_apple/sign_in_with_apple_rest_api/authenticating_users_with_sign_in_with_apple) and [Creating the Client Secret](https://developer.apple.com/documentation/accountorganizationaldatasharing/creating-a-client-secret)
+- Microsoft Entra [Doc](https://learn.microsoft.com/en-us/entra/identity-platform/quickstart-register-app?tabs=certificate)
 - Passkey(Experimental)
 
 ## 🤝 Contributing
