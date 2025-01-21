@@ -1,6 +1,17 @@
 import { init } from "./passkey/index.js"
 
-type Provider = "google" | "github" | "passkey"
+type Provider = "google" |
+  "github" |
+  "passkey" |
+  "apple" |
+  "cognito" |
+  "gitlab" |
+  "msft-entra" |
+  "slack" |
+  "atlassian" |
+  "auth0" |
+  "discord" |
+  "facebook"
 
 export function signin(provider: Provider) {
   if (provider === "passkey") {
