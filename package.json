@@ -57,7 +57,8 @@
   "scripts": {
     "build": "bun run script/build.ts",
     "format": "./script/format",
-    "release": "bun run build && changeset publish"
+    "release": "bun run build && changeset publish",
+    "changelog": "./script/changelog.sh"
   },
   "peerDependencies": {
     "payload": "latest"
@@ -68,6 +69,7 @@
     "@types/bun": "latest",
     "@types/jsonwebtoken": "^9.0.7",
     "cross-env": "^7.0.3",
+    "git-cliff": "2.7.0",
     "globals": "^15.14.0",
     "prettier": "3.4.2",
     "typescript": "^5.7.3"
