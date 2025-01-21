@@ -18,10 +18,12 @@ export async function OAuth2Callback(
     throw new MissingOrInvalidSession()
   }
 
+  const { client_id, client_secret, authorization_server, profile } = providerConfig
+
   const client: oauth.Client = {
-    client_id: providerConfig.client_id,
+    client_id,
   }
-  const clientAuth = oauth.ClientSecretPost(providerConfig.client_secret)
+  const clientAuth = oauth.ClientSecretPost(client_secret ?? "")
 
   const current_url = new URL(request.url as string) as URL
   const callback_url = getCallbackURL(
@@ -29,7 +31,7 @@ export async function OAuth2Callback(
     "admin",
     providerConfig.id,
   )
-  const as = providerConfig.authorization_server
+  const as = authorization_server
 
   const params = oauth.validateAuthResponse(as, client, current_url, state!)
 
@@ -54,5 +56,5 @@ export async function OAuth2Callback(
     token_result.access_token,
   )
   const userInfo = (await userInfoResponse.json()) as Record<string, string>
-  return session_callback(providerConfig.profile(userInfo))
+  return session_callback(profile(userInfo))
 }

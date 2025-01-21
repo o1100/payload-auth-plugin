@@ -1,10 +1,12 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
 } from "../../types.js"
 
-type AppleAuthConfig = ProviderConfig
+type AppleAuthConfig = {
+  client_id: string
+  params?: Record<string, string>
+}
 
 function AppleOIDCAuthProvider(config: AppleAuthConfig): OIDCProviderConfig {
   return {

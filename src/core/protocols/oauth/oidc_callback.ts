@@ -24,7 +24,7 @@ export async function OIDCCallback(
     client_id,
   }
 
-  const clientAuth = oauth.ClientSecretPost(client_secret)
+  const clientAuth = oauth.ClientSecretPost(client_secret ?? "")
 
   const current_url = new URL(request.url as string) as URL
   const callback_url = getCallbackURL(
