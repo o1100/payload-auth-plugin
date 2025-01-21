@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.3] - 2025-01-21
+
+### 🐛 Bug Fixes
+
+- Client secret is not always required
+
+### 💼 Other
+
+- File name
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v0.5.2
+- Adds changelog conf
+- Adds provider names
+- Bump version
+
 ## [0.5.2] - 2025-01-21
 
 ### 📚 Documentation
@@ -10,7 +27,7 @@ All notable changes to this project will be documented in this file.
 
 ### ⚙️ Miscellaneous Tasks
 
-- Release v0.5.2
+- Release v0.5.1
 
 ## [0.5.1] - 2025-01-18
 
@@ -27,10 +44,6 @@ All notable changes to this project will be documented in this file.
 
 - Format code
 - Format code
-
-### ⚙️ Miscellaneous Tasks
-
-- Release v0.5.1
 
 ## [0.5.0] - 2025-01-18
 
