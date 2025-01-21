@@ -17,7 +17,7 @@ export interface ProviderConfig {
   /*
    * Oauth provider Client Secret
    */
-  client_secret: string
+  client_secret?: string
   /*
    * Additional parameters you would like to add to query for the provider
    */
@@ -31,7 +31,7 @@ export interface OIDCProviderConfig extends BaseProviderConfig, ProviderConfig {
 
 export interface OAuth2ProviderConfig
   extends BaseProviderConfig,
-    ProviderConfig {
+  ProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
 }
