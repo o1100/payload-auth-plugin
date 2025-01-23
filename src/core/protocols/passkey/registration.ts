@@ -33,7 +33,7 @@ export async function GeneratePasskeyRegistration(
   const cookieMaxage = new Date(Date.now() + 300 * 1000)
   const cookies: string[] = []
   cookies.push(
-    `__session-webpk-challenge=${options.challenge};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
+    `__session-webpk-challenge=${options.challenge};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
   )
   const res = new Response(JSON.stringify({ options }), { status: 201 })
   cookies.forEach((cookie) => {

@@ -42,11 +42,11 @@ export async function OAuth2Authorization(
     const state = oauth.generateRandomState()
     authorizationURL.searchParams.set("state", state)
     cookies.push(
-      `__session-oauth-state=${state};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
+      `__session-oauth-state=${state};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
     )
   }
   cookies.push(
-    `__session-code-verifier=${code_verifier};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
+    `__session-code-verifier=${code_verifier};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
   )
 
   const res = new Response(null, {
