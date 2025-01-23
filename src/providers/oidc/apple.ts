@@ -1,7 +1,4 @@
-import type {
-  AccountInfo,
-  OIDCProviderConfig,
-} from "../../types.js"
+import type { AccountInfo, OIDCProviderConfig } from "../../types.js"
 
 type AppleAuthConfig = {
   client_id: string

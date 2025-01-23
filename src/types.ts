@@ -31,7 +31,7 @@ export interface OIDCProviderConfig extends BaseProviderConfig, ProviderConfig {
 
 export interface OAuth2ProviderConfig
   extends BaseProviderConfig,
-  ProviderConfig {
+    ProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
 }

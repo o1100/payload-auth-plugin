@@ -18,7 +18,8 @@ export async function OAuth2Callback(
     throw new MissingOrInvalidSession()
   }
 
-  const { client_id, client_secret, authorization_server, profile } = providerConfig
+  const { client_id, client_secret, authorization_server, profile } =
+    providerConfig
 
   const client: oauth.Client = {
     client_id,
