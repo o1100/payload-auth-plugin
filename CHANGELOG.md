@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.4] - 2025-01-23
+
+### 🐛 Bug Fixes
+
+- Use UTC
+
+### 💼 Other
+
+- Format code
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog
+- Changes keyword
+- Release v0.5.4
+- Fix script
+
 ## [0.5.3] - 2025-01-21
 
 ### 🐛 Bug Fixes
