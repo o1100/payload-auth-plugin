@@ -43,11 +43,11 @@ export async function OIDCAuthorization(
     const nonce = oauth.generateRandomNonce()
     authorizationURL.searchParams.set("nonce", nonce)
     cookies.push(
-      `__session-oauth-nonce=${nonce};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
+      `__session-oauth-nonce=${nonce};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
     )
   }
   cookies.push(
-    `__session-code-verifier=${code_verifier};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toString()}`,
+    `__session-code-verifier=${code_verifier};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
   )
 
   const res = new Response(null, {

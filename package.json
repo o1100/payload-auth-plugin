@@ -14,7 +14,7 @@
     "payload",
     "cms",
     "authentication",
-    "plugin",
+    "payload-plugin",
     "typescript",
     "react",
     "nextjs",
