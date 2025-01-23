@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.5] - 2025-01-23
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v0.5.5
+
 ## [0.5.4] - 2025-01-23
 
 ### 🐛 Bug Fixes
@@ -18,6 +24,7 @@ All notable changes to this project will be documented in this file.
 - Changes keyword
 - Release v0.5.4
 - Fix script
+- Release logs
 
 ## [0.5.3] - 2025-01-21
 
