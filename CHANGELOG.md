@@ -2,11 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.6] - 2025-01-28
+
+### 🐛 Bug Fixes
+
+- Pass response mode param
+- Use params
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v0.5.6
+
 ## [0.5.5] - 2025-01-23
 
 ### ⚙️ Miscellaneous Tasks
 
 - Release v0.5.5
+- Release logs
 
 ## [0.5.4] - 2025-01-23
 
