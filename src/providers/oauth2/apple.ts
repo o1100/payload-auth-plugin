@@ -23,6 +23,10 @@ function AppleOAuth2Provider(config: AppleAuthConfig): OAuth2ProviderConfig {
     authorization_server,
     name: "Apple",
     algorithm,
+    params: {
+      ...config.params,
+      response_mode: "form_post",
+    },
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,
