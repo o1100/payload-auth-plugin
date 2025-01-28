@@ -16,7 +16,7 @@ export async function OAuth2Authorization(
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
   const code_challenge_method = "S256"
 
-  const { authorization_server, client_id, scope } = providerConfig
+  const { authorization_server, client_id, scope, params } = providerConfig
 
   const client: oauth.Client = {
     client_id,
@@ -37,6 +37,12 @@ export async function OAuth2Authorization(
     "code_challenge_method",
     code_challenge_method,
   )
+
+  if (params) {
+    Object.entries(params).map(([key, value]) => {
+      authorizationURL.searchParams.set(key, value)
+    })
+  }
 
   if (as.code_challenge_methods_supported?.includes("S256") !== true) {
     const state = oauth.generateRandomState()

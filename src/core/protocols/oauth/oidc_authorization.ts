@@ -2,6 +2,7 @@ import * as oauth from "oauth4webapi"
 import type { OIDCProviderConfig } from "../../../types.js"
 import { getCallbackURL } from "../../utils/cb.js"
 import { PayloadRequest } from "payload"
+import { stringWidth } from "bun"
 
 export async function OIDCAuthorization(
   request: PayloadRequest,
@@ -15,7 +16,7 @@ export async function OIDCAuthorization(
   const code_verifier = oauth.generateRandomCodeVerifier()
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
   const code_challenge_method = "S256"
-  const { client_id, issuer, algorithm, scope } = providerConfig
+  const { client_id, issuer, algorithm, scope, params } = providerConfig
 
   const client: oauth.Client = {
     client_id,
@@ -38,6 +39,12 @@ export async function OIDCAuthorization(
     "code_challenge_method",
     code_challenge_method,
   )
+
+  if (params) {
+    Object.entries(params).map(([key, value]) => {
+      authorizationURL.searchParams.set(key, value)
+    })
+  }
 
   if (as.code_challenge_methods_supported?.includes("S256") !== true) {
     const nonce = oauth.generateRandomNonce()
