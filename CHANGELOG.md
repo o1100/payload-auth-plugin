@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.5.8] - 2025-02-10
+
+### 🐛 Bug Fixes
+
+- Export types
+
 ## [0.5.7] - 2025-02-09
 
 ### 🐛 Bug Fixes
