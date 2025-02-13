@@ -1,9 +1,38 @@
 import type { AuthorizationServer } from "oauth4webapi"
 
+/**
+ * Generic OAuth provider callback output
+ *
+ * @interface OAuthProviderOutput
+ * @internal
+ */
 interface OAuthProviderOutput {
+  /**
+   * OAuth Provider ID. Usually the slugified provider name
+   *
+   * @type {string}
+   */
   id: string
+  /**
+   * OAuth provider name. For example Google, Apple
+   *
+   * @type {string}
+   */
   name: string
+  /**
+   * Scope of account attributes to request from the provider
+   *
+   * @type {string}
+   */
   scope: string
+
+  /**
+   * Profile callback that returns account information requried to link with users
+   *
+   * @type {(
+   *     profile: Record<string, string | number | boolean | object>,
+   *   ) => AccountInfo}
+   */
   profile: (
     profile: Record<string, string | number | boolean | object>,
   ) => AccountInfo
