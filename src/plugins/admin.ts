@@ -112,7 +112,6 @@ export const adminAuthPlugin =
       passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
     }
 
-    // Create accounts collection if doesn't exists
     config.collections = [
       ...(config.collections ?? []),
       buildAccountsCollection(
