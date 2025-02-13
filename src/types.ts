@@ -9,34 +9,38 @@ interface BaseProviderConfig {
   ) => AccountInfo
 }
 
-export interface ProviderConfig {
-  /*
-   * Oauth provider Client ID
-   */
+/**
+ * Description placeholder
+ *
+ * @export
+ * @interface ProviderConfig
+ */
+export interface OauthProviderConfig {
   client_id: string
-  /*
-   * Oauth provider Client Secret
-   */
   client_secret?: string
-  /*
-   * Additional parameters you would like to add to query for the provider
-   */
-  params?: Record<string, string>
+  params?: Record<string, string> | undefined
 }
 
-export interface OIDCProviderConfig extends BaseProviderConfig, ProviderConfig {
+export interface OIDCProviderConfig
+  extends BaseProviderConfig,
+    OauthProviderConfig {
   issuer: string
   algorithm: "oidc"
 }
 
 export interface OAuth2ProviderConfig
   extends BaseProviderConfig,
-    ProviderConfig {
+    OauthProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
 }
 
-export type OAuthProviderConfig = OIDCProviderConfig | OAuth2ProviderConfig
+export type OAuthProviderConfig = (
+  | OIDCProviderConfig
+  | OAuth2ProviderConfig
+) & {
+  kind: "oauth"
+}
 
 export interface AccountInfo {
   sub: string
@@ -70,6 +74,7 @@ export interface CredentialsAccountInfo {
 
 export type PasskeyProviderConfig = {
   id: string
+  kind: "passkey"
 }
 
 export type ProvidersConfig = OAuthProviderConfig | PasskeyProviderConfig
