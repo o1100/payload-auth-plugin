@@ -1,6 +1,6 @@
 import type { AuthorizationServer } from "oauth4webapi"
 
-interface BaseProviderConfig {
+interface OAuthProviderOutput {
   id: string
   name: string
   scope: string
@@ -9,12 +9,6 @@ interface BaseProviderConfig {
   ) => AccountInfo
 }
 
-/**
- * Description placeholder
- *
- * @export
- * @interface OAuthBaseProviderConfig
- */
 export interface OAuthBaseProviderConfig {
   client_id: string
   client_secret?: string
@@ -22,14 +16,14 @@ export interface OAuthBaseProviderConfig {
 }
 
 export interface OIDCProviderConfig
-  extends BaseProviderConfig,
+  extends OAuthProviderOutput,
     OAuthBaseProviderConfig {
   issuer: string
   algorithm: "oidc"
 }
 
 export interface OAuth2ProviderConfig
-  extends BaseProviderConfig,
+  extends OAuthProviderOutput,
     OAuthBaseProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
