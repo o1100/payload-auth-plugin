@@ -15,9 +15,19 @@
  * @packageDocumentation
  */
 
-import { Config, Plugin } from "payload"
-import { OAuthProviderConfig, PasskeyProviderConfig } from "../types.js"
+import { BasePayload, Config, Endpoint, Plugin } from "payload"
+import {
+  AccountInfo,
+  OAuthProviderConfig,
+  PasskeyProviderConfig,
+} from "../types.js"
 import { InvalidServerURL } from "../core/errors/consoleErrors.js"
+import { getOAuthProviders, getPasskeyProvider } from "../providers/utils.js"
+import {
+  EndpointsFactory,
+  OAuthEndpointStrategy,
+  PasskeyEndpointStrategy,
+} from "../core/endpoints.js"
 
 interface UsersCollection {
   /**
@@ -154,6 +164,45 @@ export const appAuthPlugin =
     }
 
     const { users, accounts, providers } = pluginOptions
+
+    const oauthProviders = getOAuthProviders(providers)
+    const passkeyProvider = getPasskeyProvider(providers)
+
+    const endpointsFactory = new EndpointsFactory("app")
+
+    let oauthEndpoints: Endpoint[] = []
+    let passkeyEndpoints: Endpoint[] = []
+
+    if (Object.keys(oauthProviders).length > 0) {
+      endpointsFactory.registerStrategy(
+        "oauth",
+        new OAuthEndpointStrategy(oauthProviders),
+      )
+      oauthEndpoints = endpointsFactory.createEndpoints("oauth", {
+        sessionCallback: (
+          oauthAccountInfo: AccountInfo,
+          scope: string,
+          issuerName: string,
+          basePayload: BasePayload,
+        ) => {
+          return Response.json({})
+        },
+      })
+    }
+
+    if (passkeyProvider) {
+      endpointsFactory.registerStrategy(
+        "passkey",
+        new PasskeyEndpointStrategy(),
+      )
+      passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
+    }
+
+    config.endpoints = [
+      ...(config.endpoints ?? []),
+      ...oauthEndpoints,
+      ...passkeyEndpoints,
+    ]
 
     return config
   }
