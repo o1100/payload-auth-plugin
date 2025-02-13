@@ -1,10 +1,10 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-type GoogleAuthConfig = ProviderConfig
+type GoogleAuthConfig = OAuthBaseProviderConfig
 
 function GoogleAuthProvider(config: GoogleAuthConfig): OIDCProviderConfig {
   return {

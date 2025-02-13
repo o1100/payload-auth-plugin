@@ -1,10 +1,10 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-type GitLabAuthConfig = ProviderConfig
+type GitLabAuthConfig = OAuthBaseProviderConfig
 
 function GitLabAuthProvider(config: GitLabAuthConfig): OIDCProviderConfig {
   const algorithm = "oidc"

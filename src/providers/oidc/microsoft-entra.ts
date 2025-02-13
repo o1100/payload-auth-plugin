@@ -1,10 +1,10 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-type MicrosoftEntraAuthConfig = ProviderConfig & {
+type MicrosoftEntraAuthConfig = OAuthBaseProviderConfig & {
   tenant_id: string
 }
 

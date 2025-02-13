@@ -1,10 +1,10 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-type SlackAuthConfig = ProviderConfig
+type SlackAuthConfig = OAuthBaseProviderConfig
 
 function SlackAuthProvider(config: SlackAuthConfig): OIDCProviderConfig {
   return {

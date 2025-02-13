@@ -18,7 +18,6 @@
 import { Config, Plugin } from "payload"
 import { OAuthProviderConfig, PasskeyProviderConfig } from "../types.js"
 import { InvalidServerURL } from "../core/errors/consoleErrors.js"
-import { mapProviders } from "../providers/utils.js"
 
 interface UsersCollection {
   /**
@@ -155,8 +154,6 @@ export const appAuthPlugin =
     }
 
     const { users, accounts, providers } = pluginOptions
-
-    const providersMap = mapProviders(providers)
 
     return config
   }

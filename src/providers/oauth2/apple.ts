@@ -2,10 +2,10 @@ import { AuthorizationServer } from "oauth4webapi"
 import type {
   AccountInfo,
   OAuth2ProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-type AppleAuthConfig = ProviderConfig
+type AppleAuthConfig = OAuthBaseProviderConfig
 
 const algorithm = "oauth2"
 

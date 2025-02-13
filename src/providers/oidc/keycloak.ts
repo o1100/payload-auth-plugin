@@ -1,10 +1,10 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-interface KeyCloakAuthConfig extends ProviderConfig {
+interface KeyCloakAuthConfig extends OAuthBaseProviderConfig {
   realm: string
   domain: string
   identifier: string

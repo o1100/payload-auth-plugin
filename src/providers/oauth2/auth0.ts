@@ -2,10 +2,10 @@ import type * as oauth from "oauth4webapi"
 import type {
   OAuth2ProviderConfig,
   AccountInfo,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-interface Auth0AuthConfig extends ProviderConfig {
+interface Auth0AuthConfig extends OAuthBaseProviderConfig {
   domain: string
 }
 

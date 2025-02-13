@@ -1,10 +1,10 @@
 import type {
   AccountInfo,
   OIDCProviderConfig,
-  ProviderConfig,
+  OAuthBaseProviderConfig,
 } from "../../types.js"
 
-interface CognitoAuthConfig extends ProviderConfig {
+interface CognitoAuthConfig extends OAuthBaseProviderConfig {
   domain: string
   region: string
 }

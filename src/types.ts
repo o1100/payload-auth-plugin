@@ -13,9 +13,9 @@ interface BaseProviderConfig {
  * Description placeholder
  *
  * @export
- * @interface ProviderConfig
+ * @interface OAuthBaseProviderConfig
  */
-export interface OauthProviderConfig {
+export interface OAuthBaseProviderConfig {
   client_id: string
   client_secret?: string
   params?: Record<string, string> | undefined
@@ -23,14 +23,14 @@ export interface OauthProviderConfig {
 
 export interface OIDCProviderConfig
   extends BaseProviderConfig,
-    OauthProviderConfig {
+    OAuthBaseProviderConfig {
   issuer: string
   algorithm: "oidc"
 }
 
 export interface OAuth2ProviderConfig
   extends BaseProviderConfig,
-    OauthProviderConfig {
+    OAuthBaseProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
 }
