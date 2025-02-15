@@ -1,5 +1,5 @@
 {
-    "name": "cli",
+    "name": "payload-auth",
     "version": "0.5.8",
     "type": "module",
     "description": "CLI to install and set up payload-auth-plugin",
@@ -7,7 +7,10 @@
     "license": "MIT",
     "homepage:": "https://github.com/authsmith/payload-auth-plugin",
     "repository": "git@github.com:authsmith/payload-auth-plugin.git",
-    "bin": "./dist/esm/index.js",
+    "bin": {
+        "payload-auth": "./dist/esm/index.js"
+    },
+    "main": "./dist/esm/index.js",
     "scripts": {
         "dev": "bun run build && node dist/esm/index.js",
         "build": "bun run ../../script/build.ts",

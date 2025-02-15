@@ -5,8 +5,8 @@
         "pkg/*"
     ],
     "scripts": {
-        "cli:build": "bun run --filter=cli build",
-        "cli:dev": "bun run --filter=cli dev",
+        "cli:build": "bun run --filter=payload-auth build",
+        "cli:dev": "bun run --filter=payload-auth dev",
         "plugin:build": "bun run --filter=payload-auth-plugin build",
         "plugin:format": "bun run --filter=payload-auth-plugin format"
     }
