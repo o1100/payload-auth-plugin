@@ -72,6 +72,7 @@ async function setup(options: v.InferInput<typeof initOptionsSchema>) {
     ],
   })
 
+  // Installing dependencies
   await intallDeps(options.cwd, options.silent)
 
   logger.info("")
