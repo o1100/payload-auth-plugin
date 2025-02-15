@@ -10,7 +10,6 @@ import {
   InvalidServerURL,
   MissingUsersCollection,
 } from "../core/errors/consoleErrors.js"
-import { buildAccountsCollection } from "../core/collections/admin/accounts.js"
 import { getOAuthProviders, getPasskeyProvider } from "../providers/utils.js"
 
 interface PluginOptions {
@@ -111,17 +110,6 @@ export const adminAuthPlugin =
       )
       passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
     }
-
-    config.collections = [
-      ...(config.collections ?? []),
-      buildAccountsCollection(
-        {
-          slug: accounts?.slug ?? "accounts",
-          hidden: accounts?.hidden ?? false,
-        },
-        config.admin.user!,
-      ),
-    ]
 
     config.endpoints = [
       ...(config.endpoints ?? []),
