@@ -4,7 +4,7 @@ import { spinner } from "./spinner.js"
 
 const DEPENDENCIES = ["payload-auth-plugin@latest"]
 
-export async function intallDeps(cwd: string, silent?: boolean | undefined) {
+export async function installDeps(cwd: string, silent?: boolean | undefined) {
   const packageManager = await getPackageManager(cwd)
 
   const dependenciesSpinner = spinner(`Installing required dependencies.`, {
