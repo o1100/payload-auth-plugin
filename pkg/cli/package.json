@@ -1,0 +1,33 @@
+{
+    "name": "cli",
+    "version": "0.5.8",
+    "type": "module",
+    "description": "CLI to install and set up payload-auth-plugin",
+    "author": "Sourab Pramanik<shubpramanik241@gmail.com>",
+    "license": "MIT",
+    "homepage:": "https://github.com/authsmith/payload-auth-plugin",
+    "repository": "git@github.com:authsmith/payload-auth-plugin.git",
+    "bin": "./dist/esm/index.js",
+    "scripts": {
+        "dev": "bun run build && node dist/esm/index.js",
+        "build": "bun run ../../script/build.ts",
+        "format": "bun x prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'"
+    },
+    "dependencies": {
+        "commander": "13.1.0",
+        "kleur": "4.1.5",
+        "ora": "8.2.0",
+        "prompts": "2.4.2",
+        "valibot": "1.0.0-rc.0"
+    },
+    "devDependencies": {
+        "@changesets/cli": "2.27.10",
+        "@tsconfig/node22": "22.0.0",
+        "@types/bun": "latest",
+        "git-cliff": "2.7.0",
+        "globals": "^15.14.0",
+        "prettier": "3.4.2",
+        "tsup": "8.3.6",
+        "typescript": "^5.7.3"
+    }
+}
