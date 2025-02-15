@@ -11,7 +11,6 @@ export async function installDeps(cwd: string, silent?: boolean | undefined) {
     silent,
   })?.start()
 
-  dependenciesSpinner?.succeed()
   await execa(
     packageManager,
     [packageManager === "npm" ? "install" : "add", ...DEPENDENCIES],
@@ -19,4 +18,5 @@ export async function installDeps(cwd: string, silent?: boolean | undefined) {
       cwd,
     },
   )
+  dependenciesSpinner?.succeed()
 }
