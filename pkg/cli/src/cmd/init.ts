@@ -3,12 +3,7 @@ import { logger } from "../utils/logger.js"
 import { handleError } from "../utils/error.js"
 import prompts from "prompts"
 import * as v from "valibot"
-import fs from "fs-extra"
-import path from "node:path"
-import { spinner } from "../utils/spinner.js"
-import { getPackageManager } from "../utils/pkg-manager.js"
-import { execa } from "execa"
-import { DEPENDENCIES } from "../utils/dependencies.js"
+import { intallDeps } from "../utils/dependencies.js"
 
 const initOptionsSchema = v.object({
   cwd: v.string(),
@@ -77,21 +72,7 @@ async function setup(options: v.InferInput<typeof initOptionsSchema>) {
     ],
   })
 
-  const packageManager = await getPackageManager(options.cwd)
-
-  const dependenciesSpinner = spinner(`Installing required dependencies.`, {
-    silent: options.silent,
-  })?.start()
-
-  await execa(
-    packageManager,
-    [packageManager === "npm" ? "install" : "add", ...DEPENDENCIES],
-    {
-      cwd: options.cwd,
-    },
-  )
-
-  dependenciesSpinner?.succeed()
+  await intallDeps(options.cwd, options.silent)
 
   logger.info("")
 }
