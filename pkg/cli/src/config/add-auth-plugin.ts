@@ -6,11 +6,7 @@ import path from "path"
 import { providersConfig } from "./auth-provider-config.js"
 import kleur from "kleur"
 
-export async function addAuthPlugin(
-  cwd: string,
-  pluginType: string,
-  silent?: boolean | undefined,
-) {
+export async function addAuthPlugin(cwd: string, pluginType: string) {
   const { pluginsDir } = await prompts({
     type: "text",
     name: "pluginsDir",
