@@ -15,7 +15,13 @@
  * @packageDocumentation
  */
 
-import { BasePayload, Config, Endpoint, Plugin } from "payload"
+import {
+  BasePayload,
+  CollectionConfig,
+  Config,
+  Endpoint,
+  Plugin,
+} from "payload"
 import {
   AccountInfo,
   OAuthProviderConfig,
@@ -28,27 +34,6 @@ import {
   OAuthEndpointStrategy,
   PasskeyEndpointStrategy,
 } from "../core/endpoints.js"
-
-interface UsersCollection {
-  /**
-   * Collection name
-   *
-   * @type {string}
-   */
-  name: string
-  /**
-   * Collection slug but optional
-   *
-   * @type {?string}
-   */
-  slug?: string | undefined
-  /**
-   * Hide the collection but optional. Not hidden by default
-   *
-   * @type {?(boolean | undefined)}
-   */
-  hidden?: boolean | undefined
-}
 
 interface AccountsCollection {
   /**
@@ -124,7 +109,7 @@ interface PluginOptions {
    *
    * @type {UsersCollection}
    */
-  users: UsersCollection
+  users: CollectionConfig
   /**
    * User accounts collection. This collection will be used to store all the accounts that belongs to a user.
    * One user can have more than one account
@@ -164,7 +149,6 @@ export const appAuthPlugin =
     }
 
     const { users, accounts, providers } = pluginOptions
-
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
 
