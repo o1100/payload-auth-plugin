@@ -45,6 +45,10 @@ export async function addAuthPlugin(cwd: string, pluginType: string) {
   logger.success(
     `✅ Successfully created ${kleur.bold(pluginsDir + "/" + AUTH_PLUGIN_FILE)}, and added the plugin along with the selected providers.`,
   )
+  logger.info("")
+  logger.info(
+    `You can now import the ${kleur.bold("payloadAuthPlugins")} array in your Payload config file.`,
+  )
 }
 
 const addPlugin = (pluginType: string, providers: string[]) =>
