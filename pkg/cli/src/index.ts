@@ -8,7 +8,9 @@ process.on("SIGTERM", () => process.exit(0))
 async function main() {
   const program = new Command()
     .name("payload-auth")
-    .description("adds components and dependencies to your Payload project")
+    .description(
+      "Adds payload-auth-plugin to your Payload project, and configures your project to implement authentication",
+    )
 
   program.addCommand(initCommand)
 

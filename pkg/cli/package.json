@@ -17,7 +17,11 @@
         "format": "bun x prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'"
     },
     "dependencies": {
+        "@antfu/ni": "23.3.1",
         "commander": "13.1.0",
+        "cosmiconfig": "9.0.0",
+        "execa": "9.5.2",
+        "fs-extra": "11.3.0",
         "kleur": "4.1.5",
         "ora": "8.2.0",
         "prompts": "2.4.2",
@@ -27,6 +31,8 @@
         "@changesets/cli": "2.27.10",
         "@tsconfig/node22": "22.0.0",
         "@types/bun": "latest",
+        "@types/fs-extra": "11.0.4",
+        "@types/prompts": "2.4.9",
         "git-cliff": "2.7.0",
         "globals": "^15.14.0",
         "prettier": "3.4.2",
