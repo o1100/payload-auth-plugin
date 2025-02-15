@@ -56,7 +56,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "bun run script/build.ts",
+    "build": "bun run ../../script/build.ts",
     "format": "bun x prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'",
     "release": "bun run build && changeset publish",
     "changelog": "../script/changelog.sh"

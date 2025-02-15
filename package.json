@@ -3,5 +3,10 @@
     "version": "0.5.8",
     "workspaces": [
         "pkg/*"
-    ]
+    ],
+    "scripts": {
+        "cli:build": "bun run --filter=cli build",
+        "plugin:build": "bun run --filter=payload-auth-plugin build",
+        "plugin:format": "bun run --filter=payload-auth-plugin format"
+    }
 }
