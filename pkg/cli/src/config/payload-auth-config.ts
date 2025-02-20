@@ -1,5 +1,5 @@
 import path from "path"
-import { PLUGIN_CONFIG_FILE } from "../utils/consts.js"
+import { AUTH_PLUGIN_CONFIG_FILE } from "../utils/consts.js"
 import fs from "fs-extra"
 import * as logger from "@clack/prompts"
 
@@ -13,10 +13,10 @@ export async function createPayloadAuthConfig(
   cwd: string,
   config: PayloadAuthConfig,
 ) {
-  const configFile = path.resolve(cwd, PLUGIN_CONFIG_FILE)
+  const configFile = path.resolve(cwd, AUTH_PLUGIN_CONFIG_FILE)
   if (fs.existsSync(configFile)) {
     logger.log.warn(
-      `Looks like the ${PLUGIN_CONFIG_FILE} already exists. Removing it!`,
+      `Looks like the ${AUTH_PLUGIN_CONFIG_FILE} already exists. Removing it!`,
     )
     fs.removeSync(configFile)
   }
