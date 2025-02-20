@@ -1,12 +1,7 @@
-import {
-  forEachStructureChild,
-  ImportSpecifier,
-  Structure,
-  SyntaxKind,
-} from "ts-morph"
+import { SyntaxKind } from "ts-morph"
 import { Transformer } from "./index.js"
 
-export const transformImport: Transformer = async ({ sourceFile }) => {
+export const transformPlugins: Transformer = async ({ sourceFile }) => {
   const buildConfigCall = sourceFile
     .getDescendantsOfKind(SyntaxKind.CallExpression)
     .find((call) => {
@@ -20,20 +15,6 @@ export const transformImport: Transformer = async ({ sourceFile }) => {
       configObject &&
       configObject.isKind(SyntaxKind.ObjectLiteralExpression)
     ) {
-      // Extract 'collections'
-      const collectionsProperty = configObject.getProperty("collections")
-      if (collectionsProperty?.isKind(SyntaxKind.PropertyAssignment)) {
-        const collectionsArray = collectionsProperty.getInitializerIfKind(
-          SyntaxKind.ArrayLiteralExpression,
-        )
-        if (collectionsArray) {
-          console.log(
-            "Collections:",
-            collectionsArray.getElements().map((el) => el.getText()),
-          )
-        }
-      }
-
       // Extract 'plugins'
       const pluginsProperty = configObject.getProperty("plugins")
       if (pluginsProperty?.isKind(SyntaxKind.PropertyAssignment)) {

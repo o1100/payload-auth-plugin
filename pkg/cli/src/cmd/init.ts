@@ -1,5 +1,4 @@
 import { Command } from "commander"
-import { logger } from "../utils/logger.js"
 import { handleError } from "../utils/error.js"
 import * as v from "valibot"
 import { installDeps } from "../utils/dependencies.js"
@@ -26,7 +25,7 @@ export const initCommand = new Command()
       const options = v.parse(initOptionsSchema, incomingOptions)
 
       // Installing dependencies
-      await installDeps(options.cwd, options.silent)
+      await installDeps(options.cwd)
 
       // Prompt for plugin
       const pluginType = await consola.prompt(
@@ -96,17 +95,10 @@ async function setupApp(options: v.InferInput<typeof initOptionsSchema>) {
 
 async function setupAdmin(options: v.InferInput<typeof initOptionsSchema>) {
   // Collections
-  const collectionsDir = await consola.prompt(
-    "Where is the Payload collections directory located?",
-    {
-      initial: "src/collections",
-    },
-  )
 
   // Accounts collection
-  await addAccountsCollection(options.cwd, collectionsDir, options.silent)
+  await addAccountsCollection(options.cwd)
 
   // Payload plugin file
   await addAuthPlugin(options.cwd, "adminAuthPlugin")
-  logger.break()
 }

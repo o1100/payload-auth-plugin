@@ -3,11 +3,14 @@ import fs from "fs-extra"
 import { accountsCollection } from "./collections/accounts.js"
 import consola from "consola"
 
-export async function addAccountsCollection(
-  cwd: string,
-  collectionsDir: string,
-  silent?: boolean | undefined,
-) {
+export async function addAccountsCollection(cwd: string) {
+  const collectionsDir = await consola.prompt(
+    "Where is the Payload collections directory located?",
+    {
+      initial: "src/collections",
+    },
+  )
+
   const accountsCollectionSlug = await consola.prompt(
     "What should be the slug for the accounts collection?",
     {
@@ -16,10 +19,10 @@ export async function addAccountsCollection(
     },
   )
 
-  consola.start("Checking for collections...", { silent })
+  consola.start("Checking for collections...")
 
   if (fs.existsSync(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))) {
-    consola.warn("Looks like Accounts collection already exists.", { silent })
+    consola.warn("Looks like Accounts collection already exists.")
 
     const overwriteAccountsCollection = await consola.prompt(
       "Do you want to ovewrite the existing Accounts collection?",
@@ -31,7 +34,7 @@ export async function addAccountsCollection(
     if (overwriteAccountsCollection) {
       fs.removeSync(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))
     } else {
-      consola.error("Failed to create Accounts collection.", { silent })
+      consola.error("Failed to create Accounts collection.")
 
       process.exit(1)
     }
@@ -43,5 +46,5 @@ export async function addAccountsCollection(
     path.resolve(cwd, collectionsDir, "Accounts/index.ts"),
     accountsCollection(accountsCollectionSlug),
   )
-  consola.success("Successfully created Accounts collection", { silent })
+  consola.success("Successfully created Accounts collection")
 }

@@ -1,87 +1,74 @@
 export const AUTH_PLUGIN_FILE = "payload-auth.ts"
 export const AUTH_PROVIDERS = [
   {
-    title: "Apple OAuth2",
+    label: "Apple OAuth2",
     value: "AppleOAuth2Provider",
-    description:
-      "Allows sign-in using Apple OAuth2 provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/apple",
+    hint: "Allows sign-in using Apple OAuth2 provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/apple",
   },
   {
-    title: "Apple OIDC",
+    label: "Apple OIDC",
     value: "AppleOIDCAuthProvider",
-    description:
-      "Allows sign-in using Apple OIDC provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/apple",
+    hint: "Allows sign-in using Apple OIDC provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/apple",
   },
   {
-    title: "Atlassian",
+    label: "Atlassian",
     value: "AtlassianAuthProvider",
-    description:
-      "Allows sign-in using Atlassian provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/atlassian",
+    hint: "Allows sign-in using Atlassian provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/atlassian",
   },
   {
-    title: "Auth0",
+    label: "Auth0",
     value: "Auth0AuthProvider",
-    description:
-      "Allows sign-in using AUth0 provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/auth0",
+    hint: "Allows sign-in using AUth0 provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/auth0",
   },
   {
-    title: "AWS Cognito",
+    label: "AWS Cognito",
     value: "CognitoAuthProvider",
-    description:
-      "Allows sign-in using AWS Cognito provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/cognito",
+    hint: "Allows sign-in using AWS Cognito provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/cognito",
   },
   {
-    title: "Discord",
+    label: "Discord",
     value: "DiscordAuthProvider",
-    description:
-      "Allows sign-in using Discord provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/discord",
+    hint: "Allows sign-in using Discord provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/discord",
   },
   {
-    title: "Facebook",
+    label: "Facebook",
     value: "FacebookAuthProvider",
-    description:
-      "Allows sign-in using Facebook provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/facebook",
+    hint: "Allows sign-in using Facebook provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/facebook",
   },
   {
-    title: "GitHub",
+    label: "GitHub",
     value: "GitHubAuthProvider",
-    description:
-      "Allows sign-in using GitHub provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/github",
+    hint: "Allows sign-in using GitHub provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/github",
   },
   {
-    title: "GitLab",
+    label: "GitLab",
     value: "GitLabAuthProvider",
-    description:
-      "Allows sign-in using GitLab provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/gitlab",
+    hint: "Allows sign-in using GitLab provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/gitlab",
   },
   {
-    title: "Google",
+    label: "Google",
     value: "GoogleAuthProvider",
-    description:
-      "Allows sign-in using Google provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/google",
+    hint: "Allows sign-in using Google provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/google",
   },
   //   {
-  //     title: "KeyCloak",
+  //     label: "KeyCloak",
   //     value: "KeyCloakAuthProvider",
-  //     description:
+  //     hint:
   //       "Allows sign-in using Apple OAuth2 provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/apple",
   //   },
   {
-    title: "Microsoft Entra",
+    label: "Microsoft Entra",
     value: "MicrosoftEntraAuthProvider",
-    description:
-      "Allows sign-in using Microsoft Entra provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/microsoft-entra",
+    hint: "Allows sign-in using Microsoft Entra provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/microsoft-entra",
   },
   {
-    title: "Passkey",
+    label: "Passkey",
     value: "PasskeyAuthProvider",
-    description:
-      "Allows sign-in using Passkey provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/passkey",
+    hint: "Allows sign-in using Passkey provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/passkey",
   },
   {
-    title: "Slack",
+    label: "Slack",
     value: "SlackAuthProvider",
-    description:
-      "Allows sign-in using Slack provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/slack",
+    hint: "Allows sign-in using Slack provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/slack",
   },
 ]
