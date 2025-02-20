@@ -1,41 +1,35 @@
 import path from "path"
 import fs from "fs-extra"
 import { accountsCollection } from "./collections/accounts.js"
-import consola from "consola"
+import * as logger from "@clack/prompts"
 
 export async function addAccountsCollection(cwd: string) {
-  const collectionsDir = await consola.prompt(
-    "Where is the Payload collections directory located?",
-    {
-      initial: "src/collections",
-    },
-  )
+  const collectionsDir = (await logger.text({
+    message: "Where is the Payload collections directory located?",
+    placeholder: "src/collections",
+    defaultValue: "src/collections",
+  })) as string
 
-  const accountsCollectionSlug = await consola.prompt(
-    "What should be the slug for the accounts collection?",
-    {
-      placeholder: "Not sure",
-      initial: "accounts",
-    },
-  )
+  const accountsCollectionSlug = (await logger.text({
+    message: "What should be the slug for the accounts collection?",
+    placeholder: "accounts",
+    defaultValue: "accounts",
+  })) as string
 
-  consola.start("Checking for collections...")
+  const collectionCheck = logger.spinner()
+  collectionCheck.start("Checking for collections...")
 
   if (fs.existsSync(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))) {
-    consola.warn("Looks like Accounts collection already exists.")
+    collectionCheck.stop("Looks like Accounts collection already exists.")
 
-    const overwriteAccountsCollection = await consola.prompt(
-      "Do you want to ovewrite the existing Accounts collection?",
-      {
-        type: "confirm",
-      },
-    )
+    const overwriteAccountsCollection = (await logger.confirm({
+      message: "Do you want to ovewrite the existing Accounts collection?",
+    })) as boolean
 
     if (overwriteAccountsCollection) {
       fs.removeSync(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))
     } else {
-      consola.error("Failed to create Accounts collection.")
-
+      logger.log.error("Failed to create Accounts collection.")
       process.exit(1)
     }
   }
@@ -46,5 +40,6 @@ export async function addAccountsCollection(cwd: string) {
     path.resolve(cwd, collectionsDir, "Accounts/index.ts"),
     accountsCollection(accountsCollectionSlug),
   )
-  consola.success("Successfully created Accounts collection")
+  collectionCheck.stop()
+  logger.log.success("Successfully created Accounts collection")
 }

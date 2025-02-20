@@ -1,10 +1,9 @@
 import { Command } from "commander"
-import { handleError } from "../utils/error.js"
 import * as v from "valibot"
 import { installDeps } from "../utils/dependencies.js"
 import { addAuthPlugin } from "../config/add-auth-plugin.js"
 import { addAccountsCollection } from "../config/add-accounts-collection.js"
-import consola from "consola"
+import * as logger from "@clack/prompts"
 
 const initOptionsSchema = v.object({
   cwd: v.string(),
@@ -28,35 +27,32 @@ export const initCommand = new Command()
       await installDeps(options.cwd)
 
       // Prompt for plugin
-      const pluginType = await consola.prompt(
-        "Which plugin you want to set up?",
-        {
-          type: "select",
-          options: [
-            {
-              label: "Admin authentication plugin",
-              hint: "This plugin is used for implementing authentication only to the Admin of Payload project.",
-              value: "admin",
-            },
-            {
-              label: "App authentication plugin",
-              hint: "This plugin is used for implementing authentication only to the frontend of Payload project.",
-              value: "app",
-            },
-          ],
-        },
-      )
+      const pluginType = await logger.select({
+        message: "Which plugin you want to set up?",
+        options: [
+          {
+            label: "Admin authentication plugin",
+            hint: "This plugin is used for implementing authentication only to the Admin of Payload project.",
+            value: "admin",
+          },
+          {
+            label: "App authentication plugin",
+            hint: "This plugin is used for implementing authentication only to the frontend of Payload project.",
+            value: "app",
+          },
+        ],
+      })
 
       if (pluginType === "app") {
         await setupApp(options)
       } else if (pluginType === "admin") {
         await setupAdmin(options)
       } else {
-        consola.error("Wrong plugin type")
+        logger.log.error("Wrong plugin type")
         process.exit(1)
       }
     } catch (error) {
-      handleError(error)
+      logger.log.error("Something is not right. Try again")
     }
   })
 
@@ -101,4 +97,9 @@ async function setupAdmin(options: v.InferInput<typeof initOptionsSchema>) {
 
   // Payload plugin file
   await addAuthPlugin(options.cwd, "adminAuthPlugin")
+
+  // Final helper
+  logger.note(
+    `1. Import the payloadAuthPlugins in your Payload configuration file. \n2. Import the accounts collection in your Payload configuration file. \n\nIf you want to learn more about the configuration, \nplease check the documentation: https://authsmith.com/docs`,
+  )
 }

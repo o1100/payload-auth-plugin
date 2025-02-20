@@ -1,13 +1,13 @@
 import { execa } from "execa"
 import { getPackageManager } from "./pkg-manager.js"
-import consola from "consola"
+import * as logger from "@clack/prompts"
 
 const DEPENDENCIES = ["payload-auth-plugin@latest"]
 
 export async function installDeps(cwd: string) {
   const packageManager = await getPackageManager(cwd)
-
-  consola.start(`Installing required dependencies.`)
+  const installDeps = logger.spinner()
+  installDeps.start(`Installing required dependencies....`)
 
   await execa(
     packageManager,
@@ -16,5 +16,6 @@ export async function installDeps(cwd: string) {
       cwd,
     },
   )
-  consola.success("Successfully installed all required dependencies.")
+  installDeps.stop()
+  logger.log.success("Successfully installed all required dependencies.")
 }
