@@ -4,10 +4,13 @@ import { installDeps } from "../utils/dependencies.js"
 import { addAuthPlugin } from "../config/add-auth-plugin.js"
 import { addAccountsCollection } from "../config/add-accounts-collection.js"
 import * as logger from "@clack/prompts"
+import {
+  createPayloadAuthConfig,
+  PayloadAuthConfig,
+} from "../config/payload-auth-config.js"
 
 const initOptionsSchema = v.object({
   cwd: v.string(),
-  silent: v.boolean(),
 })
 
 export const initCommand = new Command()
@@ -18,7 +21,6 @@ export const initCommand = new Command()
     "the working directory. defaults to the current directory.",
     process.cwd(),
   )
-  .option("-s, --silent", "mute output.", false)
   .action(async (incomingOptions) => {
     try {
       const options = v.parse(initOptionsSchema, incomingOptions)
@@ -52,6 +54,7 @@ export const initCommand = new Command()
         process.exit(1)
       }
     } catch (error) {
+      console.log(error)
       logger.log.error("Something is not right. Try again")
     }
   })
@@ -90,13 +93,22 @@ async function setupApp(options: v.InferInput<typeof initOptionsSchema>) {
 }
 
 async function setupAdmin(options: v.InferInput<typeof initOptionsSchema>) {
-  // Collections
+  const payloadAuthConfig: PayloadAuthConfig = {
+    paths: {
+      admin: {},
+    },
+    admin: true,
+    app: false,
+  }
 
   // Accounts collection
-  await addAccountsCollection(options.cwd)
+  await addAccountsCollection(options.cwd, payloadAuthConfig)
 
   // Payload plugin file
-  await addAuthPlugin(options.cwd, "adminAuthPlugin")
+  await addAuthPlugin(options.cwd, "adminAuthPlugin", payloadAuthConfig)
+
+  // Add config
+  await createPayloadAuthConfig(options.cwd, payloadAuthConfig)
 
   // Final helper
   logger.note(

@@ -4,8 +4,13 @@ import path from "path"
 import { providersConfig } from "./auth-provider-config.js"
 import kleur from "kleur"
 import * as logger from "@clack/prompts"
+import { PayloadAuthConfig } from "./payload-auth-config.js"
 
-export async function addAuthPlugin(cwd: string, pluginType: string) {
+export async function addAuthPlugin(
+  cwd: string,
+  pluginType: string,
+  payloadAuthConfig: PayloadAuthConfig,
+) {
   const pluginsDir = (await logger.text({
     message: "Where is the Payload plugins directory located?",
     placeholder: "src/plugins",
@@ -36,6 +41,9 @@ export async function addAuthPlugin(cwd: string, pluginType: string) {
   })) as string[]
 
   await fs.writeFile(pluginsFile, addPlugin(pluginType, selectedAuthProviders))
+
+  payloadAuthConfig.paths.plugins = path.join(pluginsDir, AUTH_PLUGIN_FILE)
+
   logger.log.success(
     `Successfully created ${kleur.bold(pluginsDir + "/" + AUTH_PLUGIN_FILE)}, and added the plugin along with the selected providers.`,
   )

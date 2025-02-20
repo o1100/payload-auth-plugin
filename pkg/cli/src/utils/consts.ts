@@ -72,3 +72,5 @@ export const AUTH_PROVIDERS = [
     hint: "Allows sign-in using Slack provider. Read more about it here: https://authsmith.com/docs/plugins/payload/providers/slack",
   },
 ]
+export const PLUGIN_CONFIG_FILE = "payload-auth.config.json"
+export const ACCOUNTS_COLLECTION_FILE = "Accounts/index.ts"

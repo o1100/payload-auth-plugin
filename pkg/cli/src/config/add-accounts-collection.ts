@@ -2,8 +2,13 @@ import path from "path"
 import fs from "fs-extra"
 import { accountsCollection } from "./collections/accounts.js"
 import * as logger from "@clack/prompts"
+import { PayloadAuthConfig } from "./payload-auth-config.js"
+import { ACCOUNTS_COLLECTION_FILE } from "../utils/consts.js"
 
-export async function addAccountsCollection(cwd: string) {
+export async function addAccountsCollection(
+  cwd: string,
+  payloadAuthConfig: PayloadAuthConfig,
+) {
   const collectionsDir = (await logger.text({
     message: "Where is the Payload collections directory located?",
     placeholder: "src/collections",
@@ -19,7 +24,9 @@ export async function addAccountsCollection(cwd: string) {
   const collectionCheck = logger.spinner()
   collectionCheck.start("Checking for collections...")
 
-  if (fs.existsSync(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))) {
+  if (
+    fs.existsSync(path.resolve(cwd, collectionsDir, ACCOUNTS_COLLECTION_FILE))
+  ) {
     collectionCheck.stop("Looks like Accounts collection already exists.")
 
     const overwriteAccountsCollection = (await logger.confirm({
@@ -27,19 +34,27 @@ export async function addAccountsCollection(cwd: string) {
     })) as boolean
 
     if (overwriteAccountsCollection) {
-      fs.removeSync(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))
+      fs.removeSync(path.resolve(cwd, collectionsDir, ACCOUNTS_COLLECTION_FILE))
     } else {
       logger.log.error("Failed to create Accounts collection.")
       process.exit(1)
     }
   }
 
-  await fs.createFile(path.resolve(cwd, collectionsDir, "Accounts/index.ts"))
+  await fs.createFile(
+    path.resolve(cwd, collectionsDir, ACCOUNTS_COLLECTION_FILE),
+  )
 
   await fs.writeFile(
-    path.resolve(cwd, collectionsDir, "Accounts/index.ts"),
+    path.resolve(cwd, collectionsDir, ACCOUNTS_COLLECTION_FILE),
     accountsCollection(accountsCollectionSlug),
   )
   collectionCheck.stop()
+
+  payloadAuthConfig.paths.admin.accountsCollection = path.join(
+    collectionsDir,
+    ACCOUNTS_COLLECTION_FILE,
+  )
+
   logger.log.success("Successfully created Accounts collection")
 }
