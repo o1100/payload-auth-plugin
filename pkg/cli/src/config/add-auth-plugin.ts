@@ -45,7 +45,7 @@ export async function addAuthPlugin(
   payloadAuthConfig.paths.plugins = path.join(pluginsDir, AUTH_PLUGIN_FILE)
 
   logger.log.success(
-    `Successfully created ${kleur.bold(pluginsDir + "/" + AUTH_PLUGIN_FILE)}, and added the plugin along with the selected providers.`,
+    `Successfully created ${kleur.bold(path.join(pluginsDir, AUTH_PLUGIN_FILE))}, and added the plugin along with the selected providers.`,
   )
 }
 
