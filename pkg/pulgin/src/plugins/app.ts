@@ -15,13 +15,7 @@
  * @packageDocumentation
  */
 
-import {
-  BasePayload,
-  CollectionConfig,
-  Config,
-  Endpoint,
-  Plugin,
-} from "payload"
+import { BasePayload, Config, Endpoint, Plugin } from "payload"
 import {
   AccountInfo,
   OAuthProviderConfig,
@@ -34,50 +28,8 @@ import {
   OAuthEndpointStrategy,
   PasskeyEndpointStrategy,
 } from "../core/endpoints.js"
-
-interface AccountsCollection {
-  /**
-   * Collection name
-   *
-   * @type {string}
-   */
-  name: string
-  /**
-   * Collection slug but optional
-   *
-   * @type {?string}
-   */
-  slug?: string | undefined
-  /**
-   * Hide the collection but optional. Not hidden by default
-   *
-   * @type {?(boolean | undefined)}
-   */
-  hidden?: boolean | undefined
-}
-
-interface SessionsCollection {
-  /**
-   * Collection name
-   *
-   * @type {string}
-   */
-  name: string
-  /**
-   * Collection slug but optional
-   *
-   * @type {?string}
-   */
-  slug?: string | undefined
-  /**
-   * Hide the collection but optional. Hidden by default
-   *
-   * @default true
-   *
-   * @type {?(boolean | undefined)}
-   */
-  hidden?: boolean | undefined
-}
+import { AppSession } from "../core/session/app.js"
+import { formatSlug } from "../core/utils/slug.js"
 
 /**
  * The App plugin to set up authentication to the intengrated frontend of Payload CMS.
@@ -96,31 +48,44 @@ interface PluginOptions {
    */
   enabled?: boolean | undefined
   /**
+   * Unique name for your frontend app.
+   * This name will be used to created endpoints, tokens, and etc.
+   * @type {string}
+   */
+  name: string
+  /**
    * Auth providers supported by the plugin
    *
    * @type {(OAuthProviderConfig | PasskeyProviderConfig)[]}
    */
   providers: (OAuthProviderConfig | PasskeyProviderConfig)[]
   /**
-   * App users collection. This collection will be used to store all the app users.
+   * App users collection slug.
    *
-   * **Note:** It is recommended that this collection must be named differently than the Payload Admin users collection,
-   * or else it can cause conflicts.
+   * This collection will be used to store all the app user records.
    *
-   * @type {UsersCollection}
+   * @type {string}
    */
-  users: CollectionConfig
-  /**
-   * User accounts collection. This collection will be used to store all the accounts that belongs to a user.
-   * One user can have more than one account
-   *
-   * **NOTE:** If there is an accounts collection already existing, it is recommended that use a different name and slug(if using) to avoid conflicts.
-   *
-   * @type {AccountsCollection}
-   */
-  accounts: AccountsCollection
+  usersCollectionSlug: string
 
-  sessions: SessionsCollection
+  /**
+   * App user accounts collection slug.
+   *
+   * This collection will be used to store all the app user account records.
+   * Multiple accounts can belong to one user
+   *
+   * @type {string}
+   */
+  accountsCollectionSlug: string
+
+  /**
+   * App user session collection slug.
+   *
+   * This collection will be used to store all the app user session records.
+   *
+   * @type {string}
+   */
+  sessionsCollectionSlug: string
 }
 
 /**
@@ -148,11 +113,24 @@ export const appAuthPlugin =
       throw new InvalidServerURL()
     }
 
-    const { users, accounts, providers } = pluginOptions
+    const {
+      usersCollectionSlug,
+      accountsCollectionSlug,
+      sessionsCollectionSlug,
+      providers,
+    } = pluginOptions
+
+    const name = formatSlug(pluginOptions.name)
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
 
-    const endpointsFactory = new EndpointsFactory("app")
+    const appSession = new AppSession(name, {
+      usersCollection: usersCollectionSlug,
+      accountsCollection: accountsCollectionSlug,
+      sessionsCollection: sessionsCollectionSlug,
+    })
+
+    const endpointsFactory = new EndpointsFactory(name)
 
     let oauthEndpoints: Endpoint[] = []
     let passkeyEndpoints: Endpoint[] = []
@@ -163,14 +141,7 @@ export const appAuthPlugin =
         new OAuthEndpointStrategy(oauthProviders),
       )
       oauthEndpoints = endpointsFactory.createEndpoints("oauth", {
-        sessionCallback: (
-          oauthAccountInfo: AccountInfo,
-          scope: string,
-          issuerName: string,
-          basePayload: BasePayload,
-        ) => {
-          return Response.json({})
-        },
+        sessionCallback: appSession.oauthSessionCallback,
       })
     }
 
