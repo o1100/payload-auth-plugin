@@ -8,6 +8,7 @@
         "cli:build": "bun run --filter=payload-auth build",
         "cli:dev": "bun run --filter=payload-auth dev",
         "plugin:build": "bun run --filter=payload-auth-plugin build",
-        "plugin:format": "bun run --filter=payload-auth-plugin format"
+        "plugin:format": "bun run --filter=payload-auth-plugin format",
+        "changelog": "./script/changelog.sh"
     }
 }
