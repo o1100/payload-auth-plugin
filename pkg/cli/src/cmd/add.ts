@@ -8,20 +8,20 @@ import {
 } from "../preflights/add.js"
 import fs from "fs-extra"
 import { PayloadAuthConfig } from "../config/payload-auth-config.js"
-import { transform } from "../transformers/index.js"
-import path from "path"
-import { transformProvider } from "../transformers/provider.js"
+import { addAdminProviders } from "../config/update-auth-plugin.js"
 
 const addOptionsSchema = v.object({
   cwd: v.string(),
   authPluginConfig: v.string(),
 })
 
-type AddOptions = v.InferInput<typeof addOptionsSchema>
-
 export const addCommand = new Command()
   .name("add")
   .description("Add 3rd party authentication providers")
+
+addCommand
+  .command("providers")
+  .description("Add auth providers")
   .option(
     "-c, --cwd <cwd>",
     "the working directory. Defaults to the current directory.",
@@ -72,38 +72,10 @@ export const addCommand = new Command()
       }
 
       if (pluginType === "admin") {
-        await addAdminProviders(options, authPluginConfig)
+        await addAdminProviders(options.cwd, authPluginConfig)
       }
     } catch (error) {
       console.log(error)
       logger.log.error("Something is not right. Try again")
     }
   })
-
-async function addAdminProviders(opts: AddOptions, config: PayloadAuthConfig) {
-  const source = await fs.readFile(
-    path.resolve(opts.cwd, config.paths["plugins"]),
-    "utf-8",
-  )
-
-  const selectedAuthProviders = (await logger.multiselect({
-    message: "Please select the auth providers you would like to add:",
-    options: AUTH_PROVIDERS,
-  })) as string[]
-
-  const transformedPlugin = await transform(
-    {
-      filename: "payload-auth.ts",
-      raw: source,
-      pluginType: "adminAuthPlugin",
-      providers: selectedAuthProviders,
-    },
-    [transformProvider],
-  )
-
-  await fs.writeFile(
-    path.resolve(opts.cwd, config.paths["plugins"]),
-    transformedPlugin,
-    "utf-8",
-  )
-}

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { Command } from "commander"
 import { initCommand } from "./cmd/init.js"
+import { addCommand } from "./cmd/add.js"
 
 process.on("SIGINT", () => process.exit(0))
 process.on("SIGTERM", () => process.exit(0))
@@ -13,6 +14,7 @@ async function main() {
     )
 
   program.addCommand(initCommand)
+  program.addCommand(addCommand)
 
   program.parse()
 }
