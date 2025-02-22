@@ -44,6 +44,7 @@ export const transformProvider: Transformer = async ({
                         providersConfig[incomingProvider],
                       )
                     }
+                    updateProviderImport(incomingProvider, sourceFile)
                   }
                 }
               }
@@ -58,4 +59,19 @@ export const transformProvider: Transformer = async ({
   return sourceFile
 }
 
-function updateProviderImport(providers: string, sourceFile: SourceFile) {}
+function updateProviderImport(provider: string, sourceFile: SourceFile) {
+  const importDcl = sourceFile
+    .getImportDeclarations()
+    .find(
+      (dcl) =>
+        dcl.getModuleSpecifierValue() === "payload-auth-plugin/providers",
+    )
+  if (importDcl) {
+    const existingNamedImport = importDcl
+      .getNamedImports()
+      .find((namedImport) => namedImport.getName() === provider)
+    if (!existingNamedImport) {
+      importDcl.addNamedImport(provider)
+    }
+  }
+}
