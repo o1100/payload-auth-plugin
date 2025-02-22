@@ -3,8 +3,7 @@ import { tmpdir } from "os"
 import path from "path"
 
 import { Project, ScriptKind, type SourceFile } from "ts-morph"
-import { transformImport } from "./imports.js"
-import { transformPlugin } from "./plugins.js"
+import { transformProvider } from "./provider.js"
 
 export type TransformOpts = {
   filename: string
@@ -30,7 +29,7 @@ async function createTempSourceFile(filename: string) {
 
 export async function transform(
   opts: TransformOpts,
-  transformers: Transformer[] = [transformImport, transformPlugin],
+  transformers: Transformer[] = [transformProvider],
 ) {
   const tempFile = await createTempSourceFile(opts.filename)
   const sourceFile = project.createSourceFile(tempFile, opts.raw, {
@@ -42,7 +41,7 @@ export async function transform(
   }
 
   if (opts.pluginType && opts.providers) {
-    await transformImport({
+    await transformProvider({
       sourceFile,
       ...opts,
     })

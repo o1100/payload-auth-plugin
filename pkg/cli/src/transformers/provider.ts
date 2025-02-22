@@ -1,8 +1,8 @@
-import { SyntaxKind } from "ts-morph"
+import { SourceFile, SyntaxKind } from "ts-morph"
 import { Transformer } from "./index.js"
 import { providersConfig } from "../config/auth-provider-config.js"
 
-export const transformPlugin: Transformer = async ({
+export const transformProvider: Transformer = async ({
   sourceFile,
   pluginType,
   providers: incomingProviders,
@@ -57,3 +57,5 @@ export const transformPlugin: Transformer = async ({
   await sourceFile.save()
   return sourceFile
 }
+
+function updateProviderImport(providers: string, sourceFile: SourceFile) {}

@@ -10,8 +10,7 @@ import fs from "fs-extra"
 import { PayloadAuthConfig } from "../config/payload-auth-config.js"
 import { transform } from "../transformers/index.js"
 import path from "path"
-import { Project } from "ts-morph"
-import { transformPlugin } from "../transformers/plugins.js"
+import { transformProvider } from "../transformers/provider.js"
 
 const addOptionsSchema = v.object({
   cwd: v.string(),
@@ -99,7 +98,7 @@ async function addAdminProviders(opts: AddOptions, config: PayloadAuthConfig) {
       pluginType: "adminAuthPlugin",
       providers: selectedAuthProviders,
     },
-    [transformPlugin],
+    [transformProvider],
   )
 
   await fs.writeFile(
