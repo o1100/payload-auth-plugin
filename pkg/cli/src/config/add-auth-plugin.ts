@@ -35,8 +35,7 @@ export async function addAuthPlugin(
   await fs.createFile(pluginsFile)
 
   const selectedAuthProviders = (await logger.multiselect({
-    message:
-      "Please select the auth providers you would like to add to you Payload project",
+    message: "Please select the auth providers you would like to add:",
     options: AUTH_PROVIDERS,
   })) as string[]
 
