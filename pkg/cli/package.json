@@ -14,7 +14,8 @@
     "scripts": {
         "dev": "bun run build && node dist/esm/index.js",
         "build": "bun run ../../script/build.ts",
-        "format": "bun x prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'"
+        "format": "bun x prettier --write '**/*.{js,jsx,ts,tsx,json,md,yaml,yml}'",
+        "release": "bun run build && changeset publish"
     },
     "dependencies": {
         "@antfu/ni": "23.3.1",

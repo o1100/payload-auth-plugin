@@ -1,5 +1,6 @@
 {
-    "name": "authsmith-payload",
+    "name": "payload",
+    "description": "Official AuthSmith - Payload Auth",
     "version": "0.5.8",
     "workspaces": [
         "pkg/*"
@@ -9,6 +10,7 @@
         "cli:dev": "bun run --filter=payload-auth dev",
         "plugin:build": "bun run --filter=payload-auth-plugin build",
         "plugin:format": "bun run --filter=payload-auth-plugin format",
-        "changelog": "./script/changelog.sh"
+        "changelog": "./script/changelog.sh",
+        "release": "bun run --filter=payload-auth release && bun run --filter=payload-auth-plugin release"
     }
 }
