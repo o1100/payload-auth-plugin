@@ -4,13 +4,13 @@ import path from "path"
 
 import { Project, ScriptKind, type SourceFile } from "ts-morph"
 import { transformImport } from "./imports.js"
-import { transformCollections } from "./collections.js"
+import { transformPlugin } from "./plugins.js"
 
 export type TransformOpts = {
   filename: string
   raw: string
-  isRemote?: boolean
-  collectionExportName?: string
+  pluginType?: string
+  providers?: string[]
 }
 
 export type Transformer<Output = SourceFile> = (
@@ -30,7 +30,7 @@ async function createTempSourceFile(filename: string) {
 
 export async function transform(
   opts: TransformOpts,
-  transformers: Transformer[] = [transformImport, transformCollections],
+  transformers: Transformer[] = [transformImport, transformPlugin],
 ) {
   const tempFile = await createTempSourceFile(opts.filename)
   const sourceFile = project.createSourceFile(tempFile, opts.raw, {
@@ -41,8 +41,11 @@ export async function transform(
     await transformer({ sourceFile, ...opts })
   }
 
-  if (opts.collectionExportName) {
-    return await transformCollections({ sourceFile, ...opts })
+  if (opts.pluginType && opts.providers) {
+    await transformImport({
+      sourceFile,
+      ...opts,
+    })
   }
 
   return sourceFile.getText()
