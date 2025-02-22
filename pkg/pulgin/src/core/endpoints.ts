@@ -119,7 +119,7 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
  */
 export class EndpointsFactory {
   private strategies: Record<string, EndpointStrategy> = {}
-  constructor(private pluginType: "admin" | "app") {}
+  constructor(private pluginType: string) {}
 
   registerStrategy(
     name: "oauth" | "passkey",
