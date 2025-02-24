@@ -49,6 +49,7 @@ export interface OIDCProviderConfig
     OAuthBaseProviderConfig {
   issuer: string
   algorithm: "oidc"
+  kind: "oauth"
 }
 
 export interface OAuth2ProviderConfig
@@ -56,14 +57,10 @@ export interface OAuth2ProviderConfig
     OAuthBaseProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
-}
-
-export type OAuthProviderConfig = (
-  | OIDCProviderConfig
-  | OAuth2ProviderConfig
-) & {
   kind: "oauth"
 }
+
+export type OAuthProviderConfig = OIDCProviderConfig | OAuth2ProviderConfig
 
 export interface AccountInfo {
   sub: string

@@ -14,6 +14,7 @@ function SlackAuthProvider(config: SlackAuthConfig): OIDCProviderConfig {
     issuer: "https://slack.com",
     name: "Slack",
     algorithm: "oidc",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

@@ -15,25 +15,16 @@ import {
 export function getOAuthProviders(
   providers: ProvidersConfig[],
 ): Record<string, OAuthProviderConfig> {
-  const providerRecords = providers.reduce(
-    (
-      record: Record<string, OAuthProviderConfig>,
-      provider: ProvidersConfig,
-    ) => {
-      if (record[provider.id]) {
-        throw new ProviderAlreadyExists()
-      }
-      const newRecord = {
-        ...record,
-      }
-      if (provider.kind === "oauth") {
-        newRecord[provider.id] = provider
-      }
-      return newRecord
-    },
-    {},
-  )
-  return providerRecords
+  const records: Record<string, OAuthProviderConfig> = {}
+  providers.map((provider: ProvidersConfig) => {
+    if (records[provider.id]) {
+      throw new ProviderAlreadyExists()
+    }
+    if (provider.kind === "oauth") {
+      records[provider.id] = provider
+    }
+  })
+  return records
 }
 
 /**

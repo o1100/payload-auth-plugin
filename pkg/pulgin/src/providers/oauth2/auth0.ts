@@ -25,6 +25,7 @@ function Auth0AuthProvider(config: Auth0AuthConfig): OAuth2ProviderConfig {
     authorization_server,
     name: "Auth0",
     algorithm: "oauth2",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

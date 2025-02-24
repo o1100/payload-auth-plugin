@@ -20,6 +20,7 @@ function KeyCloakAuthProvider(config: KeyCloakAuthConfig): OIDCProviderConfig {
     issuer: `https://${domain}/realms/${realm}`,
     name,
     algorithm: "oidc",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

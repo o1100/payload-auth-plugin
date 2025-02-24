@@ -14,6 +14,7 @@ function GoogleAuthProvider(config: GoogleAuthConfig): OIDCProviderConfig {
     issuer: "https://accounts.google.com",
     name: "Google",
     algorithm: "oidc",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

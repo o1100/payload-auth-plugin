@@ -18,6 +18,7 @@ function CognitoAuthProvider(config: CognitoAuthConfig): OIDCProviderConfig {
     issuer: `https://${domain}/${region}`,
     name: "Congnito",
     algorithm: "oidc",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

@@ -18,6 +18,7 @@ function MicrosoftEntraAuthProvider(
     issuer: `https://login.microsoftonline.com/${config.tenant_id}/v2.0`,
     name: "Microsoft Entra",
     algorithm: "oidc",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       const email = profile.email as string
       return {

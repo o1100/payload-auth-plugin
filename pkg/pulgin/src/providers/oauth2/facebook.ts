@@ -25,6 +25,7 @@ function FacebookAuthProvider(
     authorization_server,
     name: "Facebook",
     algorithm: "oauth2",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       let picture
 

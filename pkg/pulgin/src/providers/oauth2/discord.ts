@@ -21,6 +21,7 @@ function DiscordAuthProvider(config: DiscordAuthConfig): OAuth2ProviderConfig {
     authorization_server,
     name: "Discord",
     algorithm: "oauth2",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       const format = profile.avatar.toString().startsWith("a_") ? "gif" : "png"
 

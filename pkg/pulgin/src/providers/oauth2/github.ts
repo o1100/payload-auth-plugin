@@ -22,6 +22,7 @@ function GitHubAuthProvider(config: GitHubAuthConfig): OAuth2ProviderConfig {
     authorization_server,
     name: "GitHub",
     algorithm: "oauth2",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.id as string,

@@ -26,6 +26,7 @@ function AtlassianAuthProvider(
     name: "Atlassian",
     algorithm,
     scope: "read:me read:account",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.account_id as string,

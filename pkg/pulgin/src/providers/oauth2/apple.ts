@@ -27,6 +27,7 @@ function AppleOAuth2Provider(config: AppleAuthConfig): OAuth2ProviderConfig {
       ...config.params,
       response_mode: "form_post",
     },
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,

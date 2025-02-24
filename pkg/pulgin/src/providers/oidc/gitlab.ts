@@ -15,6 +15,7 @@ function GitLabAuthProvider(config: GitLabAuthConfig): OIDCProviderConfig {
     issuer: "https://gitlab.com",
     name: "GitLab",
     algorithm,
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.sub as string,
