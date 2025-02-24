@@ -49,6 +49,7 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
           ] as OAuthProviderConfig
 
           return OAuthHandlers(
+            pluginType,
             request,
             request.routeParams?.resource as string,
             provider,
