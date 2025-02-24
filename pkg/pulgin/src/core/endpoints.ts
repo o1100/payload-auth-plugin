@@ -41,7 +41,7 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
   }): Endpoint[] {
     return [
       {
-        path: `${pluginType}/oauth/:resource/:provider`,
+        path: `/${pluginType}/oauth/:resource/:provider`,
         method: "get",
         handler: (request: PayloadRequest) => {
           const provider = this.providers[
@@ -92,7 +92,7 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
   }): Endpoint[] {
     return [
       {
-        path: `${pluginType}/passkey/:resource`,
+        path: `/${pluginType}/passkey/:resource`,
         method: "post",
         handler: (request: PayloadRequest) => {
           return PasskeyHandlers(
