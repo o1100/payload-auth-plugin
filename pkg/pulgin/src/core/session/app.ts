@@ -1,29 +1,19 @@
 import { BasePayload } from "payload"
 import { AccountInfo } from "../../types.js"
-import { UserNotFound } from "../errors/consoleErrors.js"
+import { ErrorKind, PluginError } from "../../error.js"
 
-/**
- * Description placeholder
- *
- * @export
- * @class AppSession
- * @typedef {AppSession}
- * @internal
- */
 export class AppSession {
-  private appName: string
-  private collections: Record<string, string>
   constructor(
-    name: string,
-    collections: {
+    private appName: string,
+    private collections: {
       usersCollection: string
       accountsCollection: string
       sessionsCollection: string
     },
-  ) {
-    this.collections = collections
-    this.appName = name
-  }
+    private onSuccess: (user: unknown) => void,
+    private onError: (err: PluginError) => void,
+    private allowAutoSignUp: boolean,
+  ) {}
 
   private async oauthAccountMutations(
     userId: string,
@@ -67,8 +57,7 @@ export class AppSession {
     scope: string,
     issuerName: string,
     payload: BasePayload,
-    allowAutoSignUp: boolean,
-  ): Promise<Response> {
+  ) {
     const userRecords = await payload.find({
       collection: this.collections.usersCollection,
       where: {
@@ -80,7 +69,7 @@ export class AppSession {
     let userRecordID: string
     if (userRecords.docs.length === 1) {
       userRecordID = userRecords.docs[0].id as string
-    } else if (allowAutoSignUp) {
+    } else if (this.allowAutoSignUp) {
       const userRecords = await payload.create({
         collection: this.collections.usersCollection,
         data: {
@@ -89,7 +78,10 @@ export class AppSession {
       })
       userRecordID = userRecords.id as string
     } else {
-      throw new UserNotFound()
+      return this.onError({
+        message: "User not found",
+        kind: ErrorKind.NotFound,
+      })
     }
 
     await this.oauthAccountMutations(
@@ -99,6 +91,6 @@ export class AppSession {
       issuerName,
       payload,
     )
-    return Response.json({})
+    return this.onSuccess(oauthAccountInfo)
   }
 }

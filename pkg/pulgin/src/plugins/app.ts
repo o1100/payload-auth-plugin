@@ -21,7 +21,10 @@ import {
   OAuthProviderConfig,
   PasskeyProviderConfig,
 } from "../types.js"
-import { InvalidServerURL } from "../core/errors/consoleErrors.js"
+import {
+  InvalidServerURL,
+  MissingCollections,
+} from "../core/errors/consoleErrors.js"
 import { getOAuthProviders, getPasskeyProvider } from "../providers/utils.js"
 import {
   EndpointsFactory,
@@ -30,6 +33,8 @@ import {
 } from "../core/endpoints.js"
 import { AppSession } from "../core/session/app.js"
 import { formatSlug } from "../core/utils/slug.js"
+import { PluginError } from "../error.js"
+import { preflightCollectionCheck } from "../core/preflights/collections.js"
 
 /**
  * The App plugin to set up authentication to the intengrated frontend of Payload CMS.
@@ -89,6 +94,21 @@ interface PluginOptions {
    *
    */
   allowAutoSignUp?: boolean | undefined
+
+  /**
+   * On success callback. This will be triggred upon successfull signin.
+   *
+   * Use it to redirect users to some page after signin
+   *
+   */
+  onSuccess: (user: unknown) => void
+
+  /**
+   * On error callback. This will be triggred upon signup or signin failures.
+   *
+   * Handle errors and show error messages to the user
+   */
+  onError: (err: PluginError) => void
 }
 
 /**
@@ -110,23 +130,39 @@ export const appAuthPlugin =
       throw new InvalidServerURL()
     }
 
+    if (!config.collections?.length) {
+      throw new MissingCollections()
+    }
+
     const {
       usersCollectionSlug,
       accountsCollectionSlug,
       sessionsCollectionSlug,
       providers,
       allowAutoSignUp,
+      onSuccess,
+      onError,
     } = pluginOptions
+
+    preflightCollectionCheck(usersCollectionSlug, config.collections)
+    preflightCollectionCheck(accountsCollectionSlug, config.collections)
+    preflightCollectionCheck(sessionsCollectionSlug, config.collections)
 
     const name = formatSlug(pluginOptions.name)
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
 
-    const session = new AppSession(name, {
-      usersCollection: usersCollectionSlug,
-      accountsCollection: accountsCollectionSlug,
-      sessionsCollection: sessionsCollectionSlug,
-    })
+    const session = new AppSession(
+      name,
+      {
+        usersCollection: usersCollectionSlug,
+        accountsCollection: accountsCollectionSlug,
+        sessionsCollection: sessionsCollectionSlug,
+      },
+      onSuccess,
+      onError,
+      allowAutoSignUp ?? false,
+    )
 
     const endpointsFactory = new EndpointsFactory(name)
 
@@ -150,7 +186,6 @@ export const appAuthPlugin =
             scope,
             issuerName,
             basePayload,
-            allowAutoSignUp ?? false,
           ),
       })
     }
