@@ -96,12 +96,6 @@ interface PluginOptions {
  */
 export const appAuthPlugin =
   (pluginOptions: PluginOptions): Plugin =>
-  /**
-   * Callback function to return the updated Payload config.
-   *
-   * @param {Config} incomingConfig
-   * @returns {Config}
-   */
   (incomingConfig: Config): Config => {
     const config = { ...incomingConfig }
 
@@ -124,7 +118,7 @@ export const appAuthPlugin =
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
 
-    const appSession = new AppSession(name, {
+    const session = new AppSession(name, {
       usersCollection: usersCollectionSlug,
       accountsCollection: accountsCollectionSlug,
       sessionsCollection: sessionsCollectionSlug,
@@ -141,7 +135,18 @@ export const appAuthPlugin =
         new OAuthEndpointStrategy(oauthProviders),
       )
       oauthEndpoints = endpointsFactory.createEndpoints("oauth", {
-        sessionCallback: appSession.oauthSessionCallback,
+        sessionCallback: (
+          oauthAccountInfo: AccountInfo,
+          scope: string,
+          issuerName: string,
+          basePayload: BasePayload,
+        ) =>
+          session.oauthSessionCallback(
+            oauthAccountInfo,
+            scope,
+            issuerName,
+            basePayload,
+          ),
       })
     }
 
