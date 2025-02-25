@@ -14,7 +14,24 @@ type Provider =
   | "discord"
   | "facebook"
 
-export function signin(provider: Provider, apiBase: string = '/api') {
+type AppSigninOptions = {
+  provider: Provider
+  name: string
+  customEndpointBase?: string
+}
+
+export function appSignin(options: AppSigninOptions) {
+  if (options.provider === "passkey") {
+    init()
+  } else {
+    const link = document.createElement("a")
+    const base = options.customEndpointBase ?? "/api"
+    link.href = `${base}/${options.name}/oauth/authorization/${options.provider}`
+    link.click()
+  }
+}
+
+export function adminSignin(provider: Provider, apiBase: string = "/api") {
   if (provider === "passkey") {
     init()
   } else {
