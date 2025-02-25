@@ -1,5 +1,6 @@
 import { BasePayload } from "payload"
 import { AccountInfo } from "../../types.js"
+import { UserNotFound } from "../errors/consoleErrors.js"
 
 /**
  * Description placeholder
@@ -88,7 +89,7 @@ export class AppSession {
       })
       userRecordID = userRecords.id as string
     } else {
-      return Response.json({ message: "User doesn't exists" }, { status: 404 })
+      throw new UserNotFound()
     }
 
     await this.oauthAccountMutations(
