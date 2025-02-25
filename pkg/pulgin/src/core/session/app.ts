@@ -10,14 +10,19 @@ import { AccountInfo } from "../../types.js"
  * @internal
  */
 export class AppSession {
+  private appName: string
+  private collections: Record<string, string>
   constructor(
-    private name: string,
-    private collections: {
+    name: string,
+    collections: {
       usersCollection: string
       accountsCollection: string
       sessionsCollection: string
     },
-  ) {}
+  ) {
+    this.collections = collections
+    this.appName = name
+  }
 
   private async oauthAccountMutations(
     userId: string,
@@ -61,6 +66,7 @@ export class AppSession {
     scope: string,
     issuerName: string,
     payload: BasePayload,
+    allowAutoSignUp: boolean,
   ): Promise<Response> {
     const userRecords = await payload.find({
       collection: this.collections.usersCollection,
@@ -70,18 +76,28 @@ export class AppSession {
         },
       },
     })
-
+    let userRecordID: string
     if (userRecords.docs.length === 1) {
-      const userRecord = userRecords.docs[0]
-      await this.oauthAccountMutations(
-        userRecord.id as string,
-        oauthAccountInfo,
-        scope,
-        issuerName,
-        payload,
-      )
+      userRecordID = userRecords.docs[0].id as string
+    } else if (allowAutoSignUp) {
+      const userRecords = await payload.create({
+        collection: this.collections.usersCollection,
+        data: {
+          email: oauthAccountInfo.email,
+        },
+      })
+      userRecordID = userRecords.id as string
+    } else {
+      return Response.json({ message: "User doesn't exists" }, { status: 404 })
     }
 
+    await this.oauthAccountMutations(
+      userRecordID,
+      oauthAccountInfo,
+      scope,
+      issuerName,
+      payload,
+    )
     return Response.json({})
   }
 }

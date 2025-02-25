@@ -43,20 +43,18 @@ interface PluginOptions {
    *
    * @default true
    *
-   * @type {boolean}
    *
    */
   enabled?: boolean | undefined
   /**
    * Unique name for your frontend app.
+   *
    * This name will be used to created endpoints, tokens, and etc.
-   * @type {string}
    */
   name: string
   /**
    * Auth providers supported by the plugin
    *
-   * @type {(OAuthProviderConfig | PasskeyProviderConfig)[]}
    */
   providers: (OAuthProviderConfig | PasskeyProviderConfig)[]
   /**
@@ -64,7 +62,6 @@ interface PluginOptions {
    *
    * This collection will be used to store all the app user records.
    *
-   * @type {string}
    */
   usersCollectionSlug: string
 
@@ -74,7 +71,6 @@ interface PluginOptions {
    * This collection will be used to store all the app user account records.
    * Multiple accounts can belong to one user
    *
-   * @type {string}
    */
   accountsCollectionSlug: string
 
@@ -83,9 +79,16 @@ interface PluginOptions {
    *
    * This collection will be used to store all the app user session records.
    *
-   * @type {string}
    */
   sessionsCollectionSlug: string
+
+  /**
+   * Allow auto signup if user doesn't have an account.
+   *
+   * @default false
+   *
+   */
+  allowAutoSignUp?: boolean | undefined
 }
 
 /**
@@ -112,6 +115,7 @@ export const appAuthPlugin =
       accountsCollectionSlug,
       sessionsCollectionSlug,
       providers,
+      allowAutoSignUp,
     } = pluginOptions
 
     const name = formatSlug(pluginOptions.name)
@@ -146,6 +150,7 @@ export const appAuthPlugin =
             scope,
             issuerName,
             basePayload,
+            allowAutoSignUp ?? false,
           ),
       })
     }
