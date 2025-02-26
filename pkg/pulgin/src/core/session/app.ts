@@ -1,16 +1,21 @@
-import { BasePayload } from "payload"
+import { BasePayload, JsonObject, TypeWithID } from "payload"
 import { AccountInfo } from "../../types.js"
 import { ErrorKind, PluginError } from "../../error.js"
 
 export class AppSession {
   constructor(
-    private appName: string,
     private collections: {
       usersCollection: string
       accountsCollection: string
       sessionsCollection: string
     },
-    private onSuccess: (user: unknown) => void,
+    private onSuccess: ({
+      user,
+      account,
+    }: {
+      user?: (JsonObject & TypeWithID) | undefined
+      account?: (JsonObject & TypeWithID) | undefined
+    }) => void,
     private onError: (err: PluginError) => void,
     private allowAutoSignUp: boolean,
   ) {}
@@ -21,7 +26,7 @@ export class AppSession {
     scope: string,
     issuerName: string,
     payload: BasePayload,
-  ) {
+  ): Promise<JsonObject & TypeWithID> {
     const data: Record<string, unknown> = {
       scope,
       name: oauthAccountInfo.name,
@@ -37,7 +42,7 @@ export class AppSession {
     })
 
     if (accountRecords.docs && accountRecords.docs.length === 1) {
-      await payload.update({
+      return await payload.update({
         collection: this.collections.accountsCollection,
         id: accountRecords.docs[0].id,
         data,
@@ -45,7 +50,7 @@ export class AppSession {
     } else {
       data["sub"] = oauthAccountInfo.sub
       data["user"] = userId
-      await payload.create({
+      return await payload.create({
         collection: this.collections.accountsCollection,
         data,
       })
@@ -66,9 +71,9 @@ export class AppSession {
         },
       },
     })
-    let userRecordID: string
+    let userRecord: JsonObject & TypeWithID
     if (userRecords.docs.length === 1) {
-      userRecordID = userRecords.docs[0].id as string
+      userRecord = userRecords.docs[0]
     } else if (this.allowAutoSignUp) {
       const userRecords = await payload.create({
         collection: this.collections.usersCollection,
@@ -76,7 +81,7 @@ export class AppSession {
           email: oauthAccountInfo.email,
         },
       })
-      userRecordID = userRecords.id as string
+      userRecord = userRecords
     } else {
       return this.onError({
         message: "User not found",
@@ -84,13 +89,13 @@ export class AppSession {
       })
     }
 
-    await this.oauthAccountMutations(
-      userRecordID,
+    const accountRecord = await this.oauthAccountMutations(
+      userRecord["id"] as string,
       oauthAccountInfo,
       scope,
       issuerName,
       payload,
     )
-    return this.onSuccess(oauthAccountInfo)
+    return this.onSuccess({ user: userRecord, account: accountRecord })
   }
 }

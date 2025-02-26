@@ -15,7 +15,14 @@
  * @packageDocumentation
  */
 
-import { BasePayload, Config, Endpoint, Plugin } from "payload"
+import {
+  BasePayload,
+  Config,
+  Endpoint,
+  JsonObject,
+  Plugin,
+  TypeWithID,
+} from "payload"
 import {
   AccountInfo,
   OAuthProviderConfig,
@@ -101,7 +108,13 @@ interface PluginOptions {
    * Use it to redirect users to some page after signin
    *
    */
-  onSuccess: (user: unknown) => void
+  onSuccess: ({
+    user,
+    account,
+  }: {
+    user?: (JsonObject & TypeWithID) | undefined
+    account?: (JsonObject & TypeWithID) | undefined
+  }) => void
 
   /**
    * On error callback. This will be triggred upon signup or signin failures.
@@ -153,7 +166,6 @@ export const appAuthPlugin =
     const passkeyProvider = getPasskeyProvider(providers)
 
     const session = new AppSession(
-      name,
       {
         usersCollection: usersCollectionSlug,
         accountsCollection: accountsCollectionSlug,
