@@ -25,6 +25,7 @@ import {
 } from "payload"
 import {
   AccountInfo,
+  CredentialsProviderConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
 } from "../types.js"
@@ -32,8 +33,13 @@ import {
   InvalidServerURL,
   MissingCollections,
 } from "../core/errors/consoleErrors.js"
-import { getOAuthProviders, getPasskeyProvider } from "../providers/utils.js"
 import {
+  getCredentialsProvider,
+  getOAuthProviders,
+  getPasskeyProvider,
+} from "../providers/utils.js"
+import {
+  CredentialsEndpointStrategy,
   EndpointsFactory,
   OAuthEndpointStrategy,
   PasskeyEndpointStrategy,
@@ -68,7 +74,11 @@ interface PluginOptions {
    * Auth providers supported by the plugin
    *
    */
-  providers: (OAuthProviderConfig | PasskeyProviderConfig)[]
+  providers: (
+    | OAuthProviderConfig
+    | PasskeyProviderConfig
+    | CredentialsProviderConfig
+  )[]
   /**
    * App users collection slug.
    *
@@ -162,8 +172,10 @@ export const appAuthPlugin =
     preflightCollectionCheck(sessionsCollectionSlug, config.collections)
 
     const name = formatSlug(pluginOptions.name)
+
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
+    const credentialsProvider = getCredentialsProvider(providers)
 
     const session = new AppSession(
       {
@@ -180,6 +192,7 @@ export const appAuthPlugin =
 
     let oauthEndpoints: Endpoint[] = []
     let passkeyEndpoints: Endpoint[] = []
+    let credentialsEndpoints: Endpoint[] = []
 
     if (Object.keys(oauthProviders).length > 0) {
       endpointsFactory.registerStrategy(
@@ -210,10 +223,19 @@ export const appAuthPlugin =
       passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
     }
 
+    if (credentialsProvider) {
+      endpointsFactory.registerStrategy(
+        "credentials",
+        new CredentialsEndpointStrategy(),
+      )
+      credentialsEndpoints = endpointsFactory.createEndpoints("credentials")
+    }
+
     config.endpoints = [
       ...(config.endpoints ?? []),
       ...oauthEndpoints,
       ...passkeyEndpoints,
+      ...credentialsEndpoints,
     ]
 
     return config

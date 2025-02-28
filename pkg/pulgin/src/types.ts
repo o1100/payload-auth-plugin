@@ -79,12 +79,13 @@ export interface AccountInfo {
 
 export type CredentialsProviderConfig = {
   id: string
-  name: string
-  verfiyEmail?: boolean
-  passwordless?: boolean
-  mfa?: "OTP" | "TOTP" | "None"
-  signinCallback?: () => void
-  signupCallback?: () => void
+  kind: "credentials"
+  // name: string
+  // verfiyEmail?: boolean
+  // passwordless?: boolean
+  // mfa?: "OTP" | "TOTP" | "None"
+  // signinCallback?: () => void
+  // signupCallback?: () => void
 }
 
 export interface CredentialsAccountInfo {
@@ -97,4 +98,7 @@ export type PasskeyProviderConfig = {
   kind: "passkey"
 }
 
-export type ProvidersConfig = OAuthProviderConfig | PasskeyProviderConfig
+export type ProvidersConfig =
+  | OAuthProviderConfig
+  | PasskeyProviderConfig
+  | CredentialsProviderConfig

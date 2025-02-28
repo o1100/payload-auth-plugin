@@ -1,9 +1,8 @@
-import { init } from "./passkey/index.js"
+import { init as passkeyInit } from "./passkey/index.js"
 
-type Provider =
+type OauthProvider =
   | "google"
   | "github"
-  | "passkey"
   | "apple"
   | "cognito"
   | "gitlab"
@@ -15,28 +14,41 @@ type Provider =
   | "facebook"
 
 type AppSigninOptions = {
-  provider: Provider
   name: string
   customEndpointBase?: string
 }
 
-export function appSignin(options: AppSigninOptions) {
-  if (options.provider === "passkey") {
-    init()
-  } else {
+export const appSignin = {
+  oauth: (options: AppSigninOptions & { provider: OauthProvider }) => {
     const link = document.createElement("a")
     const base = options.customEndpointBase ?? "/api"
     link.href = `${base}/${options.name}/oauth/authorization/${options.provider}`
     link.click()
-  }
+  },
+  passkey: () => {
+    passkeyInit()
+  },
+  credentials: async (payload: any, options: AppSigninOptions) => {
+    const base = options.customEndpointBase ?? "/api"
+    await fetch(`http://localhost:3000/${base}/${options.name}/auth/signin`, {
+      method: "POST",
+      body: JSON.stringify(payload),
+    })
+  },
 }
 
-export function adminSignin(provider: Provider, apiBase: string = "/api") {
-  if (provider === "passkey") {
-    init()
-  } else {
+type AdminSigninOptions = {
+  customEndpointBase?: string
+}
+
+export const adminSignin = {
+  oauth: (options: AdminSigninOptions & { provider: OauthProvider }) => {
     const link = document.createElement("a")
-    link.href = `${apiBase}/admin/oauth/authorization/${provider}`
+    const base = options.customEndpointBase ?? "/api"
+    link.href = `${base}/admin/oauth/authorization/${options.provider}`
     link.click()
-  }
+  },
+  passkey: () => {
+    passkeyInit()
+  },
 }

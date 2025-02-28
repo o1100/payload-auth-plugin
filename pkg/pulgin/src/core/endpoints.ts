@@ -2,6 +2,7 @@ import type { BasePayload, Endpoint, PayloadRequest } from "payload"
 import type { AccountInfo, OAuthProviderConfig } from "../types.js"
 import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
+import { CredentialsHandlers } from "./routeHandlers/credential.js"
 
 /**
  * Base interface for all endpoint strategies. Useful to keep extending for providers with
@@ -110,6 +111,33 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
   }
 }
 
+export class CredentialsEndpointStrategy implements EndpointStrategy {
+  createEndpoints({
+    pluginType,
+    sessionCallback,
+  }: {
+    pluginType: string
+    sessionCallback: (
+      accountInfo: AccountInfo,
+      issuerName: string,
+      payload: BasePayload,
+    ) => Promise<Response>
+  }): Endpoint[] {
+    return [
+      {
+        path: `/${pluginType}/auth/:resource`,
+        handler: (request: PayloadRequest) => {
+          return CredentialsHandlers(
+            request,
+            request.routeParams?.resource as string,
+          )
+        },
+        method: "post",
+      },
+    ]
+  }
+}
+
 /**
  * The generic endpoint factory class
  *
@@ -123,14 +151,14 @@ export class EndpointsFactory {
   constructor(private pluginType: string) {}
 
   registerStrategy(
-    name: "oauth" | "passkey",
+    name: "oauth" | "passkey" | "credentials",
     strategy: EndpointStrategy,
   ): void {
     this.strategies[name] = strategy
   }
 
   createEndpoints(
-    strategyName: "oauth" | "passkey",
+    strategyName: "oauth" | "passkey" | "credentials",
     config?: any | undefined,
   ): Endpoint[] {
     const strategy = this.strategies[strategyName]

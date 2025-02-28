@@ -27,3 +27,9 @@ export class PasskeyVerificationAPIError extends AuthAPIError {
     super("Passkey verification failed", 403)
   }
 }
+
+export class InvalidAPIRequest extends AuthAPIError {
+  constructor() {
+    super("Invalid API request", 400)
+  }
+}
