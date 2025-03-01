@@ -22,7 +22,7 @@ export function appSignin(options: AppSigninOptions) {
   return {
     oauth: (provider: OauthProvider) => {
       const base = options.baseURL
-      window.location.href = `${base}/${options.name}/oauth/authorization/${provider}`
+      window.location.href = `${base}/api/${options.name}/oauth/authorization/${provider}`
     },
     passkey: () => {
       passkeyInit()
