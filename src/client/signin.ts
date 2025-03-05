@@ -12,6 +12,7 @@ type OauthProvider =
   | "auth0"
   | "discord"
   | "facebook"
+  | "jumpcloud"
 
 type AppSigninOptions = {
   name: string
