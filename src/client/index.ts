@@ -8,8 +8,6 @@ interface AppClientOptions extends BaseClientOptions {
 }
 
 export function appClient(options: AppClientOptions) {
-  console.log(options)
-
   return {
     signin: () => appSignin(options),
     signup: () => {},
