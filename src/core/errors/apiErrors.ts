@@ -16,6 +16,12 @@ export class MissingEmailAPIError extends AuthAPIError {
   }
 }
 
+export class UserNotFoundAPIError extends AuthAPIError {
+  constructor() {
+    super("User not found")
+  }
+}
+
 export class EmailNotFoundAPIError extends AuthAPIError {
   constructor() {
     super("Now user found with this email", 404)
