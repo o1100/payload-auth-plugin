@@ -38,6 +38,8 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
       scope: string,
       issuerName: string,
       payload: BasePayload,
+      successRedirect: string,
+      errorRedirect: string,
     ) => Promise<Response>
   }): Endpoint[] {
     return [
@@ -45,6 +47,9 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
         path: `/${pluginType}/oauth/:resource/:provider`,
         method: "get",
         handler: (request: PayloadRequest) => {
+          const successRedirect =
+            request.searchParams.get("successRedirect") ?? ""
+          const errorRedirect = request.searchParams.get("errorRedirect") ?? ""
           const provider = this.providers[
             request.routeParams?.provider as string
           ] as OAuthProviderConfig
@@ -60,6 +65,8 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
                 provider.scope,
                 provider.name,
                 request.payload,
+                successRedirect,
+                errorRedirect,
               )
             },
           )
@@ -146,19 +153,18 @@ export class CredentialsEndpointStrategy implements EndpointStrategy {
  * @typedef {EndpointsFactory}
  * @internal
  */
+
+type Strategies = "oauth" | "passkey" | "credentials" | "session"
 export class EndpointsFactory {
   private strategies: Record<string, EndpointStrategy> = {}
   constructor(private pluginType: string) {}
 
-  registerStrategy(
-    name: "oauth" | "passkey" | "credentials",
-    strategy: EndpointStrategy,
-  ): void {
+  registerStrategy(name: Strategies, strategy: EndpointStrategy): void {
     this.strategies[name] = strategy
   }
 
   createEndpoints(
-    strategyName: "oauth" | "passkey" | "credentials",
+    strategyName: Strategies,
     config?: any | undefined,
   ): Endpoint[] {
     const strategy = this.strategies[strategyName]

@@ -183,8 +183,6 @@ export const appAuthPlugin =
         accountsCollection: accountsCollectionSlug,
         sessionsCollection: sessionsCollectionSlug,
       },
-      onSuccess,
-      onError,
       allowAutoSignUp ?? false,
     )
 
@@ -205,12 +203,16 @@ export const appAuthPlugin =
           scope: string,
           issuerName: string,
           basePayload: BasePayload,
+          successRedirect: string,
+          errorRedirect: string,
         ) =>
           session.oauthSessionCallback(
             oauthAccountInfo,
             scope,
             issuerName,
             basePayload,
+            successRedirect,
+            errorRedirect,
           ),
       })
     }

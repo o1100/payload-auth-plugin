@@ -1,6 +1,7 @@
 import { BasePayload, JsonObject, TypeWithID } from "payload"
 import { AccountInfo } from "../../types.js"
 import { ErrorKind, PluginError } from "../../error.js"
+import { UserNotFoundAPIError } from "../errors/apiErrors.js"
 
 export class AppSession {
   constructor(
@@ -9,14 +10,6 @@ export class AppSession {
       accountsCollection: string
       sessionsCollection: string
     },
-    private onSuccess: ({
-      user,
-      account,
-    }: {
-      user?: (JsonObject & TypeWithID) | undefined
-      account?: (JsonObject & TypeWithID) | undefined
-    }) => void,
-    private onError: (err: PluginError) => void,
     private allowAutoSignUp: boolean,
   ) {}
 
@@ -62,6 +55,8 @@ export class AppSession {
     scope: string,
     issuerName: string,
     payload: BasePayload,
+    successRedirect: string,
+    errorRedirect: string,
   ) {
     const userRecords = await payload.find({
       collection: this.collections.usersCollection,
@@ -83,12 +78,8 @@ export class AppSession {
       })
       userRecord = userRecords
     } else {
-      return this.onError({
-        message: "User not found",
-        kind: ErrorKind.NotFound,
-      })
+      throw new UserNotFoundAPIError()
     }
-
     const accountRecord = await this.oauthAccountMutations(
       userRecord["id"] as string,
       oauthAccountInfo,
@@ -96,6 +87,20 @@ export class AppSession {
       issuerName,
       payload,
     )
-    return this.onSuccess({ user: userRecord, account: accountRecord })
+
+    const redirectURL = new URL("http://localhost:3000")
+    redirectURL.pathname = successRedirect
+    const res = new Response(null, {
+      status: 302,
+      headers: {
+        Location: redirectURL.toString(),
+      },
+    })
+
+    const expirationDate = new Date(Date.now() + 400000).toUTCString() // Corrected expiration date
+    const cookieValue = `__session-app=vallllll; Path=/; HttpOnly; SameSite=Lax; Expires=${expirationDate}`
+
+    res.headers.append("Set-Cookie", cookieValue)
+    return res
   }
 }
