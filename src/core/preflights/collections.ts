@@ -1,12 +1,20 @@
 import { CollectionConfig } from "payload"
-import { InvalidCollectionSlug } from "../errors/consoleErrors.js"
+import {
+  InvalidCollectionSlug,
+  MissingCollections,
+} from "../errors/consoleErrors.js"
 
 export function preflightCollectionCheck(
-  slug: string,
-  collections: CollectionConfig[],
+  slugs: string[],
+  collections: CollectionConfig[] | undefined,
 ) {
-  if (!collections.some((c) => c.slug === slug)) {
-    throw new InvalidCollectionSlug()
+  if (!collections?.length) {
+    throw new MissingCollections()
   }
+  slugs.forEach((slug) => {
+    if (!collections.some((c) => c.slug === slug)) {
+      throw new InvalidCollectionSlug()
+    }
+  })
   return
 }

@@ -1,16 +1,23 @@
-import { BasePayload, JsonObject, TypeWithID } from "payload"
-import { AccountInfo } from "../../types.js"
+import { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload"
+import { AccountInfo, AuthenticationStrategy } from "../../types.js"
 import { ErrorKind, PluginError } from "../../error.js"
 import { UserNotFoundAPIError } from "../errors/apiErrors.js"
+import {
+  createAppSessionCookies,
+  invalidateOAuthCookies,
+} from "../utils/cookies.js"
 
 export class AppSession {
   constructor(
+    private appName: string,
     private collections: {
       usersCollection: string
       accountsCollection: string
       sessionsCollection: string
     },
     private allowAutoSignUp: boolean,
+    private authenticationStrategy: AuthenticationStrategy,
+    private secret: string,
   ) {}
 
   private async oauthAccountMutations(
@@ -54,10 +61,11 @@ export class AppSession {
     oauthAccountInfo: AccountInfo,
     scope: string,
     issuerName: string,
-    payload: BasePayload,
+    request: PayloadRequest,
     successRedirect: string,
     errorRedirect: string,
   ) {
+    const { payload } = request
     const userRecords = await payload.find({
       collection: this.collections.usersCollection,
       where: {
@@ -88,7 +96,20 @@ export class AppSession {
       payload,
     )
 
-    const redirectURL = new URL("http://localhost:3000")
+    let cookies: string[] = []
+
+    if (this.authenticationStrategy === "Cookie") {
+      cookies = [
+        ...createAppSessionCookies(this.appName, this.secret, {
+          id: userRecord["id"],
+          email: oauthAccountInfo.email,
+          collection: this.collections.usersCollection,
+        }),
+      ]
+      cookies = invalidateOAuthCookies(cookies)
+    }
+
+    const redirectURL = new URL(request.url!)
     redirectURL.pathname = successRedirect
     const res = new Response(null, {
       status: 302,
@@ -97,10 +118,9 @@ export class AppSession {
       },
     })
 
-    const expirationDate = new Date(Date.now() + 400000).toUTCString() // Corrected expiration date
-    const cookieValue = `__session-app=vallllll; Path=/; HttpOnly; SameSite=Lax; Expires=${expirationDate}`
-
-    res.headers.append("Set-Cookie", cookieValue)
+    cookies.forEach((cookie) => {
+      res.headers.append("Set-Cookie", cookie)
+    })
     return res
   }
 }

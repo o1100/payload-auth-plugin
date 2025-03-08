@@ -93,3 +93,9 @@ export class MissingCollections extends PluginError {
     super("Missing collections")
   }
 }
+
+export class MissingEnv extends PluginError {
+  constructor(env: string) {
+    super("Missing ENV " + env)
+  }
+}

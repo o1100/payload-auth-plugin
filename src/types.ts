@@ -109,3 +109,5 @@ export type ProvidersConfig =
   | OAuthProviderConfig
   | PasskeyProviderConfig
   | CredentialsProviderConfig
+
+export type AuthenticationStrategy = "JWT" | "Cookie"

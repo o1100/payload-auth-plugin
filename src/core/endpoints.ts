@@ -37,7 +37,7 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
       oauthAccountInfo: AccountInfo,
       scope: string,
       issuerName: string,
-      payload: BasePayload,
+      request: PayloadRequest,
       successRedirect: string,
       errorRedirect: string,
     ) => Promise<Response>
@@ -64,7 +64,7 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
                 oauthAccountInfo,
                 provider.scope,
                 provider.name,
-                request.payload,
+                request,
                 successRedirect,
                 errorRedirect,
               )

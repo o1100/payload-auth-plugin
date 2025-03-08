@@ -6,6 +6,11 @@ interface BaseSigninOptions {
 }
 
 interface AppSigninOptions extends BaseSigninOptions {
+  /**
+   * This will be the name of then frontend app. Example `app`.
+   *
+   * It should be same as the name used in the `appAuthPlugin` options.
+   */
   name: string
 }
 

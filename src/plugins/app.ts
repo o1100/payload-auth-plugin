@@ -15,7 +15,7 @@
  * @packageDocumentation
  */
 
-import { BasePayload, Config, Endpoint, Plugin } from "payload"
+import { BasePayload, Config, Endpoint, PayloadRequest, Plugin } from "payload"
 import {
   AccountInfo,
   AuthenticationStrategy,
@@ -189,7 +189,7 @@ export const appAuthPlugin =
           oauthAccountInfo: AccountInfo,
           scope: string,
           issuerName: string,
-          basePayload: BasePayload,
+          request: PayloadRequest,
           successRedirect: string,
           errorRedirect: string,
         ) =>
@@ -197,7 +197,7 @@ export const appAuthPlugin =
             oauthAccountInfo,
             scope,
             issuerName,
-            basePayload,
+            request,
             successRedirect,
             errorRedirect,
           ),
