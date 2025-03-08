@@ -7,6 +7,7 @@ export function sessionRedirect(
 ) {
   const redirectURL = new URL(request.url!)
   redirectURL.pathname = successRedirect ?? ""
+  redirectURL.search = ""
   const res = new Response(null, {
     status: 302,
     headers: {
