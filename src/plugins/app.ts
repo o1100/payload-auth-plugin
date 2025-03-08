@@ -15,14 +15,7 @@
  * @packageDocumentation
  */
 
-import {
-  BasePayload,
-  Config,
-  Endpoint,
-  JsonObject,
-  Plugin,
-  TypeWithID,
-} from "payload"
+import { BasePayload, Config, Endpoint, Plugin } from "payload"
 import {
   AccountInfo,
   AuthenticationStrategy,
@@ -47,8 +40,8 @@ import {
 } from "../core/endpoints.js"
 import { AppSession } from "../core/session/app.js"
 import { formatSlug } from "../core/utils/slug.js"
-import { PluginError } from "../error.js"
 import { preflightCollectionCheck } from "../core/preflights/collections.js"
+import { preflightEnvCheck } from "../core/preflights/env.js"
 
 /**
  * The App plugin to set up authentication to the intengrated frontend of Payload CMS.
@@ -158,6 +151,8 @@ export const appAuthPlugin =
       [usersCollectionSlug, accountsCollectionSlug, sessionsCollectionSlug],
       config.collections,
     )
+    preflightEnvCheck("app")
+
     const name = formatSlug(pluginOptions.name)
 
     const oauthProviders = getOAuthProviders(providers)
