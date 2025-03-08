@@ -1,9 +1,11 @@
-import { BasePayload, getCookieExpiration } from "payload"
+import { BasePayload, PayloadRequest } from "payload"
 import { UserNotFound } from "../errors/consoleErrors.js"
-import jwt from "jsonwebtoken"
 import { AccountInfo } from "../../types.js"
 import { hashCode } from "../utils/hash.js"
-import { invalidateOAuthCookies } from "../utils/cookies.js"
+import {
+  createSessionCookies,
+  invalidateOAuthCookies,
+} from "../utils/cookies.js"
 
 type Collections = {
   accountsCollectionSlug: string
@@ -105,8 +107,10 @@ export class PayloadSession {
     accountInfo: AccountInfo,
     scope: string,
     issuerName: string,
-    payload: BasePayload,
+    request: PayloadRequest,
   ) {
+    const { payload } = request
+
     const userID = await this.#upsertAccount(
       accountInfo,
       scope,
@@ -120,18 +124,14 @@ export class PayloadSession {
       collection: this.#collections.usersCollectionSlug,
     }
 
-    const cookieExpiration = getCookieExpiration({
-      seconds: 7200,
-    })
-
-    const token = jwt.sign(fieldsToSign, payload.secret, {
-      expiresIn: new Date(cookieExpiration).getTime(),
-    })
-
     let cookies: string[] = []
-    cookies.push(
-      `${payload.config.cookiePrefix!}-token=${token};Path=/;HttpOnly;SameSite=lax;Expires=${cookieExpiration.toUTCString()}`,
-    )
+    cookies = [
+      ...(await createSessionCookies(
+        `${payload.config.cookiePrefix!}-token`,
+        payload.secret,
+        fieldsToSign,
+      )),
+    ]
     cookies = invalidateOAuthCookies(cookies)
 
     let redirectURL = payload.getAdminURL()

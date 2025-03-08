@@ -1,4 +1,10 @@
-import type { BasePayload, Config, Endpoint, Plugin } from "payload"
+import type {
+  BasePayload,
+  Config,
+  Endpoint,
+  PayloadRequest,
+  Plugin,
+} from "payload"
 import {
   EndpointsFactory,
   OAuthEndpointStrategy,
@@ -92,14 +98,9 @@ export const adminAuthPlugin =
           oauthAccountInfo: AccountInfo,
           scope: string,
           issuerName: string,
-          basePayload: BasePayload,
+          request: PayloadRequest,
         ) =>
-          session.createSession(
-            oauthAccountInfo,
-            scope,
-            issuerName,
-            basePayload,
-          ),
+          session.createSession(oauthAccountInfo, scope, issuerName, request),
       })
     }
 

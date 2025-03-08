@@ -2,10 +2,11 @@ import { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload"
 import { AccountInfo, AuthenticationStrategy } from "../../types.js"
 import { UserNotFoundAPIError } from "../errors/apiErrors.js"
 import {
-  createAppSessionCookies,
+  createSessionCookies,
   invalidateOAuthCookies,
 } from "../utils/cookies.js"
 import { sessionRedirect } from "../utils/redirects.js"
+import { APP_COOKIE_SUFFIX } from "../../constants.js"
 
 export class AppSession {
   constructor(
@@ -100,11 +101,15 @@ export class AppSession {
 
     if (this.authenticationStrategy === "Cookie") {
       cookies = [
-        ...createAppSessionCookies(this.appName, this.secret, {
-          id: userRecord["id"],
-          email: oauthAccountInfo.email,
-          collection: this.collections.usersCollection,
-        }),
+        ...(await createSessionCookies(
+          `__${this.appName}-${APP_COOKIE_SUFFIX}`,
+          this.secret,
+          {
+            id: userRecord["id"],
+            email: oauthAccountInfo.email,
+            collection: this.collections.usersCollection,
+          },
+        )),
       ]
       cookies = invalidateOAuthCookies(cookies)
     }
