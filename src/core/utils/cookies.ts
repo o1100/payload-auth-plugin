@@ -1,22 +1,27 @@
-import jwt from "jsonwebtoken"
+import * as jwt from "jose"
 import { getCookieExpiration } from "payload"
-import { APP_COOKIE_SUFFIX } from "../../constants.js"
 
-export function createAppSessionCookies(
+export async function createSessionCookies(
   name: string,
   secret: string,
   fieldsToSign: Record<string, unknown>,
 ) {
-  const cookieExpiration = getCookieExpiration({
+  const tokenExpiration = getCookieExpiration({
     seconds: 7200,
   })
 
-  const token = jwt.sign(fieldsToSign, secret, {
-    expiresIn: new Date(cookieExpiration).getTime(),
-  })
+  const secretKey = new TextEncoder().encode(secret)
+  const issuedAt = Math.floor(Date.now() / 1000)
+  const exp = issuedAt + tokenExpiration.getTime()
+  const token = await new jwt.SignJWT(fieldsToSign)
+    .setProtectedHeader({ alg: "HS256", typ: "JWT" })
+    .setIssuedAt(issuedAt)
+    .setExpirationTime(exp)
+    .sign(secretKey)
+
   const cookies: string[] = []
   cookies.push(
-    `${name}-${APP_COOKIE_SUFFIX}=${token};Path=/;HttpOnly;SameSite=lax;Expires=${cookieExpiration.toUTCString()}`,
+    `${name}=${token};Path=/;HttpOnly;SameSite=lax;Expires=${tokenExpiration.toUTCString()}`,
   )
   return cookies
 }
