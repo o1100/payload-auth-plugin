@@ -118,20 +118,6 @@ interface PluginOptions {
    * Use it to redirect users to some page after signin
    *
    */
-  onSuccess: ({
-    user,
-    account,
-  }: {
-    user?: (JsonObject & TypeWithID) | undefined
-    account?: (JsonObject & TypeWithID) | undefined
-  }) => void
-
-  /**
-   * On error callback. This will be triggred upon signup or signin failures.
-   *
-   * Handle errors and show error messages to the user
-   */
-  onError: (err: PluginError) => void
 }
 
 /**
@@ -163,8 +149,6 @@ export const appAuthPlugin =
       sessionsCollectionSlug,
       providers,
       allowAutoSignUp,
-      onSuccess,
-      onError,
     } = pluginOptions
 
     preflightCollectionCheck(usersCollectionSlug, config.collections)
