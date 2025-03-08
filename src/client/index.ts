@@ -1,7 +1,4 @@
 import { adminSignin, appSignin } from "./signin.js"
-
-export { adminSignin, appSignin } from "./signin.js"
-
 interface BaseClientOptions {
   baseURL: string
 }
@@ -10,16 +7,18 @@ interface AppClientOptions extends BaseClientOptions {
   name: string
 }
 
-export function createAppClient(options: AppClientOptions) {
+export function appClient(options: AppClientOptions) {
+  console.log(options)
+
   return {
-    signin: () => appSignin({ baseURL: options.baseURL, name: options.name }),
+    signin: () => appSignin(options),
     signup: () => {},
     resetPassword: () => {},
     forgotPassword: () => {},
   }
 }
 
-export function createAdminClient(options: BaseClientOptions) {
+export function adminClient(options: BaseClientOptions) {
   return {
     signin: () => adminSignin({ baseURL: options.baseURL }),
   }

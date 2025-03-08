@@ -1,30 +1,20 @@
+import { oauth, OauthProvider, OauthSigninOptions } from "./oauth.js"
 import { init as passkeyInit } from "./passkey/index.js"
 
-type OauthProvider =
-  | "google"
-  | "github"
-  | "apple"
-  | "cognito"
-  | "gitlab"
-  | "msft-entra"
-  | "slack"
-  | "atlassian"
-  | "auth0"
-  | "discord"
-  | "facebook"
-  | "jumpcloud"
-
-type AppSigninOptions = {
-  name: string
+interface BaseSigninOptions {
   baseURL: string
 }
 
+interface AppSigninOptions extends BaseSigninOptions {
+  name: string
+}
+
+interface AdminSigninOptions extends BaseSigninOptions {}
+
 export function appSignin(options: AppSigninOptions) {
   return {
-    oauth: (provider: OauthProvider) => {
-      const base = options.baseURL
-      window.location.href = `${base}/api/${options.name}/oauth/authorization/${provider}`
-    },
+    oauth: (provider: OauthProvider, oauthSigniOptions?: OauthSigninOptions) =>
+      oauth(options, provider, oauthSigniOptions),
     passkey: () => {
       passkeyInit()
     },
@@ -37,16 +27,10 @@ export function appSignin(options: AppSigninOptions) {
     },
   }
 }
-
-type AdminSigninOptions = {
-  baseURL: string
-}
-
 export function adminSignin(options: AdminSigninOptions) {
   return {
-    oauth: (provider: OauthProvider) => {
-      window.location.href = `${options.baseURL}/api/admin/oauth/authorization/${provider}`
-    },
+    oauth: (provider: OauthProvider, oauthSigniOptions?: OauthSigninOptions) =>
+      oauth({ ...options, name: "admin" }, provider, oauthSigniOptions),
     passkey: () => {
       passkeyInit()
     },
