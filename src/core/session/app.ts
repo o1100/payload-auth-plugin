@@ -6,6 +6,7 @@ import {
   createAppSessionCookies,
   invalidateOAuthCookies,
 } from "../utils/cookies.js"
+import { sessionRedirect } from "../utils/redirects.js"
 
 export class AppSession {
   constructor(
@@ -62,8 +63,8 @@ export class AppSession {
     scope: string,
     issuerName: string,
     request: PayloadRequest,
-    successRedirect: string,
-    errorRedirect: string,
+    errorRedirect?: string | undefined | null,
+    successRedirect?: string | undefined | null,
   ) {
     const { payload } = request
     const userRecords = await payload.find({
@@ -88,7 +89,7 @@ export class AppSession {
     } else {
       throw new UserNotFoundAPIError()
     }
-    const accountRecord = await this.oauthAccountMutations(
+    await this.oauthAccountMutations(
       userRecord["id"] as string,
       oauthAccountInfo,
       scope,
@@ -109,18 +110,6 @@ export class AppSession {
       cookies = invalidateOAuthCookies(cookies)
     }
 
-    const redirectURL = new URL(request.url!)
-    redirectURL.pathname = successRedirect
-    const res = new Response(null, {
-      status: 302,
-      headers: {
-        Location: redirectURL.toString(),
-      },
-    })
-
-    cookies.forEach((cookie) => {
-      res.headers.append("Set-Cookie", cookie)
-    })
-    return res
+    return sessionRedirect(request, cookies, successRedirect)
   }
 }

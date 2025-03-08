@@ -38,8 +38,8 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
       scope: string,
       issuerName: string,
       request: PayloadRequest,
-      successRedirect: string,
-      errorRedirect: string,
+      successRedirect?: string | undefined | null,
+      errorRedirect?: string | undefined | null,
     ) => Promise<Response>
   }): Endpoint[] {
     return [
@@ -47,9 +47,6 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
         path: `/${pluginType}/oauth/:resource/:provider`,
         method: "get",
         handler: (request: PayloadRequest) => {
-          const successRedirect =
-            request.searchParams.get("successRedirect") ?? ""
-          const errorRedirect = request.searchParams.get("errorRedirect") ?? ""
           const provider = this.providers[
             request.routeParams?.provider as string
           ] as OAuthProviderConfig
@@ -65,8 +62,8 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
                 provider.scope,
                 provider.name,
                 request,
-                successRedirect,
-                errorRedirect,
+                request.searchParams.get("successRedirect"),
+                request.searchParams.get("errorRedirect"),
               )
             },
           )
