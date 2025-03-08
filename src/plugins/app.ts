@@ -25,6 +25,7 @@ import {
 } from "payload"
 import {
   AccountInfo,
+  AuthenticationStrategy,
   CredentialsProviderConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
@@ -61,15 +62,16 @@ interface PluginOptions {
    *
    * @default true
    *
-   *
    */
   enabled?: boolean | undefined
+
   /**
    * Unique name for your frontend app.
    *
    * This name will be used to created endpoints, tokens, and etc.
    */
   name: string
+
   /**
    * Auth providers supported by the plugin
    *
@@ -79,7 +81,9 @@ interface PluginOptions {
     | PasskeyProviderConfig
     | CredentialsProviderConfig
   )[]
+
   /**
+   * @description
    * App users collection slug.
    *
    * This collection will be used to store all the app user records.
@@ -113,11 +117,13 @@ interface PluginOptions {
   allowAutoSignUp?: boolean | undefined
 
   /**
-   * On success callback. This will be triggred upon successfull signin.
+   * Authentication strategies can be either JWT or Cookie based
    *
-   * Use it to redirect users to some page after signin
+   * @default Cookie
    *
    */
+
+  authenticationStrategy?: AuthenticationStrategy
 }
 
 /**
@@ -139,22 +145,19 @@ export const appAuthPlugin =
       throw new InvalidServerURL()
     }
 
-    if (!config.collections?.length) {
-      throw new MissingCollections()
-    }
-
     const {
       usersCollectionSlug,
       accountsCollectionSlug,
       sessionsCollectionSlug,
       providers,
       allowAutoSignUp,
+      authenticationStrategy,
     } = pluginOptions
 
-    preflightCollectionCheck(usersCollectionSlug, config.collections)
-    preflightCollectionCheck(accountsCollectionSlug, config.collections)
-    preflightCollectionCheck(sessionsCollectionSlug, config.collections)
-
+    preflightCollectionCheck(
+      [usersCollectionSlug, accountsCollectionSlug, sessionsCollectionSlug],
+      config.collections,
+    )
     const name = formatSlug(pluginOptions.name)
 
     const oauthProviders = getOAuthProviders(providers)
@@ -162,12 +165,14 @@ export const appAuthPlugin =
     const credentialsProvider = getCredentialsProvider(providers)
 
     const session = new AppSession(
+      name,
       {
         usersCollection: usersCollectionSlug,
         accountsCollection: accountsCollectionSlug,
         sessionsCollection: sessionsCollectionSlug,
       },
       allowAutoSignUp ?? false,
+      authenticationStrategy ?? "Cookie",
     )
 
     const endpointsFactory = new EndpointsFactory(name)
