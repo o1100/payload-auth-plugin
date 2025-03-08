@@ -41,7 +41,6 @@ import {
 import { AppSession } from "../core/session/app.js"
 import { formatSlug } from "../core/utils/slug.js"
 import { preflightCollectionCheck } from "../core/preflights/collections.js"
-import { preflightEnvCheck } from "../core/preflights/env.js"
 
 /**
  * The App plugin to set up authentication to the intengrated frontend of Payload CMS.
@@ -115,8 +114,11 @@ interface PluginOptions {
    * @default Cookie
    *
    */
-
   authenticationStrategy?: AuthenticationStrategy
+  /**
+   * Secret to use for JWT signing and decryption
+   */
+  secret: string
 }
 
 /**
@@ -145,13 +147,13 @@ export const appAuthPlugin =
       providers,
       allowAutoSignUp,
       authenticationStrategy,
+      secret,
     } = pluginOptions
 
     preflightCollectionCheck(
       [usersCollectionSlug, accountsCollectionSlug, sessionsCollectionSlug],
       config.collections,
     )
-    preflightEnvCheck("app")
 
     const name = formatSlug(pluginOptions.name)
 
@@ -168,6 +170,7 @@ export const appAuthPlugin =
       },
       allowAutoSignUp ?? false,
       authenticationStrategy ?? "Cookie",
+      secret,
     )
 
     const endpointsFactory = new EndpointsFactory(name)
