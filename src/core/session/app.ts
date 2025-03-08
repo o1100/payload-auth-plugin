@@ -1,6 +1,5 @@
 import { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload"
 import { AccountInfo, AuthenticationStrategy } from "../../types.js"
-import { ErrorKind, PluginError } from "../../error.js"
 import { UserNotFoundAPIError } from "../errors/apiErrors.js"
 import {
   createAppSessionCookies,
