@@ -3,6 +3,7 @@ import type { AccountInfo, OAuthProviderConfig } from "../types.js"
 import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
 import { CredentialsHandlers } from "./routeHandlers/credential.js"
+import { SessionHandlers } from "./routeHandlers/session.js"
 
 /**
  * Base interface for all endpoint strategies. Useful to keep extending for providers with
@@ -137,6 +138,29 @@ export class CredentialsEndpointStrategy implements EndpointStrategy {
           )
         },
         method: "post",
+      },
+    ]
+  }
+}
+
+/**
+ * Endpoint strategy for managing sessions
+ */
+export class SessionEndpointStrategy implements EndpointStrategy {
+  constructor(private secret: string) {}
+  createEndpoints({ pluginType }: { pluginType: string }): Endpoint[] {
+    return [
+      {
+        path: `/${pluginType}/session/:kind`,
+        handler: (request: PayloadRequest) => {
+          return SessionHandlers(
+            request,
+            pluginType,
+            request.routeParams?.kind as string,
+            this.secret,
+          )
+        },
+        method: "get",
       },
     ]
   }

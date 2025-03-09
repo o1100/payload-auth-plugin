@@ -21,9 +21,24 @@ export async function createSessionCookies(
 
   const cookies: string[] = []
   cookies.push(
-    `${name}=${token};Path=/;HttpOnly;SameSite=lax;Expires=${tokenExpiration.toUTCString()}`,
+    `${name}=${token};Path=/;HttpOnly;Secure=true;SameSite=lax;Expires=${tokenExpiration.toUTCString()}`,
   )
   return cookies
+}
+
+export async function verifySessionCookie(token: string, secret: string) {
+  const secretKey = new TextEncoder().encode(secret)
+  return await jwt.jwtVerify<{
+    id: string
+    email: string
+    collection: string
+    iat: number
+    exp: number
+  }>(token, secretKey)
+}
+
+export async function decryptSessionCookie(token: string) {
+  await jwt.decodeJwt(token)
 }
 
 export function invalidateOAuthCookies(cookies: string[]) {

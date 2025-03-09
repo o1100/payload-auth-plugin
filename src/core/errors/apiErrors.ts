@@ -39,3 +39,9 @@ export class InvalidAPIRequest extends AuthAPIError {
     super("Invalid API request", 400)
   }
 }
+
+export class UnauthorizedAPIRequest extends AuthAPIError {
+  constructor() {
+    super("Unauthorized access", 403)
+  }
+}

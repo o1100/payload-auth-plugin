@@ -37,6 +37,7 @@ import {
   EndpointsFactory,
   OAuthEndpointStrategy,
   PasskeyEndpointStrategy,
+  SessionEndpointStrategy,
 } from "../core/endpoints.js"
 import { AppSession } from "../core/session/app.js"
 import { formatSlug } from "../core/utils/slug.js"
@@ -220,11 +221,18 @@ export const appAuthPlugin =
       credentialsEndpoints = endpointsFactory.createEndpoints("credentials")
     }
 
+    endpointsFactory.registerStrategy(
+      "session",
+      new SessionEndpointStrategy(secret),
+    )
+    const sessionEndpoints = endpointsFactory.createEndpoints("session")
+
     config.endpoints = [
       ...(config.endpoints ?? []),
       ...oauthEndpoints,
       ...passkeyEndpoints,
       ...credentialsEndpoints,
+      ...sessionEndpoints,
     ]
 
     return config
