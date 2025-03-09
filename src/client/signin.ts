@@ -32,6 +32,7 @@ export function appSignin(options: AppSigninOptions) {
     },
   }
 }
+
 export function adminSignin(options: AdminSigninOptions) {
   return {
     oauth: (provider: OauthProvider, oauthSigniOptions?: OauthSigninOptions) =>

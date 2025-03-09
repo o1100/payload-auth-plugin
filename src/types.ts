@@ -1,5 +1,29 @@
 import type { AuthorizationServer } from "oauth4webapi"
 
+export enum ErrorKind {
+  NotFound = "NotFound",
+  InternalServer = "InternalServer",
+  BadRequest = "BadRequest",
+  Unauthorized = "Unauthorized",
+  UnAuthenticated = "Unauthenticated",
+}
+
+export enum SuccessKind {
+  Created = "Created",
+  Updated = "Updated",
+  Retrieved = "Retrieved",
+  Deleted = "Deleted",
+}
+export interface CallbackError {
+  message: string
+  kind: ErrorKind
+}
+
+export interface CallbackSuccess {
+  message: string
+  kind: SuccessKind
+}
+
 /**
  * Generic OAuth provider callback output
  *

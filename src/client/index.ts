@@ -1,3 +1,4 @@
+import { ExtendedRefreshOptions, refresh } from "./refresh.js"
 import { adminSignin, appSignin } from "./signin.js"
 interface BaseClientOptions {
   baseURL: string
@@ -13,6 +14,8 @@ export function appClient(options: AppClientOptions) {
     signup: () => {},
     resetPassword: () => {},
     forgotPassword: () => {},
+    refresh: async (extOpts?: ExtendedRefreshOptions) =>
+      await refresh(options, extOpts),
   }
 }
 
