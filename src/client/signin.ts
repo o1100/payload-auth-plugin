@@ -4,7 +4,7 @@ interface BaseOptions {
   name: string
 }
 
-export function appSignin(options: BaseOptions) {
+export const appSignin = (options: BaseOptions) => {
   return {
     oauth: (provider: OauthProvider, oauthSigniOptions?: OauthSigninOptions) =>
       oauth(options, provider, oauthSigniOptions),
@@ -19,7 +19,7 @@ export function appSignin(options: BaseOptions) {
   }
 }
 
-export function adminSignin() {
+export const adminSignin = () => {
   return {
     oauth: (provider: OauthProvider, oauthSigniOptions?: OauthSigninOptions) =>
       oauth({ name: "admin" }, provider, oauthSigniOptions),

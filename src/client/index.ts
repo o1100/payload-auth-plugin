@@ -6,7 +6,7 @@ interface AppClientOptions {
   name: string
 }
 
-export function appClient(options: AppClientOptions) {
+export const appClient = (options: AppClientOptions) => {
   if (!process.env.NEXT_PUBLIC_PAYLOAD_AUTH_URL) {
     throw new MissingEnv("NEXT_PUBLIC_PAYLOAD_AUTH_URL")
   }
@@ -20,7 +20,7 @@ export function appClient(options: AppClientOptions) {
   }
 }
 
-export function adminClient() {
+export const adminClient = () => {
   return {
     signin: () => adminSignin(),
   }

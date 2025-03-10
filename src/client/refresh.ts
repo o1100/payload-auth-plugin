@@ -12,10 +12,10 @@ export interface ExtendedRefreshOptions {
   onError?: (args: CallbackError) => unknown | undefined
   onSuccess?: (args: CallbackSuccess) => unknown | undefined
 }
-export async function refresh(
+export const refresh = async (
   options: BaseOptions,
   extendedOpts?: ExtendedRefreshOptions,
-) {
+) => {
   const base = process.env.NEXT_PUBLIC_PAYLOAD_AUTH_URL
   const response = await fetch(`${base}/api/${options.name}/session/refresh`)
   const message = await response.json()

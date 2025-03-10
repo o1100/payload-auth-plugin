@@ -21,11 +21,11 @@ export type OauthProvider =
   | "facebook"
   | "jumpcloud"
 
-export function oauth(
+export const oauth = (
   options: BaseOptions,
   provider: OauthProvider,
   oauthOptions?: OauthSigninOptions,
-) {
+) => {
   const base = process.env.NEXT_PUBLIC_PAYLOAD_AUTH_URL
   const query: Record<string, string> = {}
   if (oauthOptions?.successRedirect) {
