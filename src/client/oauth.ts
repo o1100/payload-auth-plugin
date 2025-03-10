@@ -1,7 +1,6 @@
 import * as qs from "qs-esm"
 
 type BaseOptions = {
-  baseURL: string
   name: string
 }
 export type OauthSigninOptions = {
@@ -27,7 +26,7 @@ export function oauth(
   provider: OauthProvider,
   oauthOptions?: OauthSigninOptions,
 ) {
-  const base = options.baseURL
+  const base = process.env.NEXT_PUBLIC_PAYLOAD_AUTH_URL
   const query: Record<string, string> = {}
   if (oauthOptions?.successRedirect) {
     query["successRedirect"] = oauthOptions.successRedirect

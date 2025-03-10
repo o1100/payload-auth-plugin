@@ -6,15 +6,6 @@ import {
 } from "../types.js"
 
 interface BaseOptions {
-  baseURL: string
-}
-
-interface AppRefreshOptions extends BaseOptions {
-  /**
-   * This will be the name of then frontend app. Example `app`.
-   *
-   * It should be same as the name used in the `appAuthPlugin` options.
-   */
   name: string
 }
 export interface ExtendedRefreshOptions {
@@ -22,10 +13,10 @@ export interface ExtendedRefreshOptions {
   onSuccess?: (args: CallbackSuccess) => unknown | undefined
 }
 export async function refresh(
-  options: AppRefreshOptions,
+  options: BaseOptions,
   extendedOpts?: ExtendedRefreshOptions,
 ) {
-  const base = options.baseURL
+  const base = process.env.NEXT_PUBLIC_PAYLOAD_AUTH_URL
   const response = await fetch(`${base}/api/${options.name}/session/refresh`)
   const message = await response.json()
   if (!response.ok) {
