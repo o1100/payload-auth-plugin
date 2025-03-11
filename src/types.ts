@@ -4,8 +4,8 @@ export enum ErrorKind {
   NotFound = "NotFound",
   InternalServer = "InternalServer",
   BadRequest = "BadRequest",
-  Unauthorized = "Unauthorized",
-  UnAuthenticated = "Unauthenticated",
+  NotAuthorized = "NotAuthorized",
+  NotAuthenticated = "NotAuthenticated",
 }
 
 export enum SuccessKind {

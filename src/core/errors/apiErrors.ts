@@ -1,47 +1,52 @@
-import { APIError } from "payload"
+import { ErrorKind } from "../../types.js"
 
-export class AuthAPIError extends APIError {
-  constructor(
-    message: string,
-    status?: number,
-    data?: Record<string, unknown> | undefined,
-  ) {
-    super(message, status ?? 400, data, true)
+const statusByKind = {
+  [ErrorKind.NotFound]: 404,
+  [ErrorKind.BadRequest]: 400,
+  [ErrorKind.InternalServer]: 500,
+  [ErrorKind.NotAuthenticated]: 401,
+  [ErrorKind.NotAuthorized]: 403,
+}
+export class AuthAPIError extends Response {
+  constructor(message: string, kind: ErrorKind) {
+    super(JSON.stringify({ message, kind, data: null }), {
+      status: statusByKind[kind],
+    })
   }
 }
 
 export class MissingEmailAPIError extends AuthAPIError {
   constructor() {
-    super("Missing email. Email is required")
+    super("Missing email. Email is required", ErrorKind.BadRequest)
   }
 }
 
 export class UserNotFoundAPIError extends AuthAPIError {
   constructor() {
-    super("User not found")
+    super("User not found", ErrorKind.NotFound)
   }
 }
 
 export class EmailNotFoundAPIError extends AuthAPIError {
   constructor() {
-    super("Now user found with this email", 404)
+    super("Now user found with this email", ErrorKind.BadRequest)
   }
 }
 
 export class PasskeyVerificationAPIError extends AuthAPIError {
   constructor() {
-    super("Passkey verification failed", 403)
+    super("Passkey verification failed", ErrorKind.BadRequest)
   }
 }
 
 export class InvalidAPIRequest extends AuthAPIError {
   constructor() {
-    super("Invalid API request", 400)
+    super("Invalid API request", ErrorKind.BadRequest)
   }
 }
 
 export class UnauthorizedAPIRequest extends AuthAPIError {
   constructor() {
-    super("Unauthorized access", 403)
+    super("Unauthorized access", ErrorKind.NotAuthorized)
   }
 }

@@ -10,12 +10,12 @@ export async function SessionRefresh(
   const cookies = parseCookies(request.headers)
   const token = cookies.get(name)
   if (!token) {
-    throw new UnauthorizedAPIRequest()
+    return new UnauthorizedAPIRequest()
   }
 
   const jwtResponse = await verifySessionCookie(token, secret)
   if (!jwtResponse.payload) {
-    throw new UnauthorizedAPIRequest()
+    return new UnauthorizedAPIRequest()
   }
   let refreshCookies: string[] = []
   refreshCookies = [
