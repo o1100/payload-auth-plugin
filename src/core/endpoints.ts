@@ -127,12 +127,7 @@ export class CredentialsEndpointStrategy implements EndpointStrategy {
     sessionCallback,
   }: {
     pluginType: string
-    sessionCallback: (
-      ser: { id: string; email: string },
-      request: PayloadRequest,
-      successRedirect?: string | undefined | null,
-      errorRedirect?: string | undefined | null,
-    ) => Promise<Response>
+    sessionCallback: (user: { id: string; email: string }) => Promise<Response>
   }): Endpoint[] {
     return [
       {
@@ -142,13 +137,7 @@ export class CredentialsEndpointStrategy implements EndpointStrategy {
             request,
             request.routeParams?.resource as string,
             this.internals,
-            (user) =>
-              sessionCallback(
-                user,
-                request,
-                request.searchParams.get("successRedirect"),
-                request.searchParams.get("errorRedirect"),
-              ),
+            (user) => sessionCallback(user),
           )
         },
         method: "post",

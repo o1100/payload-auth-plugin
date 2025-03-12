@@ -3,7 +3,7 @@ import { SuccessKind } from "../../types.js"
 export function sessionResponse(cookies: string[]) {
   const res = new Response(
     JSON.stringify({
-      message: "Session created",
+      message: "Authentication successful",
       kind: SuccessKind.Created,
     }),
     {
