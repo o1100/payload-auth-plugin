@@ -26,7 +26,7 @@ export const oauth = (
   provider: OauthProvider,
   oauthOptions?: OauthSigninOptions,
 ) => {
-  const base = process.env.NEXT_PUBLIC_PAYLOAD_AUTH_URL
+  const base = process.env.NEXT_PUBLIC_SERVER_URL
   const query: Record<string, string> = {}
   if (oauthOptions?.successRedirect) {
     query["successRedirect"] = oauthOptions.successRedirect
