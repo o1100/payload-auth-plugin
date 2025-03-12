@@ -1,18 +1,20 @@
 import type { PayloadRequest } from "payload"
-import { AccountInfo } from "../../types.js"
-import { CredentialSignin } from "../protocols/credentials.js"
+import { CredentialSignin, CredentialSignup } from "../protocols/credentials.js"
 import { InvalidAPIRequest } from "../errors/apiErrors.js"
 
 export function CredentialsHandlers(
   request: PayloadRequest,
   resource: string,
-  //   sessionCallBack: (accountInfo: AccountInfo) => Promise<Response>,
+  internal: {
+    usersCollectionSlug: string
+  },
+  sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
 ): Promise<Response> {
   switch (resource) {
     case "signin":
       return CredentialSignin(request)
     case "signup":
-      return CredentialSignin(request)
+      return CredentialSignup(request, internal, sessionCallBack)
     default:
       throw new InvalidAPIRequest()
   }

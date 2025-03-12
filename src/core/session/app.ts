@@ -5,7 +5,7 @@ import {
   createSessionCookies,
   invalidateOAuthCookies,
 } from "../utils/cookies.js"
-import { sessionResponse } from "../utils/redirects.js"
+import { sessionResponse } from "../utils/session.js"
 import { APP_COOKIE_SUFFIX } from "../../constants.js"
 
 export class AppSession {

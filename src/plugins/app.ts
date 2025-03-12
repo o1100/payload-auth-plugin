@@ -15,7 +15,7 @@
  * @packageDocumentation
  */
 
-import { BasePayload, Config, Endpoint, PayloadRequest, Plugin } from "payload"
+import { Config, Endpoint, PayloadRequest, Plugin } from "payload"
 import {
   AccountInfo,
   AuthenticationStrategy,
@@ -23,10 +23,7 @@ import {
   OAuthProviderConfig,
   PasskeyProviderConfig,
 } from "../types.js"
-import {
-  InvalidServerURL,
-  MissingCollections,
-} from "../core/errors/consoleErrors.js"
+import { InvalidServerURL } from "../core/errors/consoleErrors.js"
 import {
   getCredentialsProvider,
   getOAuthProviders,
@@ -191,16 +188,12 @@ export const appAuthPlugin =
           scope: string,
           issuerName: string,
           request: PayloadRequest,
-          successRedirect: string,
-          errorRedirect: string,
         ) =>
           session.oauthSessionCallback(
             oauthAccountInfo,
             scope,
             issuerName,
             request,
-            successRedirect,
-            errorRedirect,
           ),
       })
     }
@@ -216,9 +209,12 @@ export const appAuthPlugin =
     if (credentialsProvider) {
       endpointsFactory.registerStrategy(
         "credentials",
-        new CredentialsEndpointStrategy(),
+        new CredentialsEndpointStrategy({ usersCollectionSlug }),
       )
-      credentialsEndpoints = endpointsFactory.createEndpoints("credentials")
+      credentialsEndpoints = endpointsFactory.createEndpoints("credentials", {
+        sessionCallback: (user: { id: string; email: string }) =>
+          session.credentialSessionCallback(user),
+      })
     }
 
     endpointsFactory.registerStrategy(
@@ -234,6 +230,5 @@ export const appAuthPlugin =
       ...credentialsEndpoints,
       ...sessionEndpoints,
     ]
-
     return config
   }
