@@ -1,7 +1,6 @@
 import { AuthPluginOutput } from "../types.js"
-import { BaseClientAppOption } from "./types.js"
 
-interface BaseOptions extends BaseClientAppOption {
+interface BaseOptions {
   name: string
 }
 
