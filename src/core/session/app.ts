@@ -5,7 +5,7 @@ import {
   createSessionCookies,
   invalidateOAuthCookies,
 } from "../utils/cookies.js"
-import { sessionRedirect } from "../utils/redirects.js"
+import { sessionResponse } from "../utils/redirects.js"
 import { APP_COOKIE_SUFFIX } from "../../constants.js"
 
 export class AppSession {
@@ -63,8 +63,6 @@ export class AppSession {
     scope: string,
     issuerName: string,
     request: PayloadRequest,
-    errorRedirect?: string | undefined | null,
-    successRedirect?: string | undefined | null,
   ) {
     const { payload } = request
     const userRecords = await payload.find({
@@ -114,6 +112,29 @@ export class AppSession {
       cookies = invalidateOAuthCookies(cookies)
     }
 
-    return sessionRedirect(request, cookies, successRedirect)
+    return sessionResponse(cookies)
+  }
+
+  async credentialSessionCallback(
+    user: Pick<AccountInfo, "email"> & { id: string },
+  ) {
+    let cookies: string[] = []
+
+    if (this.authenticationStrategy === "Cookie") {
+      cookies = [
+        ...(await createSessionCookies(
+          `__${this.appName}-${APP_COOKIE_SUFFIX}`,
+          this.secret,
+          {
+            id: user.id,
+            email: user.email,
+            collection: this.collections.usersCollection,
+          },
+        )),
+      ]
+      cookies = invalidateOAuthCookies(cookies)
+    }
+
+    return sessionResponse(cookies)
   }
 }

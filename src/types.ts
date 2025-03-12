@@ -6,6 +6,7 @@ export enum ErrorKind {
   BadRequest = "BadRequest",
   NotAuthorized = "NotAuthorized",
   NotAuthenticated = "NotAuthenticated",
+  Conflict = "Conflict",
 }
 
 export enum SuccessKind {
@@ -14,14 +15,10 @@ export enum SuccessKind {
   Retrieved = "Retrieved",
   Deleted = "Deleted",
 }
-export interface CallbackError {
+export interface AuthPluginOutput {
   message: string
-  kind: ErrorKind
-}
-
-export interface CallbackSuccess {
-  message: string
-  kind: SuccessKind
+  kind: ErrorKind | SuccessKind
+  data: any
 }
 
 /**
