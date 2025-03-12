@@ -2,7 +2,7 @@ import type { BasePayload, Endpoint, PayloadRequest } from "payload"
 import type { AccountInfo, OAuthProviderConfig } from "../types.js"
 import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
-import { CredentialsHandlers } from "./routeHandlers/credential.js"
+import { CredentialsHandlers } from "./routeHandlers/password.js"
 import { SessionHandlers } from "./routeHandlers/session.js"
 
 /**
@@ -116,7 +116,7 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
   }
 }
 
-export class CredentialsEndpointStrategy implements EndpointStrategy {
+export class PasswordAuthEndpointStrategy implements EndpointStrategy {
   constructor(
     private internals: {
       usersCollectionSlug: string

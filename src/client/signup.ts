@@ -1,4 +1,4 @@
-import { CredentialSignupPayload, credentialSignup } from "./credentials.js"
+import { PasswordSignupPayload, passwordSignup } from "./password.js"
 
 interface BaseOptions {
   name: string
@@ -6,7 +6,7 @@ interface BaseOptions {
 
 export const appSignup = (options: BaseOptions) => {
   return {
-    credentials: async (paylaod: CredentialSignupPayload) =>
-      await credentialSignup(options, paylaod),
+    password: async (paylaod: PasswordSignupPayload) =>
+      await passwordSignup(options, paylaod),
   }
 }

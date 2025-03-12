@@ -8,7 +8,7 @@ import {
 import { hashPassword, verifyPassword } from "../utils/password.js"
 import { SuccessKind } from "../../types.js"
 
-export async function CredentialSignin(
+export async function PasswordSignin(
   request: PayloadRequest,
   internal: {
     usersCollectionSlug: string
@@ -54,7 +54,7 @@ export async function CredentialSignin(
   })
 }
 
-export const CredentialSignup = async (
+export const PasswordSignup = async (
   request: PayloadRequest,
   internal: {
     usersCollectionSlug: string

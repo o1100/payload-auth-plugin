@@ -1,5 +1,5 @@
 import type { PayloadRequest } from "payload"
-import { CredentialSignin, CredentialSignup } from "../protocols/credentials.js"
+import { PasswordSignin, PasswordSignup } from "../protocols/password.js"
 import { InvalidAPIRequest } from "../errors/apiErrors.js"
 
 export function CredentialsHandlers(
@@ -12,9 +12,9 @@ export function CredentialsHandlers(
 ): Promise<Response> {
   switch (resource) {
     case "signin":
-      return CredentialSignin(request, internal, sessionCallBack)
+      return PasswordSignin(request, internal, sessionCallBack)
     case "signup":
-      return CredentialSignup(request, internal, sessionCallBack)
+      return PasswordSignup(request, internal, sessionCallBack)
     default:
       throw new InvalidAPIRequest()
   }

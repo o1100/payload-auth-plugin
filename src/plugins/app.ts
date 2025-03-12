@@ -30,7 +30,7 @@ import {
   getPasskeyProvider,
 } from "../providers/utils.js"
 import {
-  CredentialsEndpointStrategy,
+  PasswordAuthEndpointStrategy,
   EndpointsFactory,
   OAuthEndpointStrategy,
   PasskeyEndpointStrategy,
@@ -209,7 +209,7 @@ export const appAuthPlugin =
     if (credentialsProvider) {
       endpointsFactory.registerStrategy(
         "credentials",
-        new CredentialsEndpointStrategy({ usersCollectionSlug }),
+        new PasswordAuthEndpointStrategy({ usersCollectionSlug }),
       )
       credentialsEndpoints = endpointsFactory.createEndpoints("credentials", {
         sessionCallback: (user: { id: string; email: string }) =>
