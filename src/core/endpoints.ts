@@ -117,15 +117,21 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
 }
 
 export class CredentialsEndpointStrategy implements EndpointStrategy {
+  constructor(
+    private internals: {
+      usersCollectionSlug: string
+    },
+  ) {}
   createEndpoints({
     pluginType,
     sessionCallback,
   }: {
     pluginType: string
     sessionCallback: (
-      accountInfo: AccountInfo,
-      issuerName: string,
-      payload: BasePayload,
+      ser: { id: string; email: string },
+      request: PayloadRequest,
+      successRedirect?: string | undefined | null,
+      errorRedirect?: string | undefined | null,
     ) => Promise<Response>
   }): Endpoint[] {
     return [
@@ -135,6 +141,14 @@ export class CredentialsEndpointStrategy implements EndpointStrategy {
           return CredentialsHandlers(
             request,
             request.routeParams?.resource as string,
+            this.internals,
+            (user) =>
+              sessionCallback(
+                user,
+                request,
+                request.searchParams.get("successRedirect"),
+                request.searchParams.get("errorRedirect"),
+              ),
           )
         },
         method: "post",
