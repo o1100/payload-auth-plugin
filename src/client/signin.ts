@@ -1,3 +1,4 @@
+import { credentialSignin, CredentialSigninPayload } from "./credentials.js"
 import { oauth, OauthProvider, OauthSigninOptions } from "./oauth.js"
 import { init as passkeyInit } from "./passkey/index.js"
 interface BaseOptions {
@@ -9,13 +10,8 @@ export const appSignin = (options: BaseOptions) => {
     oauth: (provider: OauthProvider, oauthSigniOptions?: OauthSigninOptions) =>
       oauth(options, provider, oauthSigniOptions),
     passkey: () => passkeyInit(),
-    // credentials: async (payload: any) => {
-    //   const base = options.baseURL
-    //   await fetch(`${base}/${options.name}/auth/signin`, {
-    //     method: "POST",
-    //     body: JSON.stringify(payload),
-    //   })
-    // },
+    credentials: async (payload: CredentialSigninPayload) =>
+      await credentialSignin(options, payload),
   }
 }
 
