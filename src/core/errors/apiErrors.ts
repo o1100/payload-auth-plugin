@@ -6,6 +6,7 @@ const statusByKind = {
   [ErrorKind.InternalServer]: 500,
   [ErrorKind.NotAuthenticated]: 401,
   [ErrorKind.NotAuthorized]: 403,
+  [ErrorKind.Conflict]: 409,
 }
 export class AuthAPIError extends Response {
   constructor(message: string, kind: ErrorKind) {
@@ -48,5 +49,17 @@ export class InvalidAPIRequest extends AuthAPIError {
 export class UnauthorizedAPIRequest extends AuthAPIError {
   constructor() {
     super("Unauthorized access", ErrorKind.NotAuthorized)
+  }
+}
+
+export class InvalidRequestBodyError extends AuthAPIError {
+  constructor() {
+    super("Wrong request body. Missing parameters", ErrorKind.BadRequest)
+  }
+}
+
+export class EmailAlreadyExistError extends AuthAPIError {
+  constructor() {
+    super("Email is already taken", ErrorKind.Conflict)
   }
 }
