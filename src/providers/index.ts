@@ -13,6 +13,9 @@ import MicrosoftEntraAuthProvider from "./oidc/microsoft-entra.js"
 import AppleOIDCAuthProvider from "./oidc/apple.js"
 import AppleOAuth2Provider from "./oauth2/apple.js"
 import JumpCloudProvider from "./oauth2/jumpcloud.js"
+
+import CredentialsProvider from "./credentials.js"
+
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -29,4 +32,5 @@ export {
   AppleOIDCAuthProvider,
   AppleOAuth2Provider,
   JumpCloudProvider,
+  CredentialsProvider,
 }
