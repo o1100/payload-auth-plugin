@@ -52,6 +52,18 @@ export class UnauthorizedAPIRequest extends AuthAPIError {
   }
 }
 
+export class AuthenticationFailed extends AuthAPIError {
+  constructor() {
+    super("Authentication Failed", ErrorKind.NotAuthenticated)
+  }
+}
+
+export class InvalidCredentials extends AuthAPIError {
+  constructor() {
+    super("INvalid Credentials", ErrorKind.BadRequest)
+  }
+}
+
 export class InvalidRequestBodyError extends AuthAPIError {
   constructor() {
     super("Wrong request body. Missing parameters", ErrorKind.BadRequest)

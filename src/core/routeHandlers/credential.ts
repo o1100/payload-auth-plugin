@@ -12,7 +12,7 @@ export function CredentialsHandlers(
 ): Promise<Response> {
   switch (resource) {
     case "signin":
-      return CredentialSignin(request)
+      return CredentialSignin(request, internal, sessionCallBack)
     case "signup":
       return CredentialSignup(request, internal, sessionCallBack)
     default:
