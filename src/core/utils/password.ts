@@ -1,0 +1,31 @@
+import * as jose from "jose"
+
+export const hashPassword = async (password: string) => {
+  const iterations = 600000
+  const encoder = new TextEncoder()
+  const bytes = encoder.encode(password)
+  const salt = crypto.getRandomValues(new Uint8Array(16))
+  const keyMaterial = await crypto.subtle.importKey(
+    "raw",
+    bytes,
+    "PBKDF2",
+    false,
+    ["deriveBits"],
+  )
+  const hash = await crypto.subtle.deriveBits(
+    {
+      name: "PBKDF2",
+      hash: "SHA-256",
+      salt: salt,
+      iterations: 600000,
+    },
+    keyMaterial,
+    256,
+  )
+  const hashB64 = jose.base64url.encode(new Uint8Array(hash))
+  const saltB64 = jose.base64url.encode(salt)
+  return {
+    hash: hashB64,
+    salt: saltB64,
+  }
+}
