@@ -2,7 +2,7 @@ import type { PayloadRequest } from "payload"
 import { PasswordSignin, PasswordSignup } from "../protocols/password.js"
 import { InvalidAPIRequest } from "../errors/apiErrors.js"
 
-export function CredentialsHandlers(
+export function PasswordAuthHandlers(
   request: PayloadRequest,
   resource: string,
   internal: {

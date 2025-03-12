@@ -115,7 +115,7 @@ export class AppSession {
     return sessionResponse(cookies)
   }
 
-  async credentialSessionCallback(
+  async passwordSessionCallback(
     user: Pick<AccountInfo, "email"> & { id: string },
   ) {
     let cookies: string[] = []

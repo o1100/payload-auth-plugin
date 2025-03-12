@@ -105,9 +105,9 @@ export interface AccountInfo {
   }
 }
 
-export type CredentialsProviderConfig = {
+export type PasswordProviderConfig = {
   id: string
-  kind: "credentials"
+  kind: "password"
   // name: string
   // verfiyEmail?: boolean
   // passwordless?: boolean
@@ -129,6 +129,6 @@ export type PasskeyProviderConfig = {
 export type ProvidersConfig =
   | OAuthProviderConfig
   | PasskeyProviderConfig
-  | CredentialsProviderConfig
+  | PasswordProviderConfig
 
 export type AuthenticationStrategy = "JWT" | "Cookie"

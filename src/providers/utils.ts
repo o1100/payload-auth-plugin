@@ -3,7 +3,7 @@ import {
   ProvidersConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
-  CredentialsProviderConfig,
+  PasswordProviderConfig,
 } from "../types.js"
 
 /**
@@ -48,14 +48,14 @@ export function getPasskeyProvider(
 }
 
 /**
- * Function to get the Credentials provider
+ * Function to get the Password provider
  *
  * @internal
  */
-export function getCredentialsProvider(
+export function getPasswordProvider(
   providers: ProvidersConfig[],
-): CredentialsProviderConfig | null {
-  const provider = providers.find((provider) => provider.kind === "credentials")
+): PasswordProviderConfig | null {
+  const provider = providers.find((provider) => provider.kind === "password")
   if (provider) {
     return provider
   }

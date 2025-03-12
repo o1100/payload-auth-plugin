@@ -2,7 +2,7 @@ import type { BasePayload, Endpoint, PayloadRequest } from "payload"
 import type { AccountInfo, OAuthProviderConfig } from "../types.js"
 import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
-import { CredentialsHandlers } from "./routeHandlers/password.js"
+import { PasswordAuthHandlers } from "./routeHandlers/password.js"
 import { SessionHandlers } from "./routeHandlers/session.js"
 
 /**
@@ -116,6 +116,9 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
   }
 }
 
+/**
+ * Endpoint strategy for Password based authentication
+ */
 export class PasswordAuthEndpointStrategy implements EndpointStrategy {
   constructor(
     private internals: {
@@ -133,7 +136,7 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
       {
         path: `/${pluginType}/auth/:resource`,
         handler: (request: PayloadRequest) => {
-          return CredentialsHandlers(
+          return PasswordAuthHandlers(
             request,
             request.routeParams?.resource as string,
             this.internals,
@@ -178,7 +181,7 @@ export class SessionEndpointStrategy implements EndpointStrategy {
  * @internal
  */
 
-type Strategies = "oauth" | "passkey" | "credentials" | "session"
+type Strategies = "oauth" | "passkey" | "password" | "session"
 export class EndpointsFactory {
   private strategies: Record<string, EndpointStrategy> = {}
   constructor(private pluginType: string) {}

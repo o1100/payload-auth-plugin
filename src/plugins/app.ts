@@ -1,6 +1,6 @@
 /**
  * The App plugin is used for authenticating users in the frontent app of the Payload CMS application.
- * It support magic link, credentials, OAuth, and Passkey based authentications.
+ * It support magic link, password, OAuth, and Passkey based authentications.
  *
  * On top of it, to add additional security it also support 2FA using OTP, and TOTP.
  *
@@ -19,13 +19,13 @@ import { Config, Endpoint, PayloadRequest, Plugin } from "payload"
 import {
   AccountInfo,
   AuthenticationStrategy,
-  CredentialsProviderConfig,
+  PasswordProviderConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
 } from "../types.js"
 import { InvalidServerURL } from "../core/errors/consoleErrors.js"
 import {
-  getCredentialsProvider,
+  getPasswordProvider,
   getOAuthProviders,
   getPasskeyProvider,
 } from "../providers/utils.js"
@@ -69,7 +69,7 @@ interface PluginOptions {
   providers: (
     | OAuthProviderConfig
     | PasskeyProviderConfig
-    | CredentialsProviderConfig
+    | PasswordProviderConfig
   )[]
 
   /**
@@ -157,7 +157,7 @@ export const appAuthPlugin =
 
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
-    const credentialsProvider = getCredentialsProvider(providers)
+    const passwordProvider = getPasswordProvider(providers)
 
     const session = new AppSession(
       name,
@@ -175,7 +175,7 @@ export const appAuthPlugin =
 
     let oauthEndpoints: Endpoint[] = []
     let passkeyEndpoints: Endpoint[] = []
-    let credentialsEndpoints: Endpoint[] = []
+    let passwordEndpoints: Endpoint[] = []
 
     if (Object.keys(oauthProviders).length > 0) {
       endpointsFactory.registerStrategy(
@@ -206,14 +206,14 @@ export const appAuthPlugin =
       passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
     }
 
-    if (credentialsProvider) {
+    if (passwordProvider) {
       endpointsFactory.registerStrategy(
-        "credentials",
+        "password",
         new PasswordAuthEndpointStrategy({ usersCollectionSlug }),
       )
-      credentialsEndpoints = endpointsFactory.createEndpoints("credentials", {
+      passwordEndpoints = endpointsFactory.createEndpoints("password", {
         sessionCallback: (user: { id: string; email: string }) =>
-          session.credentialSessionCallback(user),
+          session.passwordSessionCallback(user),
       })
     }
 
@@ -227,7 +227,7 @@ export const appAuthPlugin =
       ...(config.endpoints ?? []),
       ...oauthEndpoints,
       ...passkeyEndpoints,
-      ...credentialsEndpoints,
+      ...passwordEndpoints,
       ...sessionEndpoints,
     ]
     return config

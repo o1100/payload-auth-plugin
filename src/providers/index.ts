@@ -14,7 +14,7 @@ import AppleOIDCAuthProvider from "./oidc/apple.js"
 import AppleOAuth2Provider from "./oauth2/apple.js"
 import JumpCloudProvider from "./oauth2/jumpcloud.js"
 
-import CredentialsProvider from "./credentials.js"
+import PasswordProvider from "./password.js"
 
 export {
   GoogleAuthProvider,
@@ -32,5 +32,5 @@ export {
   AppleOIDCAuthProvider,
   AppleOAuth2Provider,
   JumpCloudProvider,
-  CredentialsProvider,
+  PasswordProvider,
 }

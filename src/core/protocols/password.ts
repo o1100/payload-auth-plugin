@@ -8,13 +8,13 @@ import {
 import { hashPassword, verifyPassword } from "../utils/password.js"
 import { SuccessKind } from "../../types.js"
 
-export async function PasswordSignin(
+export const PasswordSignin = async (
   request: PayloadRequest,
   internal: {
     usersCollectionSlug: string
   },
   sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
-): Promise<Response> {
+) => {
   const body =
     request.json &&
     ((await request.json()) as { email: string; password: string })
@@ -61,6 +61,73 @@ export const PasswordSignup = async (
   },
   sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
 ) => {
+  const body =
+    request.json &&
+    ((await request.json()) as {
+      email: string
+      password: string
+      allowAutoSignin?: boolean
+      profile?: Record<string, unknown>
+    })
+
+  if (!body?.email || !body.password) {
+    return new InvalidRequestBodyError()
+  }
+
+  const { payload } = request
+  const { docs } = await payload.find({
+    collection: internal.usersCollectionSlug,
+    where: {
+      email: { equals: body.email },
+    },
+    limit: 1,
+  })
+
+  if (docs.length > 0) {
+    return new EmailAlreadyExistError()
+  }
+
+  const {
+    hash: hashedPassword,
+    salt,
+    iterations,
+  } = await hashPassword(body.password)
+
+  const user = await payload.create({
+    collection: internal.usersCollectionSlug,
+    data: {
+      email: body.email,
+      hashedPassword: hashedPassword,
+      hashIterations: iterations,
+      salt,
+      ...body.profile,
+    },
+  })
+
+  if (body.allowAutoSignin) {
+    return sessionCallBack({
+      id: user.id as string,
+      email: body.email,
+    })
+  }
+
+  return Response.json(
+    {
+      message: "Signed up successfully",
+      kind: SuccessKind.Created,
+    },
+    { status: 201 },
+  )
+}
+
+export const PasswordReset = async (
+  request: PayloadRequest,
+  internal: {
+    usersCollectionSlug: string
+  },
+  sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
+) => {
+  request.payload.sendEmail({})
   const body =
     request.json &&
     ((await request.json()) as {
