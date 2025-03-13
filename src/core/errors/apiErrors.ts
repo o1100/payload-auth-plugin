@@ -60,7 +60,7 @@ export class AuthenticationFailed extends AuthAPIError {
 
 export class InvalidCredentials extends AuthAPIError {
   constructor() {
-    super("INvalid Credentials", ErrorKind.BadRequest)
+    super("Invalid Credentials", ErrorKind.BadRequest)
   }
 }
 

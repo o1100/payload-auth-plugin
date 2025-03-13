@@ -41,15 +41,13 @@ export const PasswordSignin = async (
   }
 
   const user = docs[0]
-
-  if (
-    !verifyPassword(
-      body.password,
-      user["hashedPassword"],
-      user["salt"],
-      user["hashIterations"],
-    )
-  ) {
+  const isVerifed = await verifyPassword(
+    body.password,
+    user["hashedPassword"],
+    user["salt"],
+    user["hashIterations"],
+  )
+  if (!isVerifed) {
     return new InvalidCredentials()
   }
   return sessionCallBack({
