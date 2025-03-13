@@ -96,3 +96,24 @@ export const passwordRecover = async (
     kind,
   }
 }
+
+export interface PasswordResetPayload {
+  email: string
+  password: string
+}
+export const passwordReset = async (
+  opts: BaseOptions,
+  payload: PasswordResetPayload,
+): Promise<AuthPluginOutput> => {
+  const response = await fetch(`/api/${opts.name}/auth/reset-password`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  })
+
+  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  return {
+    data,
+    message,
+    kind,
+  }
+}

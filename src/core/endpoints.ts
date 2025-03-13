@@ -124,6 +124,7 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
     private internals: {
       usersCollectionSlug: string
     },
+    private secret: string,
   ) {}
   createEndpoints({
     pluginType,
@@ -139,9 +140,11 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
           const stage = request.searchParams.get("stage") ?? undefined
           return PasswordAuthHandlers(
             request,
+            pluginType,
             request.routeParams?.kind as string,
             this.internals,
             (user) => sessionCallback(user),
+            this.secret,
             stage,
           )
         },

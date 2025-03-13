@@ -4,6 +4,8 @@ import {
   ForgotPasswordPayload,
   passwordRecover,
   PasswordRecoverPayload,
+  passwordReset,
+  PasswordResetPayload,
 } from "./password.js"
 import { refresh } from "./refresh.js"
 import { adminSignin, appSignin } from "./signin.js"
@@ -20,7 +22,8 @@ export const appClient = (options: AppClientOptions) => {
   return {
     signin: () => appSignin(options),
     signup: () => appSignup(options),
-    resetPassword: () => {},
+    resetPassword: async (payload: PasswordResetPayload) =>
+      await passwordReset(options, payload),
     forgotPassword: async (payload: ForgotPasswordPayload) =>
       await forgotPassword(options, payload),
     passwordRecover: async (payload: PasswordRecoverPayload) =>

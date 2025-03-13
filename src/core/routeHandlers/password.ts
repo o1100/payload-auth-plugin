@@ -4,16 +4,20 @@ import {
   ForgotPasswordVerify,
   PasswordSignin,
   PasswordSignup,
+  ResetPassword,
 } from "../protocols/password.js"
 import { InvalidAPIRequest } from "../errors/apiErrors.js"
+import { APP_COOKIE_SUFFIX } from "../../constants.js"
 
 export function PasswordAuthHandlers(
   request: PayloadRequest,
+  pluginType: string,
   kind: string,
   internal: {
     usersCollectionSlug: string
   },
   sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
+  secret: string,
   stage?: string | undefined,
 ): Promise<Response> {
   switch (kind) {
@@ -30,6 +34,13 @@ export function PasswordAuthHandlers(
         default:
           throw new InvalidAPIRequest()
       }
+    case "reset-password":
+      return ResetPassword(
+        `__${pluginType}-${APP_COOKIE_SUFFIX}`,
+        secret,
+        internal,
+        request,
+      )
     default:
       throw new InvalidAPIRequest()
   }

@@ -215,7 +215,7 @@ export const appAuthPlugin =
       }
       endpointsFactory.registerStrategy(
         "password",
-        new PasswordAuthEndpointStrategy({ usersCollectionSlug }),
+        new PasswordAuthEndpointStrategy({ usersCollectionSlug }, secret),
       )
       passwordEndpoints = endpointsFactory.createEndpoints("password", {
         sessionCallback: (user: { id: string; email: string }) =>

@@ -37,10 +37,6 @@ export async function verifySessionCookie(token: string, secret: string) {
   }>(token, secretKey)
 }
 
-export async function decryptSessionCookie(token: string) {
-  await jwt.decodeJwt(token)
-}
-
 export function invalidateOAuthCookies(cookies: string[]) {
   const expired = "Thu, 01 Jan 1970 00:00:00 GMT"
   cookies.push(
@@ -55,5 +51,11 @@ export function invalidateOAuthCookies(cookies: string[]) {
   cookies.push(
     `__session-webpk-challenge=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`,
   )
+  return cookies
+}
+
+export const invalidateSessionCookies = (name: string, cookies: string[]) => {
+  const expired = "Thu, 01 Jan 1970 00:00:00 GMT"
+  cookies.push(`${name}=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`)
   return cookies
 }
