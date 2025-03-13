@@ -54,11 +54,17 @@ export async function OAuth2Callback(
     callback_url.toString(),
     code_verifier,
   )
+  let modResponse = response
+  let body = (await response.json()) as { scope: string | string[] }
+  if (Array.isArray(body.scope)) {
+    body.scope = body.scope.join(" ")
+    modResponse = new Response(JSON.stringify(body), response)
+  }
 
   const token_result = await oauth.processAuthorizationCodeResponse(
     as,
     client,
-    response,
+    modResponse,
   )
 
   const userInfoResponse = await oauth.userInfoRequest(
