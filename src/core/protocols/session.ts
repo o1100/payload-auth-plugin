@@ -4,12 +4,12 @@ import { createSessionCookies, verifySessionCookie } from "../utils/cookies.js"
 import { SuccessKind } from "../../types.js"
 
 export async function SessionRefresh(
-  name: string,
+  cookieName: string,
   secret: string,
   request: PayloadRequest,
 ) {
   const cookies = parseCookies(request.headers)
-  const token = cookies.get(name)
+  const token = cookies.get(cookieName)
   if (!token) {
     return new UnauthorizedAPIRequest()
   }
@@ -20,7 +20,7 @@ export async function SessionRefresh(
   }
   let refreshCookies: string[] = []
   refreshCookies = [
-    ...(await createSessionCookies(name, secret, jwtResponse.payload)),
+    ...(await createSessionCookies(cookieName, secret, jwtResponse.payload)),
   ]
 
   const res = new Response(
