@@ -99,3 +99,11 @@ export class MissingEnv extends PluginError {
     super("Missing ENV " + env)
   }
 }
+
+export class MissingEmailAdapter extends PluginError {
+  constructor() {
+    super(
+      "Email adapter is required. Check the docs for the setup: https://payloadcms.com/docs/email/overview",
+    )
+  }
+}

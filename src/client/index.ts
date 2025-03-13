@@ -1,4 +1,10 @@
 import { MissingEnv } from "../core/errors/consoleErrors.js"
+import {
+  forgotPassword,
+  ForgotPasswordPayload,
+  passwordRecover,
+  PasswordRecoverPayload,
+} from "./password.js"
 import { refresh } from "./refresh.js"
 import { adminSignin, appSignin } from "./signin.js"
 import { appSignup } from "./signup.js"
@@ -15,7 +21,10 @@ export const appClient = (options: AppClientOptions) => {
     signin: () => appSignin(options),
     signup: () => appSignup(options),
     resetPassword: () => {},
-    forgotPassword: () => {},
+    forgotPassword: async (payload: ForgotPasswordPayload) =>
+      await forgotPassword(options, payload),
+    passwordRecover: async (payload: PasswordRecoverPayload) =>
+      await passwordRecover(options, payload),
     refresh: async () => await refresh(options),
   }
 }

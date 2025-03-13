@@ -134,13 +134,15 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
   }): Endpoint[] {
     return [
       {
-        path: `/${pluginType}/auth/:resource`,
+        path: `/${pluginType}/auth/:kind`,
         handler: (request: PayloadRequest) => {
+          const stage = request.searchParams.get("stage") ?? undefined
           return PasswordAuthHandlers(
             request,
-            request.routeParams?.resource as string,
+            request.routeParams?.kind as string,
             this.internals,
             (user) => sessionCallback(user),
+            stage,
           )
         },
         method: "post",

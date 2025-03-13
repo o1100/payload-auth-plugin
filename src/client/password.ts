@@ -48,3 +48,51 @@ export const passwordSignup = async (
     kind,
   }
 }
+
+export interface ForgotPasswordPayload {
+  email: string
+}
+export const forgotPassword = async (
+  opts: BaseOptions,
+  payload: ForgotPasswordPayload,
+): Promise<AuthPluginOutput> => {
+  const response = await fetch(
+    `/api/${opts.name}/auth/forgot-password?stage=init`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  )
+
+  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  return {
+    data,
+    message,
+    kind,
+  }
+}
+
+export interface PasswordRecoverPayload {
+  email: string
+  password: string
+  code: string
+}
+export const passwordRecover = async (
+  opts: BaseOptions,
+  payload: PasswordRecoverPayload,
+): Promise<AuthPluginOutput> => {
+  const response = await fetch(
+    `/api/${opts.name}/auth/forgot-password?stage=verify`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  )
+
+  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  return {
+    data,
+    message,
+    kind,
+  }
+}

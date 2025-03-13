@@ -23,7 +23,10 @@ import {
   OAuthProviderConfig,
   PasskeyProviderConfig,
 } from "../types.js"
-import { InvalidServerURL } from "../core/errors/consoleErrors.js"
+import {
+  InvalidServerURL,
+  MissingEmailAdapter,
+} from "../core/errors/consoleErrors.js"
 import {
   getPasswordProvider,
   getOAuthProviders,
@@ -207,6 +210,9 @@ export const appAuthPlugin =
     }
 
     if (passwordProvider) {
+      if (!!!config.email) {
+        throw new MissingEmailAdapter()
+      }
       endpointsFactory.registerStrategy(
         "password",
         new PasswordAuthEndpointStrategy({ usersCollectionSlug }),
