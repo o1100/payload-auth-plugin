@@ -3,11 +3,11 @@ import { UnauthorizedAPIRequest } from "../errors/apiErrors.js"
 import { createSessionCookies, verifySessionCookie } from "../utils/cookies.js"
 import { SuccessKind } from "../../types.js"
 
-export async function SessionRefresh(
+export const SessionRefresh = async (
   cookieName: string,
   secret: string,
   request: PayloadRequest,
-) {
+) => {
   const cookies = parseCookies(request.headers)
   const token = cookies.get(cookieName)
   if (!token) {
