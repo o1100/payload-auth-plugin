@@ -107,3 +107,9 @@ export class MissingEmailAdapter extends PluginError {
     )
   }
 }
+
+export class MissingCollectionSlug extends PluginError {
+  constructor() {
+    super("Missing collection slug")
+  }
+}

@@ -41,7 +41,7 @@ export async function OIDCCallback(
 
   const params = oauth.validateAuthResponse(as, client, current_url)
 
-  const response = await oauth.authorizationCodeGrantRequest(
+  const grantResponse = await oauth.authorizationCodeGrantRequest(
     as,
     client,
     clientAuth,
@@ -50,17 +50,17 @@ export async function OIDCCallback(
     code_verifier,
   )
 
-  let modResponse = response
-  let body = (await response.json()) as { scope: string | string[] }
+  let body = (await grantResponse.json()) as { scope: string | string[] }
+  let response = new Response(JSON.stringify(body), grantResponse)
   if (Array.isArray(body.scope)) {
     body.scope = body.scope.join(" ")
-    modResponse = new Response(JSON.stringify(body), response)
+    response = new Response(JSON.stringify(body), grantResponse)
   }
 
   const token_result = await oauth.processAuthorizationCodeResponse(
     as,
     client,
-    modResponse,
+    response,
     {
       expectedNonce: nonce as string,
       requireIdToken: true,

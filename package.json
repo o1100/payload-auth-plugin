@@ -49,6 +49,14 @@
     "./client": {
       "import": "./dist/esm/client/index.js",
       "types": "./dist/types/client/index.d.ts"
+    },
+    "./collection": {
+      "import": "./dist/esm/collection/index.js",
+      "types": "./dist/types/collection/index.d.ts"
+    },
+    "./collection/hooks": {
+      "import": "./dist/esm/collection/hooks.js",
+      "types": "./dist/types/collection/hooks.d.ts"
     }
   },
   "files": [
