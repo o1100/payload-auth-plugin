@@ -225,7 +225,7 @@ export const appAuthPlugin =
 
     endpointsFactory.registerStrategy(
       "session",
-      new SessionEndpointStrategy(secret),
+      new SessionEndpointStrategy(secret, { usersCollectionSlug }),
     )
     const sessionEndpoints = endpointsFactory.createEndpoints("session")
 

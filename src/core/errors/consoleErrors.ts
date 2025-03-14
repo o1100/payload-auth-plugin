@@ -113,3 +113,9 @@ export class MissingCollectionSlug extends PluginError {
     super("Missing collection slug")
   }
 }
+
+export class WrongClientUsage extends PluginError {
+  constructor() {
+    super("Using client only code in server side")
+  }
+}

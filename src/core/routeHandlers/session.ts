@@ -13,7 +13,6 @@ export function SessionHandlers(
     // TODO: Implementation is not necessary as it is already handled by Payload. But can be customised.
     throw new InvalidAPIRequest()
   }
-
   switch (kind) {
     case "refresh":
       return SessionRefresh(
