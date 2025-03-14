@@ -35,7 +35,8 @@
     "microsoft",
     "slack",
     "passkey",
-    "webauthn"
+    "webauthn",
+    "twitch"
   ],
   "exports": {
     ".": {
