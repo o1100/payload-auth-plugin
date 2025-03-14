@@ -14,7 +14,6 @@ export class AppSession {
     private collections: {
       usersCollection: string
       accountsCollection: string
-      sessionsCollection: string
     },
     private allowAutoSignUp: boolean,
     private authenticationStrategy: AuthenticationStrategy,

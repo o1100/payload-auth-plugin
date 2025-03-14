@@ -20,6 +20,7 @@ export type OauthProvider =
   | "discord"
   | "facebook"
   | "jumpcloud"
+  | "twitch"
 
 export const oauth = (
   options: BaseOptions,

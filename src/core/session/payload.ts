@@ -6,6 +6,8 @@ import {
   createSessionCookies,
   invalidateOAuthCookies,
 } from "../utils/cookies.js"
+import { sessionResponse } from "../utils/session.js"
+import { UserNotFoundAPIError } from "../errors/apiErrors.js"
 
 type Collections = {
   accountsCollectionSlug: string
@@ -14,16 +16,10 @@ type Collections = {
 
 export class PayloadSession {
   readonly #collections: Collections
-  readonly #successPath: string | undefined
   readonly #allowSignUp: boolean
-  constructor(
-    collections: Collections,
-    allowSignUp?: boolean,
-    successPath?: string,
-  ) {
+  constructor(collections: Collections, allowSignUp?: boolean) {
     this.#collections = collections
     this.#allowSignUp = !!allowSignUp
-    this.#successPath = successPath
   }
   async #upsertAccount(
     accountInfo: AccountInfo,
@@ -44,7 +40,7 @@ export class PayloadSession {
 
     if (userQueryResults.docs.length === 0) {
       if (!this.#allowSignUp) {
-        throw new UserNotFound()
+        return new UserNotFoundAPIError()
       }
 
       const newUser = await payload.create({
@@ -72,7 +68,6 @@ export class PayloadSession {
       picture: accountInfo.picture,
     }
 
-    // // Add passkey payload for auth
     if (issuerName === "Passkey" && accountInfo.passKey) {
       data["passkey"] = {
         ...accountInfo.passKey,
@@ -134,22 +129,6 @@ export class PayloadSession {
     ]
     cookies = invalidateOAuthCookies(cookies)
 
-    let redirectURL = payload.getAdminURL()
-    if (this.#successPath) {
-      const newURL = new URL(payload.getAdminURL())
-      newURL.pathname = this.#successPath
-      redirectURL = newURL.toString()
-    }
-    const res = new Response(null, {
-      status: 302,
-      headers: {
-        Location: redirectURL,
-      },
-    })
-
-    cookies.forEach((cookie) => {
-      res.headers.append("Set-Cookie", cookie)
-    })
-    return res
+    return sessionResponse(cookies)
   }
 }

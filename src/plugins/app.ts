@@ -94,14 +94,6 @@ interface PluginOptions {
   accountsCollectionSlug: string
 
   /**
-   * App user session collection slug.
-   *
-   * This collection will be used to store all the app user session records.
-   *
-   */
-  sessionsCollectionSlug: string
-
-  /**
    * Allow auto signup if user doesn't have an account.
    *
    * @default false
@@ -144,7 +136,6 @@ export const appAuthPlugin =
     const {
       usersCollectionSlug,
       accountsCollectionSlug,
-      sessionsCollectionSlug,
       providers,
       allowAutoSignUp,
       authenticationStrategy,
@@ -152,7 +143,7 @@ export const appAuthPlugin =
     } = pluginOptions
 
     preflightCollectionCheck(
-      [usersCollectionSlug, accountsCollectionSlug, sessionsCollectionSlug],
+      [usersCollectionSlug, accountsCollectionSlug],
       config.collections,
     )
 
@@ -167,7 +158,6 @@ export const appAuthPlugin =
       {
         usersCollection: usersCollectionSlug,
         accountsCollection: accountsCollectionSlug,
-        sessionsCollection: sessionsCollectionSlug,
       },
       allowAutoSignUp ?? false,
       authenticationStrategy ?? "Cookie",

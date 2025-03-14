@@ -131,4 +131,4 @@ export type ProvidersConfig =
   | PasskeyProviderConfig
   | PasswordProviderConfig
 
-export type AuthenticationStrategy = "JWT" | "Cookie"
+export type AuthenticationStrategy = "Cookie"
