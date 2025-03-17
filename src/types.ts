@@ -19,6 +19,8 @@ export interface AuthPluginOutput {
   message: string
   kind: ErrorKind | SuccessKind
   data: any
+  isSuccess: boolean
+  isError: boolean
 }
 
 /**

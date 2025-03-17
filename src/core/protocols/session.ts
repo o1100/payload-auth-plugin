@@ -27,7 +27,12 @@ export const SessionRefresh = async (
   ]
 
   const res = new Response(
-    JSON.stringify({ message: "Session refreshed", kind: SuccessKind.Updated }),
+    JSON.stringify({
+      message: "Session refreshed",
+      kind: SuccessKind.Updated,
+      isSuccess: true,
+      isError: false,
+    }),
     {
       status: 201,
     },
@@ -75,6 +80,8 @@ export const UserSession = async (
         data: {
           isAuthenticated: false,
         },
+        isSuccess: false,
+        isError: true,
       }),
       {
         status: 401,
@@ -105,6 +112,8 @@ export const UserSession = async (
         isAuthenticated: true,
         ...queryData,
       },
+      isSuccess: true,
+      isError: false,
     }),
     {
       status: 201,

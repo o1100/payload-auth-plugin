@@ -5,6 +5,8 @@ export function sessionResponse(cookies: string[]) {
     JSON.stringify({
       message: "Authentication successful",
       kind: SuccessKind.Created,
+      isSuccess: true,
+      isError: false,
     }),
     {
       status: 200,
@@ -22,6 +24,8 @@ export const revokeSession = (cookies: string[]) => {
     JSON.stringify({
       message: "Session revoked",
       kind: SuccessKind.Deleted,
+      isSuccess: true,
+      isError: false,
     }),
     {
       status: 200,

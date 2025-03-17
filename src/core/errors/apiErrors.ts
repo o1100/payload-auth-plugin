@@ -10,9 +10,18 @@ const statusByKind = {
 }
 export class AuthAPIError extends Response {
   constructor(message: string, kind: ErrorKind) {
-    super(JSON.stringify({ message, kind, data: null }), {
-      status: statusByKind[kind],
-    })
+    super(
+      JSON.stringify({
+        message,
+        kind,
+        data: null,
+        isSuccess: false,
+        isError: true,
+      }),
+      {
+        status: statusByKind[kind],
+      },
+    )
   }
 }
 

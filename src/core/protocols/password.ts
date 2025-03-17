@@ -123,6 +123,8 @@ export const PasswordSignup = async (
     {
       message: "Signed up successfully",
       kind: SuccessKind.Created,
+      isSuccess: true,
+      isError: false,
     },
     { status: 201 },
   )
@@ -169,6 +171,8 @@ export const ForgotPasswordInit = async (
     JSON.stringify({
       message: "Password recovery initiated successfully",
       kind: SuccessKind.Created,
+      isSuccess: true,
+      isError: false,
     }),
     { status: 201 },
   )
@@ -245,6 +249,8 @@ export const ForgotPasswordVerify = async (
     JSON.stringify({
       message: "Password recovered successfully",
       kind: SuccessKind.Updated,
+      isSuccess: true,
+      isError: false,
     }),
     { status: 201 },
   )
@@ -337,6 +343,8 @@ export const ResetPassword = async (
     JSON.stringify({
       message: "Password reset complete",
       kind: SuccessKind.Updated,
+      isSuccess: true,
+      isError: false,
     }),
     {
       status: 201,
