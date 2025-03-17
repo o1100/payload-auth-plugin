@@ -1,5 +1,28 @@
 import type { AuthorizationServer } from "oauth4webapi"
 
+export enum ErrorKind {
+  NotFound = "NotFound",
+  InternalServer = "InternalServer",
+  BadRequest = "BadRequest",
+  NotAuthorized = "NotAuthorized",
+  NotAuthenticated = "NotAuthenticated",
+  Conflict = "Conflict",
+}
+
+export enum SuccessKind {
+  Created = "Created",
+  Updated = "Updated",
+  Retrieved = "Retrieved",
+  Deleted = "Deleted",
+}
+export interface AuthPluginOutput {
+  message: string
+  kind: ErrorKind | SuccessKind
+  data: any
+  isSuccess: boolean
+  isError: boolean
+}
+
 /**
  * Generic OAuth provider callback output
  *
@@ -41,7 +64,14 @@ interface OAuthProviderOutput {
 export interface OAuthBaseProviderConfig {
   client_id: string
   client_secret?: string
-  params?: Record<string, string> | undefined
+  /*
+   * Oauth provider Client Type
+   */
+  client_auth_type?: "client_secret_basic" | "client_secret_post"
+  /*
+   * Additional parameters you would like to add to query for the provider
+   */
+  params?: Record<string, string>
 }
 
 export interface OIDCProviderConfig
@@ -49,6 +79,7 @@ export interface OIDCProviderConfig
     OAuthBaseProviderConfig {
   issuer: string
   algorithm: "oidc"
+  kind: "oauth"
 }
 
 export interface OAuth2ProviderConfig
@@ -56,14 +87,10 @@ export interface OAuth2ProviderConfig
     OAuthBaseProviderConfig {
   authorization_server: AuthorizationServer
   algorithm: "oauth2"
-}
-
-export type OAuthProviderConfig = (
-  | OIDCProviderConfig
-  | OAuth2ProviderConfig
-) & {
   kind: "oauth"
 }
+
+export type OAuthProviderConfig = OIDCProviderConfig | OAuth2ProviderConfig
 
 export interface AccountInfo {
   sub: string
@@ -80,14 +107,15 @@ export interface AccountInfo {
   }
 }
 
-export type CredentialsProviderConfig = {
+export type PasswordProviderConfig = {
   id: string
-  name: string
-  verfiyEmail?: boolean
-  passwordless?: boolean
-  mfa?: "OTP" | "TOTP" | "None"
-  signinCallback?: () => void
-  signupCallback?: () => void
+  kind: "password"
+  // name: string
+  // verfiyEmail?: boolean
+  // passwordless?: boolean
+  // mfa?: "OTP" | "TOTP" | "None"
+  // signinCallback?: () => void
+  // signupCallback?: () => void
 }
 
 export interface CredentialsAccountInfo {
@@ -100,4 +128,9 @@ export type PasskeyProviderConfig = {
   kind: "passkey"
 }
 
-export type ProvidersConfig = OAuthProviderConfig | PasskeyProviderConfig
+export type ProvidersConfig =
+  | OAuthProviderConfig
+  | PasskeyProviderConfig
+  | PasswordProviderConfig
+
+export type AuthenticationStrategy = "Cookie"

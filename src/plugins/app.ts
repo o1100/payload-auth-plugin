@@ -1,6 +1,6 @@
 /**
  * The App plugin is used for authenticating users in the frontent app of the Payload CMS application.
- * It support magic link, credentials, OAuth, and Passkey based authentications.
+ * It support magic link, password, OAuth, and Passkey based authentications.
  *
  * On top of it, to add additional security it also support 2FA using OTP, and TOTP.
  *
@@ -15,84 +15,33 @@
  * @packageDocumentation
  */
 
-import { BasePayload, Config, Endpoint, Plugin } from "payload"
+import { Config, Endpoint, PayloadRequest, Plugin } from "payload"
 import {
   AccountInfo,
+  AuthenticationStrategy,
+  PasswordProviderConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
 } from "../types.js"
-import { InvalidServerURL } from "../core/errors/consoleErrors.js"
-import { getOAuthProviders, getPasskeyProvider } from "../providers/utils.js"
 import {
+  InvalidServerURL,
+  MissingEmailAdapter,
+} from "../core/errors/consoleErrors.js"
+import {
+  getPasswordProvider,
+  getOAuthProviders,
+  getPasskeyProvider,
+} from "../providers/utils.js"
+import {
+  PasswordAuthEndpointStrategy,
   EndpointsFactory,
   OAuthEndpointStrategy,
   PasskeyEndpointStrategy,
+  SessionEndpointStrategy,
 } from "../core/endpoints.js"
-
-interface UsersCollection {
-  /**
-   * Collection name
-   *
-   * @type {string}
-   */
-  name: string
-  /**
-   * Collection slug but optional
-   *
-   * @type {?string}
-   */
-  slug?: string | undefined
-  /**
-   * Hide the collection but optional. Not hidden by default
-   *
-   * @type {?(boolean | undefined)}
-   */
-  hidden?: boolean | undefined
-}
-
-interface AccountsCollection {
-  /**
-   * Collection name
-   *
-   * @type {string}
-   */
-  name: string
-  /**
-   * Collection slug but optional
-   *
-   * @type {?string}
-   */
-  slug?: string | undefined
-  /**
-   * Hide the collection but optional. Not hidden by default
-   *
-   * @type {?(boolean | undefined)}
-   */
-  hidden?: boolean | undefined
-}
-
-interface SessionsCollection {
-  /**
-   * Collection name
-   *
-   * @type {string}
-   */
-  name: string
-  /**
-   * Collection slug but optional
-   *
-   * @type {?string}
-   */
-  slug?: string | undefined
-  /**
-   * Hide the collection but optional. Hidden by default
-   *
-   * @default true
-   *
-   * @type {?(boolean | undefined)}
-   */
-  hidden?: boolean | undefined
-}
+import { AppSession } from "../core/session/app.js"
+import { formatSlug } from "../core/utils/slug.js"
+import { preflightCollectionCheck } from "../core/preflights/collections.js"
 
 /**
  * The App plugin to set up authentication to the intengrated frontend of Payload CMS.
@@ -106,36 +55,63 @@ interface PluginOptions {
    *
    * @default true
    *
-   * @type {boolean}
-   *
    */
   enabled?: boolean | undefined
+
+  /**
+   * Unique name for your frontend app.
+   *
+   * This name will be used to created endpoints, tokens, and etc.
+   */
+  name: string
+
   /**
    * Auth providers supported by the plugin
    *
-   * @type {(OAuthProviderConfig | PasskeyProviderConfig)[]}
    */
-  providers: (OAuthProviderConfig | PasskeyProviderConfig)[]
-  /**
-   * App users collection. This collection will be used to store all the app users.
-   *
-   * **Note:** It is recommended that this collection must be named differently than the Payload Admin users collection,
-   * or else it can cause conflicts.
-   *
-   * @type {UsersCollection}
-   */
-  users: UsersCollection
-  /**
-   * User accounts collection. This collection will be used to store all the accounts that belongs to a user.
-   * One user can have more than one account
-   *
-   * **NOTE:** If there is an accounts collection already existing, it is recommended that use a different name and slug(if using) to avoid conflicts.
-   *
-   * @type {AccountsCollection}
-   */
-  accounts: AccountsCollection
+  providers: (
+    | OAuthProviderConfig
+    | PasskeyProviderConfig
+    | PasswordProviderConfig
+  )[]
 
-  sessions: SessionsCollection
+  /**
+   * @description
+   * App users collection slug.
+   *
+   * This collection will be used to store all the app user records.
+   *
+   */
+  usersCollectionSlug: string
+
+  /**
+   * App user accounts collection slug.
+   *
+   * This collection will be used to store all the app user account records.
+   * Multiple accounts can belong to one user
+   *
+   */
+  accountsCollectionSlug: string
+
+  /**
+   * Allow auto signup if user doesn't have an account.
+   *
+   * @default false
+   *
+   */
+  allowAutoSignUp?: boolean | undefined
+
+  /**
+   * Authentication strategies can be either JWT or Cookie based
+   *
+   * @default Cookie
+   *
+   */
+  authenticationStrategy?: AuthenticationStrategy
+  /**
+   * Secret to use for JWT signing and decryption
+   */
+  secret: string
 }
 
 /**
@@ -146,12 +122,6 @@ interface PluginOptions {
  */
 export const appAuthPlugin =
   (pluginOptions: PluginOptions): Plugin =>
-  /**
-   * Callback function to return the updated Payload config.
-   *
-   * @param {Config} incomingConfig
-   * @returns {Config}
-   */
   (incomingConfig: Config): Config => {
     const config = { ...incomingConfig }
 
@@ -163,15 +133,42 @@ export const appAuthPlugin =
       throw new InvalidServerURL()
     }
 
-    const { users, accounts, providers } = pluginOptions
+    const {
+      usersCollectionSlug,
+      accountsCollectionSlug,
+      providers,
+      allowAutoSignUp,
+      authenticationStrategy,
+      secret,
+    } = pluginOptions
+
+    preflightCollectionCheck(
+      [usersCollectionSlug, accountsCollectionSlug],
+      config.collections,
+    )
+
+    const name = formatSlug(pluginOptions.name)
 
     const oauthProviders = getOAuthProviders(providers)
     const passkeyProvider = getPasskeyProvider(providers)
+    const passwordProvider = getPasswordProvider(providers)
 
-    const endpointsFactory = new EndpointsFactory("app")
+    const session = new AppSession(
+      name,
+      {
+        usersCollection: usersCollectionSlug,
+        accountsCollection: accountsCollectionSlug,
+      },
+      allowAutoSignUp ?? false,
+      authenticationStrategy ?? "Cookie",
+      secret,
+    )
+
+    const endpointsFactory = new EndpointsFactory(name)
 
     let oauthEndpoints: Endpoint[] = []
     let passkeyEndpoints: Endpoint[] = []
+    let passwordEndpoints: Endpoint[] = []
 
     if (Object.keys(oauthProviders).length > 0) {
       endpointsFactory.registerStrategy(
@@ -183,10 +180,14 @@ export const appAuthPlugin =
           oauthAccountInfo: AccountInfo,
           scope: string,
           issuerName: string,
-          basePayload: BasePayload,
-        ) => {
-          return Response.json({})
-        },
+          request: PayloadRequest,
+        ) =>
+          session.oauthSessionCallback(
+            oauthAccountInfo,
+            scope,
+            issuerName,
+            request,
+          ),
       })
     }
 
@@ -198,11 +199,32 @@ export const appAuthPlugin =
       passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
     }
 
+    if (passwordProvider) {
+      if (!!!config.email) {
+        throw new MissingEmailAdapter()
+      }
+      endpointsFactory.registerStrategy(
+        "password",
+        new PasswordAuthEndpointStrategy({ usersCollectionSlug }, secret),
+      )
+      passwordEndpoints = endpointsFactory.createEndpoints("password", {
+        sessionCallback: (user: { id: string; email: string }) =>
+          session.passwordSessionCallback(user),
+      })
+    }
+
+    endpointsFactory.registerStrategy(
+      "session",
+      new SessionEndpointStrategy(secret, { usersCollectionSlug }),
+    )
+    const sessionEndpoints = endpointsFactory.createEndpoints("session")
+
     config.endpoints = [
       ...(config.endpoints ?? []),
       ...oauthEndpoints,
       ...passkeyEndpoints,
+      ...passwordEndpoints,
+      ...sessionEndpoints,
     ]
-
     return config
   }

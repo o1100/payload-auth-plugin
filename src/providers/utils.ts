@@ -3,6 +3,7 @@ import {
   ProvidersConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
+  PasswordProviderConfig,
 } from "../types.js"
 
 /**
@@ -15,25 +16,16 @@ import {
 export function getOAuthProviders(
   providers: ProvidersConfig[],
 ): Record<string, OAuthProviderConfig> {
-  const providerRecords = providers.reduce(
-    (
-      record: Record<string, OAuthProviderConfig>,
-      provider: ProvidersConfig,
-    ) => {
-      if (record[provider.id]) {
-        throw new ProviderAlreadyExists()
-      }
-      const newRecord = {
-        ...record,
-      }
-      if (provider.kind === "oauth") {
-        newRecord[provider.id] = provider
-      }
-      return newRecord
-    },
-    {},
-  )
-  return providerRecords
+  const records: Record<string, OAuthProviderConfig> = {}
+  providers.map((provider: ProvidersConfig) => {
+    if (records[provider.id]) {
+      throw new ProviderAlreadyExists()
+    }
+    if (provider.kind === "oauth") {
+      records[provider.id] = provider
+    }
+  })
+  return records
 }
 
 /**
@@ -51,6 +43,21 @@ export function getPasskeyProvider(
   )
   if (passkeyProvider) {
     return passkeyProvider
+  }
+  return null
+}
+
+/**
+ * Function to get the Password provider
+ *
+ * @internal
+ */
+export function getPasswordProvider(
+  providers: ProvidersConfig[],
+): PasswordProviderConfig | null {
+  const provider = providers.find((provider) => provider.kind === "password")
+  if (provider) {
+    return provider
   }
   return null
 }

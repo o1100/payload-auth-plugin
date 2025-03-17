@@ -1,4 +1,10 @@
-import type { BasePayload, Config, Endpoint, Plugin } from "payload"
+import type {
+  BasePayload,
+  Config,
+  Endpoint,
+  PayloadRequest,
+  Plugin,
+} from "payload"
 import {
   EndpointsFactory,
   OAuthEndpointStrategy,
@@ -6,12 +12,9 @@ import {
 } from "../core/endpoints.js"
 import type { AccountInfo, ProvidersConfig } from "../types.js"
 import { PayloadSession } from "../core/session/payload.js"
-import {
-  InvalidServerURL,
-  MissingUsersCollection,
-} from "../core/errors/consoleErrors.js"
-import { buildAccountsCollection } from "../core/collections/admin/accounts.js"
+import { InvalidServerURL } from "../core/errors/consoleErrors.js"
 import { getOAuthProviders, getPasskeyProvider } from "../providers/utils.js"
+import { preflightCollectionCheck } from "../core/preflights/collections.js"
 
 interface PluginOptions {
   /* Enable or disable plugin
@@ -26,16 +29,7 @@ interface PluginOptions {
   /*
    * Accounts collections config
    */
-  accounts?: {
-    slug?: string | undefined
-    hidden?: boolean | undefined
-  }
-
-  /*
-   * Path to be redirected to upon successful login
-   * @defuault /admin
-   */
-  successPath?: string
+  accountsCollectionSlug: string
 
   /* Enable or disable user creation. WARNING: If applied to your admin users collection it will allow ANYONE to sign up as an admin.
    * @default false
@@ -56,23 +50,23 @@ export const adminAuthPlugin =
       throw new InvalidServerURL()
     }
 
-    if (!config.admin?.user) {
-      throw new MissingUsersCollection()
-    }
+    const { accountsCollectionSlug, providers, allowSignUp } = pluginOptions
+
+    preflightCollectionCheck(
+      [config.admin?.user!, accountsCollectionSlug],
+      config.collections,
+    )
 
     config.admin = {
       ...(config.admin ?? {}),
     }
 
-    const { accounts, providers, allowSignUp, successPath } = pluginOptions
-
     const session = new PayloadSession(
       {
-        accountsCollectionSlug: accounts?.slug ?? "accounts",
+        accountsCollectionSlug: accountsCollectionSlug,
         usersCollectionSlug: config.admin.user!,
       },
       allowSignUp,
-      successPath,
     )
 
     const oauthProviders = getOAuthProviders(providers)
@@ -93,14 +87,9 @@ export const adminAuthPlugin =
           oauthAccountInfo: AccountInfo,
           scope: string,
           issuerName: string,
-          basePayload: BasePayload,
+          request: PayloadRequest,
         ) =>
-          session.createSession(
-            oauthAccountInfo,
-            scope,
-            issuerName,
-            basePayload,
-          ),
+          session.createSession(oauthAccountInfo, scope, issuerName, request),
       })
     }
 
@@ -111,17 +100,6 @@ export const adminAuthPlugin =
       )
       passkeyEndpoints = endpointsFactory.createEndpoints("passkey")
     }
-
-    config.collections = [
-      ...(config.collections ?? []),
-      buildAccountsCollection(
-        {
-          slug: accounts?.slug ?? "accounts",
-          hidden: accounts?.hidden ?? false,
-        },
-        config.admin.user!,
-      ),
-    ]
 
     config.endpoints = [
       ...(config.endpoints ?? []),
