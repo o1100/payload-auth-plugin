@@ -15,12 +15,12 @@ type MicrosoftEntraAuthConfig = OAuthBaseProviderConfig & {
  *
  * - For Admin
  * ```
- * https://example.com/api/admin/oauth/callback/MicrosoftEntra
+ * https://example.com/api/admin/oauth/callback/msft-entra
  * ```
  *
  * - For App
  * ```
- * https://example.com/api/{app_name}/oauth/callback/MicrosoftEntra
+ * https://example.com/api/{app_name}/oauth/callback/msft-entra
  * ```
  *
  * #### Plugin Setup
