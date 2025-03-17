@@ -2,6 +2,145 @@
 
 All notable changes to this project will be documented in this file.
 
+### 🚀 Features
+
+- App plugin
+- Updated endpoint strategy
+- Use new endpoint strategy
+- New provider utils
+- Adds endpoints
+- Cli
+- All the basic implementations
+- Deps installer
+- Create accounts collection
+- Admin plugin init process
+- Added instruction
+- Collection process
+- All init process
+- Local config
+- Transform plugin
+- Adds transform plugin
+- Update imports
+- Sub-cmd
+- Slugifier
+- App session
+- Updates client func
+- Updates client func
+- Oauth session
+- Collections preflight
+- New error kind
+- New exceptions
+- New callbacks
+- OnSuccess payload updates
+- Creds signin
+- Adding JumpCloud provider
+- Add support for `client_secret_basic` client auth type.
+- New error type
+- Session for app
+- Oaut app session
+- Adds redirection util
+- Adds refresh lops
+- Signup
+- Signup
+- Error
+- Pw util
+- Cred signin
+- Password recovery
+- Twitch provider
+- Collections and hooks
+- Current user session
+
+### 🐛 Bug Fixes
+
+- Add support for non standard api path in signin function
+- Make executable
+- Rm collection setup
+- Spinner
+- Use consola
+- Use new looger
+- Path join
+- Update const
+- Message
+- Type
+- Params
+- Adds missing property
+- Adds missing forward slash
+- Use plugin type
+- Callback
+- Use inbuilt error
+- Base implementation
+- Client config
+- Bug where none utc times would cause the cookie to not be set by browsers
+- Provider config
+- Signin options
+- Preflight collections
+- Env preflight
+- Use secrets
+- Rm search params
+- Use jose
+- Session creations
+- Refresh process
+- Rm baseURL opts
+- Rm dependency
+- Error response
+- Export cred provider
+- Session response
+- Env
+- Signin
+- Output
+- Adds callback
+- Refresh response
+- Missing file
+- Args
+- Rename to password
+- Rename to password
+- Verification
+- Config
+- Response updates
+- Config
+
+### 💼 Other
+
+- File and func name
+- Move files
+- Moves cli to https://github.com/authsmith/cli
+- Password reset
+
+### 📚 Documentation
+
+- Updates JSDoc
+- Provider doc
+- Updated
+
+### ⚙️ Miscellaneous Tasks
+
+- Type changes
+- Type changes
+- Type changes
+- Cleanup
+- Setup workspace
+- Dep updated
+- Changes scripts
+- Fmt
+- Script updates
+- Fix cli meta
+- Comments
+- Cleanup
+- Scripts updated
+- Script
+- Cleanup
+- Cleanup
+- Cleanup
+- Fmt
+- Converts to arrow func.
+- Rename var
+- Info
+- User arrow func
+- Cleanup
+- Format
+- New keyword
+- Release
+
 ## [0.5.8] - 2025-02-10
 
 ### 🐛 Bug Fixes
@@ -10,6 +149,7 @@ All notable changes to this project will be documented in this file.
 
 ### ⚙️ Miscellaneous Tasks
 
+- Release v0.5.8
 - Release v0.5.8
 
 ## [0.5.7] - 2025-02-09
