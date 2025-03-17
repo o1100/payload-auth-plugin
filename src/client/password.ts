@@ -17,11 +17,14 @@ export const passwordSignin = async (
     body: JSON.stringify(payload),
   })
 
-  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  const { data, message, kind, isError, isSuccess } =
+    (await response.json()) as AuthPluginOutput
   return {
     data,
     message,
     kind,
+    isError,
+    isSuccess,
   }
 }
 
@@ -35,17 +38,20 @@ export interface PasswordSignupPayload {
 export const passwordSignup = async (
   opts: BaseOptions,
   payload: PasswordSignupPayload,
-) => {
+): Promise<AuthPluginOutput> => {
   const response = await fetch(`/api/${opts.name}/auth/signup`, {
     method: "POST",
     body: JSON.stringify(payload),
   })
 
-  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  const { data, message, kind, isError, isSuccess } =
+    (await response.json()) as AuthPluginOutput
   return {
     data,
     message,
     kind,
+    isError,
+    isSuccess,
   }
 }
 
@@ -64,11 +70,14 @@ export const forgotPassword = async (
     },
   )
 
-  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  const { data, message, kind, isError, isSuccess } =
+    (await response.json()) as AuthPluginOutput
   return {
     data,
     message,
     kind,
+    isError,
+    isSuccess,
   }
 }
 
@@ -89,11 +98,14 @@ export const passwordRecover = async (
     },
   )
 
-  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  const { data, message, kind, isError, isSuccess } =
+    (await response.json()) as AuthPluginOutput
   return {
     data,
     message,
     kind,
+    isError,
+    isSuccess,
   }
 }
 
@@ -110,10 +122,13 @@ export const passwordReset = async (
     body: JSON.stringify(payload),
   })
 
-  const { data, message, kind } = (await response.json()) as AuthPluginOutput
+  const { data, message, kind, isError, isSuccess } =
+    (await response.json()) as AuthPluginOutput
   return {
     data,
     message,
     kind,
+    isError,
+    isSuccess,
   }
 }
