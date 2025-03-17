@@ -12,7 +12,10 @@ import PasskeyAuthProvider from "./passkey.js"
 import MicrosoftEntraAuthProvider from "./oidc/microsoft-entra.js"
 import AppleOIDCAuthProvider from "./oidc/apple.js"
 import AppleOAuth2Provider from "./oauth2/apple.js"
-import JumpCloudProvider from "./oauth2/jumpcloud.js"
+import JumpCloudAuthProvider from "./oauth2/jumpcloud.js"
+import TwitchAuthProvider from "./oauth2/twitch.js"
+import PasswordProvider from "./password.js"
+
 export {
   GoogleAuthProvider,
   GitHubAuthProvider,
@@ -28,5 +31,7 @@ export {
   MicrosoftEntraAuthProvider,
   AppleOIDCAuthProvider,
   AppleOAuth2Provider,
-  JumpCloudProvider,
+  JumpCloudAuthProvider,
+  TwitchAuthProvider,
+  PasswordProvider,
 }
