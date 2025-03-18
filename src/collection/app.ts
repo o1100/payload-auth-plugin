@@ -2,11 +2,19 @@ import { CollectionConfig, Field } from "payload"
 import { MissingCollectionSlug } from "../core/errors/consoleErrors.js"
 
 export const withAppUsersCollection = (
-  incomingCollection: CollectionConfig,
+  incomingCollection: Omit<CollectionConfig, "fields"> & {
+    fields?: Field[] | undefined
+  },
 ): CollectionConfig => {
   if (!incomingCollection.slug) {
     throw new MissingCollectionSlug()
   }
+
+  const collectionConfig: CollectionConfig = {
+    ...incomingCollection,
+    fields: [],
+  }
+
   const baseFields: Field[] = [
     {
       name: "name",
@@ -33,11 +41,11 @@ export const withAppUsersCollection = (
       type: "number",
     },
   ]
-  incomingCollection.fields = [
+  collectionConfig.fields = [
     ...baseFields,
     ...(incomingCollection.fields ?? []),
   ]
-  incomingCollection.access = {
+  collectionConfig.access = {
     admin: ({ req: { user } }) => Boolean(user),
     create: ({ req: { user } }) => Boolean(user),
     delete: ({ req: { user } }) => Boolean(user),
@@ -45,22 +53,30 @@ export const withAppUsersCollection = (
     update: ({ req: { user } }) => Boolean(user),
     ...(incomingCollection.access ?? {}),
   }
-  incomingCollection.admin = {
+  collectionConfig.admin = {
     defaultColumns: ["name", "email"],
     useAsTitle: "name",
     ...incomingCollection.admin,
   }
-  incomingCollection.timestamps = true
+  collectionConfig.timestamps = true
 
-  return incomingCollection
+  return collectionConfig
 }
 
 export const withAppAccountCollection = (
-  incomingCollection: CollectionConfig,
+  incomingCollection: Omit<CollectionConfig, "fields"> & {
+    fields?: Field[] | undefined
+  },
 ): CollectionConfig => {
   if (!incomingCollection.slug) {
     throw new MissingCollectionSlug()
   }
+
+  const collectionConfig: CollectionConfig = {
+    ...incomingCollection,
+    fields: [],
+  }
+
   const baseFields: Field[] = [
     {
       name: "name",
@@ -139,12 +155,12 @@ export const withAppAccountCollection = (
     },
   ]
 
-  incomingCollection.fields = [
+  collectionConfig.fields = [
     ...baseFields,
     ...(incomingCollection.fields ?? []),
   ]
 
-  incomingCollection.access = {
+  collectionConfig.access = {
     admin: ({ req: { user } }) => Boolean(user),
     read: ({ req: { user } }) => Boolean(user),
     create: () => false,
@@ -152,11 +168,11 @@ export const withAppAccountCollection = (
     delete: () => true,
     ...(incomingCollection.access ?? {}),
   }
-  incomingCollection.admin = {
+  collectionConfig.admin = {
     defaultColumns: ["issuerName", "scope", "user"],
     useAsTitle: "id",
     ...incomingCollection.admin,
   }
-  incomingCollection.timestamps = true
-  return incomingCollection
+  collectionConfig.timestamps = true
+  return collectionConfig
 }

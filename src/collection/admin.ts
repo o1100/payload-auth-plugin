@@ -2,11 +2,19 @@ import { CollectionConfig, Field } from "payload"
 import { MissingCollectionSlug } from "../core/errors/consoleErrors.js"
 
 export const withAdminAccountCollection = (
-  incomingCollection: CollectionConfig,
+  incomingCollection: Omit<CollectionConfig, "fields"> & {
+    fields?: Field[] | undefined
+  },
 ): CollectionConfig => {
   if (!incomingCollection.slug) {
     throw new MissingCollectionSlug()
   }
+
+  const collectionConfig: CollectionConfig = {
+    ...incomingCollection,
+    fields: [],
+  }
+
   const baseFields: Field[] = [
     {
       name: "name",
@@ -85,12 +93,12 @@ export const withAdminAccountCollection = (
     },
   ]
 
-  incomingCollection.fields = [
+  collectionConfig.fields = [
     ...baseFields,
     ...(incomingCollection.fields ?? []),
   ]
 
-  incomingCollection.access = {
+  collectionConfig.access = {
     admin: ({ req: { user } }) => Boolean(user),
     read: ({ req: { user } }) => Boolean(user),
     create: () => false,
@@ -98,11 +106,13 @@ export const withAdminAccountCollection = (
     delete: () => false,
     ...(incomingCollection.access ?? {}),
   }
-  incomingCollection.admin = {
+
+  collectionConfig.admin = {
     defaultColumns: ["issuerName", "scope", "user"],
     useAsTitle: "id",
     ...incomingCollection.admin,
   }
-  incomingCollection.timestamps = true
-  return incomingCollection
+  collectionConfig.timestamps = true
+
+  return collectionConfig
 }
