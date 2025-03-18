@@ -1,3 +1,4 @@
+import { appAuthPlugin } from 'payload-auth-plugin'
 import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
@@ -13,6 +14,8 @@ import { beforeSyncWithSearch } from '@/search/beforeSync'
 
 import { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
+import { AppUsers } from '@/collections/Auth/App/Users'
+import { AppAccounts } from '@/collections/Auth/App/Accounts'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -91,4 +94,11 @@ export const plugins: Plugin[] = [
     },
   }),
   payloadCloudPlugin(),
+  appAuthPlugin({
+    name: 'app',
+    usersCollectionSlug: AppUsers.slug,
+    accountsCollectionSlug: AppAccounts.slug,
+    providers: [],
+    secret: process.env.PAYLOAD_AUTH_SECRET!,
+  }),
 ]
