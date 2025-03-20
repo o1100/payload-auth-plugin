@@ -1,6 +1,11 @@
 import { CollectionConfig, Field } from "payload"
 import { MissingCollectionSlug } from "../core/errors/consoleErrors.js"
 
+/**
+ * A higher order function that takes the collection config for the argument
+ * @param incomingCollection
+ * @returns {CollectionConfig}
+ */
 export const withAppUsersCollection = (
   incomingCollection: Omit<CollectionConfig, "fields"> & {
     fields?: Field[] | undefined
@@ -64,7 +69,7 @@ export const withAppUsersCollection = (
 }
 
 /**
- *
+ * A higher order function that takes the collection config and a Users collection slug for the arguments
  * @param incomingCollection
  * @param userCollectionSlug
  * @returns {CollectionConfig}
