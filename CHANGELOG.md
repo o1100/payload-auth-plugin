@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [unreleased]
+
+### 🐛 Bug Fixes
+
+- Typo
+- Docs and typos
+- Dynamic user slug
+
+### ⚙️ Miscellaneous Tasks
+
+- Logs
+- Release
+
 ## [0.6.1] - 2025-03-20
 
 ### 🚀 Features
