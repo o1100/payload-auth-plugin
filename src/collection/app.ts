@@ -73,7 +73,7 @@ export const withAppAccountCollection = (
   incomingCollection: Omit<CollectionConfig, "fields"> & {
     fields?: Field[] | undefined
   },
-  userCollectionSlug: string,
+  usersCollectionSlug: string,
 ): CollectionConfig => {
   if (!incomingCollection.slug) {
     throw new MissingCollectionSlug()
@@ -96,7 +96,7 @@ export const withAppAccountCollection = (
     {
       name: "user",
       type: "relationship",
-      relationTo: userCollectionSlug,
+      relationTo: usersCollectionSlug,
       hasMany: false,
       required: true,
       label: "User",
