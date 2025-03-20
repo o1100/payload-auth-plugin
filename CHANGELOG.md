@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.6.1] - 2025-03-20
+
+### 🚀 Features
+
+- Example
+
+### 🐛 Bug Fixes
+
+- Make fields optional
+- Dynamic user slug
+- Rm example
+
+### ⚙️ Miscellaneous Tasks
+
+- Cleanup
+- Use plugin
+- Release
+
+## [0.6.0] - 2025-03-17
+
 ### 🚀 Features
 
 - App plugin
@@ -140,6 +160,7 @@ All notable changes to this project will be documented in this file.
 - Format
 - New keyword
 - Release
+- Change log created
 
 ## [0.5.8] - 2025-02-10
 
