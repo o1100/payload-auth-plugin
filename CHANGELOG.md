@@ -6,11 +6,22 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
+- Make calls async
+
+### ⚙️ Miscellaneous Tasks
+
+- Release
+
+## [0.6.3] - 2025-03-21
+
+### 🐛 Bug Fixes
+
 - Oauth workflow
 
 ### ⚙️ Miscellaneous Tasks
 
 - Release
+- Logs
 
 ## [0.6.2] - 2025-03-20
 
