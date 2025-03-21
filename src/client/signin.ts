@@ -7,7 +7,7 @@ interface BaseOptions {
 
 export const appSignin = (options: BaseOptions) => {
   return {
-    oauth: (provider: OauthProvider) => oauth(options, provider),
+    oauth: async (provider: OauthProvider) => await oauth(options, provider),
     passkey: () => passkeyInit(),
     password: async (payload: PasswordSigninPayload) =>
       await passwordSignin(options, payload),
@@ -16,7 +16,8 @@ export const appSignin = (options: BaseOptions) => {
 
 export const adminSignin = () => {
   return {
-    oauth: (provider: OauthProvider) => oauth({ name: "admin" }, provider),
+    oauth: async (provider: OauthProvider) =>
+      await oauth({ name: "admin" }, provider),
     passkey: () => {
       passkeyInit()
     },
