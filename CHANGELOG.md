@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 
 ### 🐛 Bug Fixes
 
+- Oauth workflow
+
+### ⚙️ Miscellaneous Tasks
+
+- Release
+
+## [0.6.2] - 2025-03-20
+
+### 🐛 Bug Fixes
+
 - Typo
 - Docs and typos
 - Dynamic user slug
