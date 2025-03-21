@@ -62,6 +62,7 @@ export class AppSession {
     scope: string,
     issuerName: string,
     request: PayloadRequest,
+    clientOrigin: string,
   ) {
     const { payload } = request
     const userRecords = await payload.find({
@@ -111,7 +112,7 @@ export class AppSession {
       cookies = invalidateOAuthCookies(cookies)
     }
 
-    return sessionResponse(cookies)
+    return sessionResponse(cookies, clientOrigin)
   }
 
   async passwordSessionCallback(

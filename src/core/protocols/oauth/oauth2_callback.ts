@@ -8,14 +8,18 @@ export async function OAuth2Callback(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OAuth2ProviderConfig,
-  session_callback: (oauthAccountInfo: AccountInfo) => Promise<Response>,
+  session_callback: (
+    oauthAccountInfo: AccountInfo,
+    clientOrigin: string,
+  ) => Promise<Response>,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
   const code_verifier = parsedCookies.get("__session-code-verifier")
   const state = parsedCookies.get("__session-oauth-state")
+  const clientOrigin = parsedCookies.get("__client-origin")
 
-  if (!code_verifier) {
+  if (!code_verifier || !clientOrigin) {
     throw new MissingOrInvalidSession()
   }
 
@@ -73,5 +77,5 @@ export async function OAuth2Callback(
     token_result.access_token,
   )
   const userInfo = (await userInfoResponse.json()) as Record<string, string>
-  return session_callback(profile(userInfo))
+  return session_callback(profile(userInfo), clientOrigin)
 }

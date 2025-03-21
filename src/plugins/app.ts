@@ -181,12 +181,14 @@ export const appAuthPlugin =
           scope: string,
           issuerName: string,
           request: PayloadRequest,
+          clientOrigin: string,
         ) =>
           session.oauthSessionCallback(
             oauthAccountInfo,
             scope,
             issuerName,
             request,
+            clientOrigin,
           ),
       })
     }

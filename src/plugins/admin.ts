@@ -88,8 +88,15 @@ export const adminAuthPlugin =
           scope: string,
           issuerName: string,
           request: PayloadRequest,
+          clientOrigin: string,
         ) =>
-          session.createSession(oauthAccountInfo, scope, issuerName, request),
+          session.createSession(
+            oauthAccountInfo,
+            scope,
+            issuerName,
+            request,
+            clientOrigin,
+          ),
       })
     }
 

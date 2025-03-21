@@ -103,6 +103,7 @@ export class PayloadSession {
     scope: string,
     issuerName: string,
     request: PayloadRequest,
+    clientOrigin: string,
   ) {
     const { payload } = request
 
@@ -129,6 +130,6 @@ export class PayloadSession {
     ]
     cookies = invalidateOAuthCookies(cookies)
 
-    return sessionResponse(cookies)
+    return sessionResponse(cookies, clientOrigin)
   }
 }
