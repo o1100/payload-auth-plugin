@@ -41,8 +41,7 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
       scope: string,
       issuerName: string,
       request: PayloadRequest,
-      successRedirect?: string | undefined | null,
-      errorRedirect?: string | undefined | null,
+      clientOrigin: string,
     ) => Promise<Response>
   }): Endpoint[] {
     return [
@@ -59,16 +58,16 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
             request,
             request.routeParams?.resource as string,
             provider,
-            (oauthAccountInfo: any) => {
+            (oauthAccountInfo: AccountInfo, clientOrigin: string) => {
               return sessionCallback(
                 oauthAccountInfo,
                 provider.scope,
                 provider.name,
                 request,
-                request.searchParams.get("successRedirect"),
-                request.searchParams.get("errorRedirect"),
+                clientOrigin,
               )
             },
+            request.searchParams.get("clientOrigin") ?? undefined,
           )
         },
       },

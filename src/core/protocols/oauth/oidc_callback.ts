@@ -8,14 +8,18 @@ export async function OIDCCallback(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OIDCProviderConfig,
-  session_callback: (oauthAccountInfo: AccountInfo) => Promise<Response>,
+  session_callback: (
+    oauthAccountInfo: AccountInfo,
+    clientOrigin: string,
+  ) => Promise<Response>,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
   const code_verifier = parsedCookies.get("__session-code-verifier")
   const nonce = parsedCookies.get("__session-oauth-nonce")
+  const clientOrigin = parsedCookies.get("__session-client-origin")
 
-  if (!code_verifier) {
+  if (!code_verifier || !clientOrigin) {
     throw new MissingOrInvalidSession()
   }
 
@@ -88,5 +92,6 @@ export async function OIDCCallback(
       email: result.email as string,
       picture: result.picture as string,
     }),
+    clientOrigin,
   )
 }

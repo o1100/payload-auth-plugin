@@ -15,7 +15,11 @@ export function OAuthHandlers(
   request: PayloadRequest,
   resource: string,
   provider: OAuthProviderConfig,
-  sessionCallBack: (oauthAccountInfo: AccountInfo) => Promise<Response>,
+  sessionCallBack: (
+    oauthAccountInfo: AccountInfo,
+    clientOrigin: string,
+  ) => Promise<Response>,
+  clientOrigin?: string,
 ): Promise<Response> {
   if (!provider) {
     throw new InvalidProvider()
@@ -25,7 +29,7 @@ export function OAuthHandlers(
     case "authorization":
       switch (provider.algorithm) {
         case "oidc":
-          return OIDCAuthorization(pluginType, request, provider)
+          return OIDCAuthorization(pluginType, request, provider, clientOrigin!)
         case "oauth2":
           return OAuth2Authorization(pluginType, request, provider)
         default:
