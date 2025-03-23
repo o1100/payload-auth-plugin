@@ -46,7 +46,6 @@ import {
   PasskeyEndpointStrategy,
   SessionEndpointStrategy,
 } from "./core/endpoints.js"
-import { AppSession } from "./core/session/app.js"
 import { formatSlug } from "./core/utils/slug.js"
 import { preflightCollectionCheck } from "./core/preflights/collections.js"
 import { AuthSession } from "./core/session.js"
