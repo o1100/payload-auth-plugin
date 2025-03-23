@@ -143,6 +143,7 @@ export const authPlugin =
       allowAutoSignUp,
       authenticationStrategy,
       secret,
+      useAdmin,
     } = pluginOptions
 
     preflightCollectionCheck(
@@ -165,6 +166,7 @@ export const authPlugin =
       allowAutoSignUp ?? false,
       authenticationStrategy ?? "Cookie",
       secret,
+      !!useAdmin,
     )
 
     const endpointsFactory = new EndpointsFactory(name)

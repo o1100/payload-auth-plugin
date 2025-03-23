@@ -18,6 +18,7 @@ export class AuthSession {
     private allowAutoSignUp: boolean,
     private authenticationStrategy: AuthenticationStrategy,
     private secret: string,
+    private useAdmin: boolean,
   ) {}
 
   private async oauthAccountMutations(
@@ -97,20 +98,21 @@ export class AuthSession {
 
     let cookies: string[] = []
 
-    if (this.authenticationStrategy === "Cookie") {
-      cookies = [
-        ...(await createSessionCookies(
-          `__${this.appName}-${APP_COOKIE_SUFFIX}`,
-          this.secret,
-          {
-            id: userRecord["id"],
-            email: oauthAccountInfo.email,
-            collection: this.collections.usersCollection,
-          },
-        )),
-      ]
-      cookies = invalidateOAuthCookies(cookies)
-    }
+    const cookieName = this.useAdmin
+      ? `${payload.config.cookiePrefix!}-token`
+      : `__${this.appName}-${APP_COOKIE_SUFFIX}`
+
+    const secret = this.useAdmin ? payload.secret : this.secret
+
+    cookies = [
+      ...(await createSessionCookies(cookieName, secret, {
+        id: userRecord["id"],
+        email: oauthAccountInfo.email,
+        collection: this.collections.usersCollection,
+      })),
+    ]
+
+    cookies = invalidateOAuthCookies(cookies)
 
     return sessionResponse(cookies, clientOrigin)
   }
