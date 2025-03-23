@@ -109,14 +109,6 @@ interface PluginOptions {
    *
    */
   allowAutoSignUp?: boolean | undefined
-
-  /**
-   * Authentication strategies can be either JWT or Cookie based
-   *
-   * @default Cookie
-   *
-   */
-  authenticationStrategy?: AuthenticationStrategy
   /**
    * Secret to use for JWT signing and decryption
    */
@@ -141,7 +133,6 @@ export const authPlugin =
       accountsCollectionSlug,
       providers,
       allowAutoSignUp,
-      authenticationStrategy,
       secret,
       useAdmin,
     } = pluginOptions
@@ -164,7 +155,6 @@ export const authPlugin =
         accountsCollection: accountsCollectionSlug,
       },
       allowAutoSignUp ?? false,
-      authenticationStrategy ?? "Cookie",
       secret,
       !!useAdmin,
     )

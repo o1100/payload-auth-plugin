@@ -16,7 +16,6 @@ export class AuthSession {
       accountsCollection: string
     },
     private allowAutoSignUp: boolean,
-    private authenticationStrategy: AuthenticationStrategy,
     private secret: string,
     private useAdmin: boolean,
   ) {}
@@ -122,20 +121,18 @@ export class AuthSession {
   ) {
     let cookies: string[] = []
 
-    if (this.authenticationStrategy === "Cookie") {
-      cookies = [
-        ...(await createSessionCookies(
-          `__${this.appName}-${APP_COOKIE_SUFFIX}`,
-          this.secret,
-          {
-            id: user.id,
-            email: user.email,
-            collection: this.collections.usersCollection,
-          },
-        )),
-      ]
-      cookies = invalidateOAuthCookies(cookies)
-    }
+    cookies = [
+      ...(await createSessionCookies(
+        `__${this.appName}-${APP_COOKIE_SUFFIX}`,
+        this.secret,
+        {
+          id: user.id,
+          email: user.email,
+          collection: this.collections.usersCollection,
+        },
+      )),
+    ]
+    cookies = invalidateOAuthCookies(cookies)
 
     return sessionResponse(cookies)
   }
