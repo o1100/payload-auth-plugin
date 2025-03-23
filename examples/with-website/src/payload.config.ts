@@ -10,14 +10,13 @@ import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
 import { Pages } from './collections/Pages'
 import { Posts } from './collections/Posts'
-import { Users } from './collections/Users'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
-import { AppAccounts } from './collections/Auth/App/Accounts'
-import { AppUsers } from './collections/Auth/App/Users'
+import { AdminUsers } from './collections/Auth/Admin/Users'
+import { AdminAccounts } from './collections/Auth/Admin/Accounts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,7 +34,7 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
-    user: Users.slug,
+    user: AdminUsers.slug,
     livePreview: {
       breakpoints: [
         {
@@ -64,7 +63,7 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users, AppAccounts, AppUsers],
+  collections: [Pages, Posts, Media, Categories, AdminUsers, AdminAccounts],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
