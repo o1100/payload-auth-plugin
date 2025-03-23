@@ -86,7 +86,7 @@ export interface PasswordRecoverPayload {
   password: string
   code: string
 }
-export const passwordRecover = async (
+export const recoverPassword = async (
   opts: BaseOptions,
   payload: PasswordRecoverPayload,
 ): Promise<AuthPluginOutput> => {
@@ -113,7 +113,7 @@ export interface PasswordResetPayload {
   email: string
   password: string
 }
-export const passwordReset = async (
+export const resetPassword = async (
   opts: BaseOptions,
   payload: PasswordResetPayload,
 ): Promise<AuthPluginOutput> => {

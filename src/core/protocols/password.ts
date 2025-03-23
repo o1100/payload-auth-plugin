@@ -12,7 +12,6 @@ import { SuccessKind } from "../../types.js"
 import { ephemeralCode, verifyEphemeralCode } from "../utils/hash.js"
 import { EPHEMERAL_CODE_COOKIE_NAME } from "../../constants.js"
 import {
-  createSessionCookies,
   invalidateSessionCookies,
   verifySessionCookie,
 } from "../utils/cookies.js"
@@ -75,7 +74,7 @@ export const PasswordSignup = async (
       email: string
       password: string
       allowAutoSignin?: boolean
-      profile?: Record<string, unknown>
+      userInfo?: Record<string, unknown>
     })
 
   if (!body?.email || !body.password) {
@@ -108,7 +107,7 @@ export const PasswordSignup = async (
       hashedPassword: hashedPassword,
       hashIterations: iterations,
       salt,
-      ...body.profile,
+      ...body.userInfo,
     },
   })
 
