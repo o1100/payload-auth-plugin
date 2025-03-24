@@ -25,7 +25,7 @@ export const oauthClientUserNotFound = (returnURL: string) => {
         </html>
       `,
     {
-      status: 200,
+      status: 404,
       headers: {
         "Content-Type": "text/html; charset=utf-8",
       },
