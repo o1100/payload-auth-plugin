@@ -108,7 +108,7 @@ interface PluginOptions {
    * @default false
    *
    */
-  allowAutoSignUp?: boolean | undefined
+  allowOAuthAutoSignUp?: boolean | undefined
   /**
    * Secret to use for JWT signing and decryption
    */
@@ -132,7 +132,7 @@ export const authPlugin =
       usersCollectionSlug,
       accountsCollectionSlug,
       providers,
-      allowAutoSignUp,
+      allowOAuthAutoSignUp,
       secret,
       useAdmin,
     } = pluginOptions
@@ -154,7 +154,7 @@ export const authPlugin =
         usersCollection: usersCollectionSlug,
         accountsCollection: accountsCollectionSlug,
       },
-      allowAutoSignUp ?? false,
+      allowOAuthAutoSignUp ?? false,
       secret,
       !!useAdmin,
     )

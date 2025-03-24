@@ -7,6 +7,7 @@ import {
 } from "./utils/cookies.js"
 import { sessionResponse } from "./utils/session.js"
 import { APP_COOKIE_SUFFIX } from "./../constants.js"
+import { oauthClientUserNotFound } from "./utils/response.js"
 
 export class AuthSession {
   constructor(
@@ -15,7 +16,7 @@ export class AuthSession {
       usersCollection: string
       accountsCollection: string
     },
-    private allowAutoSignUp: boolean,
+    private allowOAuthAutoSignUp: boolean,
     private secret: string,
     private useAdmin: boolean,
   ) {}
@@ -74,9 +75,10 @@ export class AuthSession {
       },
     })
     let userRecord: JsonObject & TypeWithID
+
     if (userRecords.docs.length === 1) {
       userRecord = userRecords.docs[0]
-    } else if (this.allowAutoSignUp) {
+    } else if (this.allowOAuthAutoSignUp) {
       const userRecords = await payload.create({
         collection: this.collections.usersCollection,
         data: {
@@ -85,7 +87,7 @@ export class AuthSession {
       })
       userRecord = userRecords
     } else {
-      throw new UserNotFoundAPIError()
+      return oauthClientUserNotFound(clientOrigin)
     }
     await this.oauthAccountMutations(
       userRecord["id"] as string,
