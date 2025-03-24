@@ -375,7 +375,8 @@ export interface Category {
  */
 export interface AdminUser {
   id: string;
-  name?: string | null;
+  fullName?: string | null;
+  lastName?: string | null;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -1310,7 +1311,8 @@ export interface CategoriesSelect<T extends boolean = true> {
  * via the `definition` "adminUsers_select".
  */
 export interface AdminUsersSelect<T extends boolean = true> {
-  name?: T;
+  fullName?: T;
+  lastName?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;

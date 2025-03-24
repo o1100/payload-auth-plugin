@@ -11,13 +11,17 @@ export const AdminUsers: CollectionConfig = {
     update: authenticated,
   },
   admin: {
-    defaultColumns: ['name', 'email'],
-    useAsTitle: 'name',
+    defaultColumns: ['fullName', 'email'],
+    useAsTitle: 'email',
   },
   auth: true,
   fields: [
     {
-      name: 'name',
+      name: 'fullName',
+      type: 'text',
+    },
+    {
+      name: 'lastName',
       type: 'text',
     },
   ],

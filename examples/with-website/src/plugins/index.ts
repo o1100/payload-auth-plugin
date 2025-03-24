@@ -99,6 +99,7 @@ export const plugins: Plugin[] = [
   authPlugin({
     name: 'admin',
     useAdmin: true,
+    allowOAuthAutoSignUp: true,
     usersCollectionSlug: AdminUsers.slug,
     accountsCollectionSlug: AdminAccounts.slug,
     providers: [
