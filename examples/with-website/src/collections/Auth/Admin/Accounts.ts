@@ -3,5 +3,5 @@ export const AdminAccounts = withAccountCollection(
   {
     slug: 'adminAccounts',
   },
-  'appUsers',
+  'adminUsers',
 )

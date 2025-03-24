@@ -25,16 +25,6 @@ export const withUsersCollection = (
 
   const baseFields: Field[] = [
     {
-      name: "name",
-      type: "text",
-    },
-    {
-      name: "email",
-      type: "email",
-      unique: true,
-      required: true,
-    },
-    {
       name: "hashedPassword",
       type: "text",
       unique: true,
@@ -49,6 +39,15 @@ export const withUsersCollection = (
       type: "number",
     },
   ]
+  if (!collectionConfig.fields.some((field) => field.type === "email")) {
+    baseFields.push({
+      name: "email",
+      type: "email",
+      unique: true,
+      required: true,
+    })
+  }
+
   collectionConfig.fields = [
     ...baseFields,
     ...(incomingCollection.fields ?? []),
