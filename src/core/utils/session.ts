@@ -31,7 +31,7 @@ export function sessionResponse(
           <body>
             <script type="text/javascript">
               const message = {
-                message: "Authentication successful",
+                message: "User authenticated successfully",
                 kind: "Created",
                 isSuccess: true,
                 isError: false,

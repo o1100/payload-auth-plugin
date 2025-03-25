@@ -53,30 +53,29 @@ export const oauth = (
     channel.onmessage = (event) => {
       channel.close()
       if (popup && !popup.closed) popup.close()
-      clearTimeout(timeoutId)
       resolve(event.data as AuthPluginOutput)
     }
 
-    const timeoutId = setTimeout(() => {
-      if (!popup || popup.closed) {
-        channel.close()
-        resolve(defaultOutput)
-      } else {
-        const checkInterval = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(checkInterval)
-            channel.close()
-            resolve(defaultOutput)
-          }
-        }, 1000)
+    // const timeoutId = setTimeout(() => {
+    //   if (!popup || popup.closed) {
+    //     channel.close()
+    //     resolve(defaultOutput)
+    //   } else {
+    //     const checkInterval = setInterval(() => {
+    //       if (popup.closed) {
+    //         clearInterval(checkInterval)
+    //         channel.close()
+    //         resolve(defaultOutput)
+    //       }
+    //     }, 1000)
 
-        setTimeout(() => {
-          clearInterval(checkInterval)
-          channel.close()
-          if (popup && !popup.closed) popup.close()
-          resolve(defaultOutput)
-        }, 120000)
-      }
-    }, 1000)
+    //     setTimeout(() => {
+    //       clearInterval(checkInterval)
+    //       channel.close()
+    //       if (popup && !popup.closed) popup.close()
+    //       resolve(defaultOutput)
+    //     }, 120000)
+    //   }
+    // }, 1000)
   })
 }
