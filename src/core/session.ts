@@ -1,6 +1,5 @@
 import { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload"
-import { AccountInfo, AuthenticationStrategy } from "./../types.js"
-import { UserNotFoundAPIError } from "./errors/apiErrors.js"
+import { AccountInfo } from "./../types.js"
 import {
   createSessionCookies,
   invalidateOAuthCookies,
@@ -8,6 +7,7 @@ import {
 import { sessionResponse } from "./utils/session.js"
 import { APP_COOKIE_SUFFIX } from "./../constants.js"
 import { oauthClientUserNotFound } from "./utils/response.js"
+import * as jose from "jose"
 
 export class AuthSession {
   constructor(
@@ -83,12 +83,16 @@ export class AuthSession {
         collection: this.collections.usersCollection,
         data: {
           email: oauthAccountInfo.email,
+          password: jose.base64url.encode(
+            crypto.getRandomValues(new Uint8Array(16)),
+          ),
         },
       })
       userRecord = userRecords
     } else {
       return oauthClientUserNotFound(clientOrigin)
     }
+
     await this.oauthAccountMutations(
       userRecord["id"] as string,
       oauthAccountInfo,
