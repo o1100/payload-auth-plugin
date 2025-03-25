@@ -79,14 +79,20 @@ export class AuthSession {
     if (userRecords.docs.length === 1) {
       userRecord = userRecords.docs[0]
     } else if (this.allowOAuthAutoSignUp) {
+      const data: Record<string, unknown> = {
+        email: oauthAccountInfo.email,
+      }
+      const hasAuthEnabled = Boolean(
+        payload.collections[this.collections.usersCollection].config.auth,
+      )
+      if (hasAuthEnabled) {
+        data["password"] = jose.base64url.encode(
+          crypto.getRandomValues(new Uint8Array(16)),
+        )
+      }
       const userRecords = await payload.create({
         collection: this.collections.usersCollection,
-        data: {
-          email: oauthAccountInfo.email,
-          password: jose.base64url.encode(
-            crypto.getRandomValues(new Uint8Array(16)),
-          ),
-        },
+        data,
       })
       userRecord = userRecords
     } else {
