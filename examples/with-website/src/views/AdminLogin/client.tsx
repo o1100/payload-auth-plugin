@@ -12,7 +12,7 @@ const AdminLoginViewClient = () => {
     const handleGoogleSignin = async () => {
         const { isError, isSuccess, message } = await oauth("google")
         if (isSuccess) {
-            toast.error(message)
+            toast.success(message)
             router.push("/admin")
         }
         if (isError) {
