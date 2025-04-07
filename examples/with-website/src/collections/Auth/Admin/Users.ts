@@ -17,7 +17,7 @@ export const AdminUsers: CollectionConfig = {
   auth: true,
   fields: [
     {
-      name: 'fullName',
+      name: 'firstName',
       type: 'text',
     },
     {
