@@ -60,7 +60,7 @@ export async function OIDCAuthorization(
 
   if (clientOrigin && clientOrigin !== undefined) {
     cookies.push(
-      `__session-client-origin=${clientOrigin};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
+      `__session-client-origin=${clientOrigin};Path=/;HttpOnly;SameSite=lax;max-age=100`,
     )
   }
 
