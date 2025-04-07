@@ -1,4 +1,10 @@
-import { BasePayload, JsonObject, PayloadRequest, TypeWithID } from "payload"
+import {
+  BasePayload,
+  JsonObject,
+  parseCookies,
+  PayloadRequest,
+  TypeWithID,
+} from "payload"
 import { AccountInfo } from "./../types.js"
 import {
   createSessionCookies,
@@ -79,7 +85,7 @@ export class AuthSession {
     if (userRecords.docs.length === 1) {
       userRecord = userRecords.docs[0]
     } else if (this.allowOAuthAutoSignUp) {
-      const data: Record<string, unknown> = {
+      let data: Record<string, unknown> = {
         email: oauthAccountInfo.email,
       }
       const hasAuthEnabled = Boolean(
@@ -90,6 +96,18 @@ export class AuthSession {
           crypto.getRandomValues(new Uint8Array(16)),
         )
       }
+
+      const cookies = parseCookies(request.headers)
+      if (cookies.has("oauth_profile")) {
+        const profileData = JSON.parse(
+          decodeURIComponent(cookies.get("oauth_profile")!),
+        )
+        data = {
+          ...data,
+          ...profileData,
+        }
+      }
+
       const userRecords = await payload.create({
         collection: this.collections.usersCollection,
         data,

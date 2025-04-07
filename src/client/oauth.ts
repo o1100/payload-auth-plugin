@@ -22,13 +22,16 @@ export type OauthProvider =
 export const oauth = (
   options: BaseOptions,
   provider: OauthProvider,
+  profile?: Record<string, unknown> | undefined,
 ): Promise<AuthPluginOutput> => {
   return new Promise((resolve) => {
     const channelId = `oauth_channel_${Math.random().toString(36).substring(2, 15)}`
     const channel = new BroadcastChannel(channelId)
 
+    const cookieName = `oauth_profile`
+
     const defaultOutput: AuthPluginOutput = {
-      message: "Failed to authenticate",
+      message: "Failed to authenticate. Something went wrong",
       kind: ErrorKind.BadRequest,
       data: null,
       isSuccess: false,
@@ -38,44 +41,42 @@ export const oauth = (
     const base = process.env.NEXT_PUBLIC_SERVER_URL
     const authUrl = `${base}/api/${options.name}/oauth/authorization/${provider}?clientOrigin=${encodeURIComponent(window.location.origin + `#${channelId}`)}`
 
-    const width = 600
-    const height = 700
-    const left = window.screenX + (window.outerWidth - width) / 2
-    const top = window.screenY + (window.outerHeight - height) / 2
-
-    const popup = window.open(
-      authUrl,
-      "oauth",
-      `width=${width},height=${height},left=${left},top=${top}`,
-    )
-
-    // Listen for messages
-    channel.onmessage = (event) => {
-      channel.close()
-      if (popup && !popup.closed) popup.close()
-      resolve(event.data as AuthPluginOutput)
+    if (profile) {
+      const encodedData = encodeURIComponent(JSON.stringify(profile))
+      document.cookie = `${cookieName}=${encodedData};httpOnly=true;secure=true;path=/;SameSite=Strict;max-age=100`
     }
 
-    // const timeoutId = setTimeout(() => {
-    //   if (!popup || popup.closed) {
-    //     channel.close()
-    //     resolve(defaultOutput)
-    //   } else {
-    //     const checkInterval = setInterval(() => {
-    //       if (popup.closed) {
-    //         clearInterval(checkInterval)
-    //         channel.close()
-    //         resolve(defaultOutput)
-    //       }
-    //     }, 1000)
+    const popup = window.open(authUrl, "oauth", `popup`)
 
-    //     setTimeout(() => {
-    //       clearInterval(checkInterval)
-    //       channel.close()
-    //       if (popup && !popup.closed) popup.close()
-    //       resolve(defaultOutput)
-    //     }, 120000)
-    //   }
-    // }, 1000)
+    channel.onmessage = async (event) => {
+      channel.close()
+      document.cookie = `${cookieName}=;path=/;max-age=0`
+      if (popup && !popup.closed) popup.close()
+      clearTimeout(timeoutId)
+      resolve(event.data as AuthPluginOutput)
+      return
+    }
+
+    const timeoutId = setTimeout(() => {
+      if (!popup || popup.closed) {
+        channel.close()
+        resolve(defaultOutput)
+      } else {
+        const checkInterval = setInterval(() => {
+          if (popup.closed) {
+            clearInterval(checkInterval)
+            channel.close()
+            resolve(defaultOutput)
+          }
+        }, 1000)
+
+        setTimeout(() => {
+          clearInterval(checkInterval)
+          channel.close()
+          if (popup && !popup.closed) popup.close()
+          resolve(defaultOutput)
+        }, 120000)
+      }
+    }, 1000)
   })
 }
