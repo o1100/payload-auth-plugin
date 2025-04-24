@@ -6,9 +6,6 @@ import type {
 
 interface OktaAuthConfig extends OAuthBaseProviderConfig {
   domain: string
-  identifier: string
-  name: string
-  state: string
 }
 
 /**
