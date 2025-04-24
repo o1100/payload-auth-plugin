@@ -43,7 +43,12 @@ export async function OIDCCallback(
     .discoveryRequest(issuer_url, { algorithm })
     .then((response) => oauth.processDiscoveryResponse(issuer_url, response))
 
-  const params = oauth.validateAuthResponse(as, client, current_url)
+  const params = oauth.validateAuthResponse(
+    as,
+    client,
+    current_url,
+    providerConfig?.params?.state || undefined,
+  )
 
   const grantResponse = await oauth.authorizationCodeGrantRequest(
     as,
