@@ -73,6 +73,7 @@ function JumpCloudAuthProvider(
     authorization_server,
     name: "Jump Cloud",
     algorithm: "oauth2",
+    kind: "oauth",
     profile: (profile): AccountInfo => {
       return {
         sub: profile.email as string,
