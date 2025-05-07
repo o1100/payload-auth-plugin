@@ -31,7 +31,7 @@ export function OAuthHandlers(
         case "oidc":
           return OIDCAuthorization(pluginType, request, provider, clientOrigin!)
         case "oauth2":
-          return OAuth2Authorization(pluginType, request, provider)
+          return OAuth2Authorization(pluginType, request, provider, clientOrigin)
         default:
           throw new InvalidOAuthAlgorithm()
       }
