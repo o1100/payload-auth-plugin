@@ -8,10 +8,6 @@ export async function OAuth2Callback(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OAuth2ProviderConfig,
-  session_callback: (
-    oauthAccountInfo: AccountInfo,
-    clientOrigin: string,
-  ) => Promise<Response>,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
@@ -77,5 +73,15 @@ export async function OAuth2Callback(
     token_result.access_token,
   )
   const userInfo = (await userInfoResponse.json()) as Record<string, string>
-  return session_callback(profile(userInfo), clientOrigin)
+
+  const authorizationURL = new URL(
+    `${request.origin}/api/${pluginType}/oauth/authentication/${providerConfig.id}`,
+  )
+  const res = new Response(JSON.stringify({ process: "oauth" }), {
+    headers: {
+      Location: authorizationURL.href,
+    },
+  })
+
+  return res
 }

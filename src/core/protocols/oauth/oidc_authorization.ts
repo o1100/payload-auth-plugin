@@ -7,7 +7,6 @@ export async function OIDCAuthorization(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OIDCProviderConfig,
-  clientOrigin?: string | undefined,
 ): Promise<Response> {
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
@@ -57,12 +56,6 @@ export async function OIDCAuthorization(
   cookies.push(
     `__session-code-verifier=${code_verifier};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
   )
-
-  if (clientOrigin && clientOrigin !== undefined) {
-    cookies.push(
-      `__session-client-origin=${clientOrigin};Path=/;HttpOnly;SameSite=lax;max-age=100`,
-    )
-  }
 
   const res = new Response(null, {
     status: 302,

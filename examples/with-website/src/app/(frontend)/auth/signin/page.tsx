@@ -4,10 +4,11 @@ import React from 'react'
 import { signin } from "payload-auth-plugin/client"
 import { useRouter } from 'next/navigation'
 import { Button, toast } from '@payloadcms/ui'
-const AdminLoginViewClient = () => {
+
+const Page = () => {
     const router = useRouter()
 
-    const { oauth } = signin({ name: "admin" })
+    const { oauth } = signin({ name: "app" })
 
     const handleGoogleSignin = async () => {
         const { isError, isSuccess, message } = await oauth("google", {
@@ -16,17 +17,7 @@ const AdminLoginViewClient = () => {
         })
         if (isSuccess) {
             toast.success(message)
-            router.push("/admin")
-        }
-        if (isError) {
-            toast.error(message)
-        }
-    }
-    const handleAuth0Signin = async () => {
-        const { isError, isSuccess, message } = await oauth("auth0")
-        if (isSuccess) {
-            toast.success(message)
-            router.push("/admin")
+            router.push("/private")
         }
         if (isError) {
             toast.error(message)
@@ -38,12 +29,9 @@ const AdminLoginViewClient = () => {
                 <Button type="button" onClick={handleGoogleSignin}>
                     Signin with Google
                 </Button>
-                <Button type="button" onClick={handleAuth0Signin}>
-                    Signin with Auth0
-                </Button>
             </div>
         </div>
     )
 }
 
-export default AdminLoginViewClient
+export default Page

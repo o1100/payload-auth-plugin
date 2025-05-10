@@ -25,7 +25,6 @@
 import { Config, Endpoint, PayloadRequest, Plugin } from "payload"
 import {
   AccountInfo,
-  AuthenticationStrategy,
   PasswordProviderConfig,
   OAuthProviderConfig,
   PasskeyProviderConfig,
@@ -159,7 +158,16 @@ export const authPlugin =
       !!useAdmin,
     )
 
-    const endpointsFactory = new EndpointsFactory(name)
+    const endpointsFactory = new EndpointsFactory(
+      name,
+      {
+        usersCollection: usersCollectionSlug,
+        accountsCollection: accountsCollectionSlug,
+      },
+      allowOAuthAutoSignUp ?? false,
+      secret,
+      !!useAdmin,
+    )
 
     let oauthEndpoints: Endpoint[] = []
     let passkeyEndpoints: Endpoint[] = []
@@ -176,14 +184,12 @@ export const authPlugin =
           scope: string,
           issuerName: string,
           request: PayloadRequest,
-          clientOrigin: string,
         ) =>
           session.oauthSessionCallback(
             oauthAccountInfo,
             scope,
             issuerName,
             request,
-            clientOrigin,
           ),
       })
     }

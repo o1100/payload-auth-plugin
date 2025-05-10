@@ -3,23 +3,22 @@ import * as oauth from "oauth4webapi"
 import type { AccountInfo, OIDCProviderConfig } from "../../../types.js"
 import { getCallbackURL } from "../../utils/cb.js"
 import { MissingOrInvalidSession } from "../../errors/consoleErrors.js"
+import {
+  MissingEmailAPIError,
+  UnVerifiedAccountAPIError,
+} from "../../errors/apiErrors.js"
 
 export async function OIDCCallback(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OIDCProviderConfig,
-  session_callback: (
-    oauthAccountInfo: AccountInfo,
-    clientOrigin: string,
-  ) => Promise<Response>,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
   const code_verifier = parsedCookies.get("__session-code-verifier")
   const nonce = parsedCookies.get("__session-oauth-nonce")
-  const clientOrigin = parsedCookies.get("__session-client-origin")
 
-  if (!code_verifier || !clientOrigin) {
+  if (!code_verifier) {
     throw new MissingOrInvalidSession()
   }
 
@@ -85,13 +84,30 @@ export async function OIDCCallback(
     userInfoResponse,
   )
 
-  return session_callback(
-    profile({
-      sub: result.sub,
-      name: result.name as string,
-      email: result.email as string,
-      picture: result.picture as string,
-    }),
-    clientOrigin,
+  if (!result.email_verified) {
+    return new UnVerifiedAccountAPIError()
+  }
+
+  if (!result.email) {
+    return new MissingEmailAPIError()
+  }
+
+  const authenticationURL = new URL(
+    `${request.origin}/api/${pluginType}/oauth/authentication/${providerConfig.id}`,
   )
+
+  authenticationURL.searchParams.set("sub", result.sub)
+  authenticationURL.searchParams.set("email", result.email)
+  authenticationURL.searchParams.set("name", result.name ?? "")
+  authenticationURL.searchParams.set("scope", providerConfig.scope)
+  authenticationURL.searchParams.set("issuer", providerConfig.issuer)
+  authenticationURL.searchParams.set("picture", result.picture ?? "")
+
+  const res = new Response(null, {
+    status: 302,
+    headers: {
+      Location: authenticationURL.href,
+    },
+  })
+  return res
 }

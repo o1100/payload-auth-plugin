@@ -16,7 +16,11 @@ import { getServerSideURL } from '@/utilities/getURL'
 import { AdminUsers } from '@/collections/Auth/Admin/Users'
 
 import { authPlugin } from 'payload-auth-plugin'
-import { GoogleAuthProvider, TwitchAuthProvider } from 'payload-auth-plugin/providers'
+import {
+  Auth0AuthProvider,
+  GoogleAuthProvider,
+  TwitchAuthProvider,
+} from 'payload-auth-plugin/providers'
 import { AdminAccounts } from '@/collections/Auth/Admin/Accounts'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
@@ -97,6 +101,23 @@ export const plugins: Plugin[] = [
   }),
   payloadCloudPlugin(),
   authPlugin({
+    name: 'app',
+    allowOAuthAutoSignUp: true,
+    usersCollectionSlug: AdminUsers.slug,
+    accountsCollectionSlug: AdminAccounts.slug,
+    providers: [
+      GoogleAuthProvider({
+        client_id: process.env.GOOGLE_CLIENT_ID!,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+      }),
+      TwitchAuthProvider({
+        client_id: process.env.TWITCH_CLIENT_ID!,
+        client_secret: process.env.TWITCH_CLIENT_SECRET!,
+      }),
+    ],
+    secret: process.env.PAYLOAD_AUTH_SECRET!,
+  }),
+  authPlugin({
     name: 'admin',
     useAdmin: true,
     allowOAuthAutoSignUp: true,
@@ -110,6 +131,11 @@ export const plugins: Plugin[] = [
       TwitchAuthProvider({
         client_id: process.env.TWITCH_CLIENT_ID!,
         client_secret: process.env.TWITCH_CLIENT_SECRET!,
+      }),
+      Auth0AuthProvider({
+        domain: process.env.AUTH0_DOMAIN!,
+        client_id: process.env.AUTH0_CLIENT_ID!,
+        client_secret: process.env.AUTH0_CLIENT_SECRET!,
       }),
     ],
     secret: process.env.PAYLOAD_AUTH_SECRET!,

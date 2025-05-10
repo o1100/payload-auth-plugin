@@ -10,10 +10,10 @@ import {
   createSessionCookies,
   invalidateOAuthCookies,
 } from "./utils/cookies.js"
-import { sessionResponse } from "./utils/session.js"
 import { APP_COOKIE_SUFFIX } from "./../constants.js"
 import { oauthClientUserNotFound } from "./utils/response.js"
 import * as jose from "jose"
+import { UserNotFoundAPIError } from "./errors/apiErrors.js"
 
 export class AuthSession {
   constructor(
@@ -69,7 +69,6 @@ export class AuthSession {
     scope: string,
     issuerName: string,
     request: PayloadRequest,
-    clientOrigin: string,
   ) {
     const { payload } = request
     const userRecords = await payload.find({
@@ -114,7 +113,7 @@ export class AuthSession {
       })
       userRecord = userRecords
     } else {
-      return oauthClientUserNotFound(clientOrigin)
+      return new UserNotFoundAPIError()
     }
 
     await this.oauthAccountMutations(
@@ -143,7 +142,7 @@ export class AuthSession {
 
     cookies = invalidateOAuthCookies(cookies)
 
-    return sessionResponse(cookies, clientOrigin)
+    return
   }
 
   async passwordSessionCallback(
@@ -164,6 +163,6 @@ export class AuthSession {
     ]
     cookies = invalidateOAuthCookies(cookies)
 
-    return sessionResponse(cookies)
+    // return sessionResponse(cookies)
   }
 }

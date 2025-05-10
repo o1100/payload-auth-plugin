@@ -16,7 +16,6 @@ export async function OAuth2Authorization(
   const code_verifier = oauth.generateRandomCodeVerifier()
   const code_challenge = await oauth.calculatePKCECodeChallenge(code_verifier)
   const code_challenge_method = "S256"
-
   const { authorization_server, client_id, scope, params } = providerConfig
 
   const client: oauth.Client = {
