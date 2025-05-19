@@ -1,5 +1,5 @@
 {
-  "name": "payload-auth-plugin",
+  "name": "@decked/payload-auth-plugin",
   "version": "0.6.4",
   "type": "module",
   "sideEffects": false,
