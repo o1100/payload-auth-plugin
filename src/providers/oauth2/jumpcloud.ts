@@ -1,5 +1,5 @@
 import type * as oauth from "oauth4webapi"
-import type { AccountInfo, OAuthBaseProviderConfig } from "../../types.js"
+import type { AccountInfo, OAuthBaseProviderConfig, OAuth2ProviderConfig } from "../../types.js"
 
 const authorization_server: oauth.AuthorizationServer = {
   issuer: "https://oauth.id.jumpcloud.com/",
