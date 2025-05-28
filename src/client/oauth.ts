@@ -24,65 +24,7 @@ export type OauthProvider =
 export const oauth = (
   options: BaseOptions,
   provider: OauthProvider,
-): Promise<AuthPluginOutput> => {
-  return new Promise((resolve) => {
-    const channelId = `oauth_channel_${Math.random().toString(36).substring(2, 15)}`
-    const channel = new BroadcastChannel(channelId)
-
-    const defaultOutput: AuthPluginOutput = {
-      message: "Failed to authenticate",
-      kind: ErrorKind.BadRequest,
-      data: null,
-      isSuccess: false,
-      isError: true,
-    }
-
-    let authUrl = `/api/${options.name}/oauth/authorization/${provider}?clientOrigin=${encodeURIComponent(window.location.origin + `#${channelId}`)}`
-    
-    if (process.env.NEXT_PUBLIC_SERVER_URL) {
-      authUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}${authUrl}`
-    }
-    
-    
-    const width = 600
-    const height = 700
-    const left = window.screenX + (window.outerWidth - width) / 2
-    const top = window.screenY + (window.outerHeight - height) / 2
-
-    const popup = window.open(
-      authUrl,
-      "oauth",
-      `width=${width},height=${height},left=${left},top=${top}`,
-    )
-
-    // Listen for messages
-    channel.onmessage = (event) => {
-      channel.close()
-      if (popup && !popup.closed) popup.close()
-      clearTimeout(timeoutId)
-      resolve(event.data as AuthPluginOutput)
-    }
-
-    const timeoutId = setTimeout(() => {
-      if (!popup || popup.closed) {
-        channel.close()
-        resolve(defaultOutput)
-      } else {
-        const checkInterval = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(checkInterval)
-            channel.close()
-            resolve(defaultOutput)
-          }
-        }, 1000)
-
-        setTimeout(() => {
-          clearInterval(checkInterval)
-          channel.close()
-          if (popup && !popup.closed) popup.close()
-          resolve(defaultOutput)
-        }, 120000)
-      }
-    }, 1000)
-  })
+  profile?: Record<string, unknown> | undefined,
+) => {
+  window.location.href = `http://localhost:3000/api/${options.name}/oauth/authorization/${provider}`
 }

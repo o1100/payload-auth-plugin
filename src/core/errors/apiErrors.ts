@@ -31,6 +31,12 @@ export class MissingEmailAPIError extends AuthAPIError {
   }
 }
 
+export class UnVerifiedAccountAPIError extends AuthAPIError {
+  constructor() {
+    super("Account is not verfified", ErrorKind.BadRequest)
+  }
+}
+
 export class UserNotFoundAPIError extends AuthAPIError {
   constructor() {
     super("User not found", ErrorKind.NotFound)

@@ -12,7 +12,6 @@ import { SuccessKind } from "../../types.js"
 import { ephemeralCode, verifyEphemeralCode } from "../utils/hash.js"
 import { EPHEMERAL_CODE_COOKIE_NAME } from "../../constants.js"
 import {
-  createSessionCookies,
   invalidateSessionCookies,
   verifySessionCookie,
 } from "../utils/cookies.js"
@@ -50,7 +49,7 @@ export const PasswordSignin = async (
   const isVerifed = await verifyPassword(
     body.password,
     user["hashedPassword"],
-    user["salt"],
+    user["hashSalt"],
     user["hashIterations"],
   )
   if (!isVerifed) {
@@ -75,7 +74,7 @@ export const PasswordSignup = async (
       email: string
       password: string
       allowAutoSignin?: boolean
-      profile?: Record<string, unknown>
+      userInfo?: Record<string, unknown>
     })
 
   if (!body?.email || !body.password) {
@@ -97,7 +96,7 @@ export const PasswordSignup = async (
 
   const {
     hash: hashedPassword,
-    salt,
+    salt: hashSalt,
     iterations,
   } = await hashPassword(body.password)
 
@@ -107,8 +106,8 @@ export const PasswordSignup = async (
       email: body.email,
       hashedPassword: hashedPassword,
       hashIterations: iterations,
-      salt,
-      ...body.profile,
+      hashSalt,
+      ...body.userInfo,
     },
   })
 
@@ -231,7 +230,7 @@ export const ForgotPasswordVerify = async (
 
   const {
     hash: hashedPassword,
-    salt,
+    salt: hashSalt,
     iterations,
   } = await hashPassword(body.password)
 
@@ -240,7 +239,7 @@ export const ForgotPasswordVerify = async (
     id: docs[0].id,
     data: {
       hashedPassword,
-      salt,
+      hashSalt,
       hashIterations: iterations,
     },
   })
@@ -310,7 +309,7 @@ export const ResetPassword = async (
   const isVerifed = await verifyPassword(
     body.currentPassword,
     user["hashedPassword"],
-    user["salt"],
+    user["hashSalt"],
     user["hashIterations"],
   )
   if (!isVerifed) {
@@ -319,7 +318,7 @@ export const ResetPassword = async (
 
   const {
     hash: hashedPassword,
-    salt,
+    salt: hashSalt,
     iterations,
   } = await hashPassword(body.newPassword)
 
@@ -328,7 +327,7 @@ export const ResetPassword = async (
     id: user.id,
     data: {
       hashedPassword,
-      salt,
+      hashSalt,
       hashIterations: iterations,
     },
   })

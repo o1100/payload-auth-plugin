@@ -7,7 +7,7 @@ interface BaseOptions {
 interface QueryOptions {
   fields?: string[] | undefined
 }
-export const getCurrentUser = async (
+export const useUser = async (
   options: BaseOptions,
   queryOpts?: QueryOptions | undefined,
 ) => {

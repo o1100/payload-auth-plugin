@@ -33,16 +33,19 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
 
   createEndpoints({
     pluginType,
-    sessionCallback,
+    collections,
+    allowOAuthAutoSignUp,
+    secret,
+    useAdmin,
   }: {
     pluginType: string
-    sessionCallback: (
-      oauthAccountInfo: AccountInfo,
-      scope: string,
-      issuerName: string,
-      request: PayloadRequest,
-      clientOrigin: string,
-    ) => Promise<Response>
+    collections: {
+      usersCollection: string
+      accountsCollection: string
+    }
+    allowOAuthAutoSignUp: boolean
+    secret: string
+    useAdmin: boolean
   }): Endpoint[] {
     return [
       {
@@ -55,19 +58,13 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
 
           return OAuthHandlers(
             pluginType,
+            collections,
+            allowOAuthAutoSignUp,
+            secret,
+            useAdmin,
             request,
             request.routeParams?.resource as string,
             provider,
-            (oauthAccountInfo: AccountInfo, clientOrigin: string) => {
-              return sessionCallback(
-                oauthAccountInfo,
-                provider.scope,
-                provider.name,
-                request,
-                clientOrigin,
-              )
-            },
-            request.searchParams.get("clientOrigin") ?? undefined,
           )
         },
       },
@@ -91,6 +88,10 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
     sessionCallback,
   }: {
     pluginType: string
+    collections: {
+      usersCollection: string
+      accountsCollection: string
+    }
     rpID: string
     sessionCallback: (
       accountInfo: AccountInfo,
@@ -210,7 +211,16 @@ export class SessionEndpointStrategy implements EndpointStrategy {
 type Strategies = "oauth" | "passkey" | "password" | "session"
 export class EndpointsFactory {
   private strategies: Record<string, EndpointStrategy> = {}
-  constructor(private pluginType: string) {}
+  constructor(
+    private pluginType: string,
+    private collections: {
+      usersCollection: string
+      accountsCollection: string
+    },
+    private allowOAuthAutoSignUp: boolean,
+    private secret: string,
+    private useAdmin: boolean,
+  ) {}
 
   registerStrategy(name: Strategies, strategy: EndpointStrategy): void {
     this.strategies[name] = strategy
@@ -224,6 +234,13 @@ export class EndpointsFactory {
     if (!strategy) {
       throw new Error(`Strategy "${strategyName}" not found.`)
     }
-    return strategy.createEndpoints({ pluginType: this.pluginType, ...config })
+    return strategy.createEndpoints({
+      pluginType: this.pluginType,
+      allowOAuthAutoSignUp: this.allowOAuthAutoSignUp,
+      secret: this.secret,
+      useAdmin: this.useAdmin,
+      collections: this.collections,
+      ...config,
+    })
   }
 }

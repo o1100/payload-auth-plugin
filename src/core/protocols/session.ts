@@ -54,7 +54,6 @@ export const UserSession = async (
 ) => {
   const cookies = parseCookies(request.headers)
   const token = cookies.get(cookieName)
-  console.log(cookies.get("payload-token"))
 
   if (!token) {
     return new Response(
