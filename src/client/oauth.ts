@@ -18,6 +18,8 @@ export type OauthProvider =
   | "facebook"
   | "jumpcloud"
   | "twitch"
+  | "okta"
+
 
 export const oauth = (
   options: BaseOptions,
@@ -35,9 +37,13 @@ export const oauth = (
       isError: true,
     }
 
-    const base = process.env.NEXT_PUBLIC_SERVER_URL
-    const authUrl = `${base}/api/${options.name}/oauth/authorization/${provider}?clientOrigin=${encodeURIComponent(window.location.origin + `#${channelId}`)}`
-
+    let authUrl = `/api/${options.name}/oauth/authorization/${provider}?clientOrigin=${encodeURIComponent(window.location.origin + `#${channelId}`)}`
+    
+    if (process.env.NEXT_PUBLIC_SERVER_URL) {
+      authUrl = `${process.env.NEXT_PUBLIC_SERVER_URL}${authUrl}`
+    }
+    
+    
     const width = 600
     const height = 700
     const left = window.screenX + (window.outerWidth - width) / 2
