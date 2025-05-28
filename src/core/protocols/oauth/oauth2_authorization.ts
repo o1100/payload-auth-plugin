@@ -7,6 +7,7 @@ export async function OAuth2Authorization(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OAuth2ProviderConfig,
+  clientOrigin?: string | undefined,
 ): Promise<Response> {
   const callback_url = getCallbackURL(
     request.payload.config.serverURL,
@@ -54,6 +55,11 @@ export async function OAuth2Authorization(
   cookies.push(
     `__session-code-verifier=${code_verifier};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
   )
+  if (clientOrigin && clientOrigin !== undefined) {
+    cookies.push(
+      `__session-client-origin=${clientOrigin};Path=/;HttpOnly;SameSite=lax;Expires=${cookieMaxage.toUTCString()}`,
+    )
+  }
 
   const res = new Response(null, {
     status: 302,

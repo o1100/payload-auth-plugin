@@ -13,7 +13,7 @@ export async function OAuth2Callback(
 
   const code_verifier = parsedCookies.get("__session-code-verifier")
   const state = parsedCookies.get("__session-oauth-state")
-  const clientOrigin = parsedCookies.get("__client-origin")
+  const clientOrigin = parsedCookies.get("__session-client-origin")
 
   if (!code_verifier || !clientOrigin) {
     throw new MissingOrInvalidSession()
