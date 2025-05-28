@@ -6,6 +6,7 @@ import DiscordAuthProvider from "./oauth2/discord.js"
 import FacebookAuthProvider from "./oauth2/facebook.js"
 import SlackAuthProvider from "./oidc/slack.js"
 import Auth0AuthProvider from "./oauth2/auth0.js"
+import OktaAuthProvider from "./oidc/okta.js"
 import CognitoAuthProvider from "./oidc/cognito.js"
 import KeyCloakAuthProvider from "./oidc/keycloak.js"
 import PasskeyAuthProvider from "./passkey.js"
@@ -34,4 +35,5 @@ export {
   JumpCloudAuthProvider,
   TwitchAuthProvider,
   PasswordProvider,
+  OktaAuthProvider,
 }
