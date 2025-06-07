@@ -2,9 +2,9 @@
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 
 import sharp from 'sharp' // sharp-import
-import path from 'path'
+import path from 'node:path'
 import { buildConfig, type PayloadRequest } from 'payload'
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
@@ -19,6 +19,7 @@ import { AdminUsers } from './collections/Auth/Admin/Users'
 import { AdminAccounts } from './collections/Auth/Admin/Accounts'
 import { AppUsers } from './collections/Auth/App/Users'
 import { AppUsersAccounts } from './collections/Auth/App/Accounts'
+import { resendAdapter } from '@payloadcms/email-resend'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -105,4 +106,9 @@ export default buildConfig({
     },
     tasks: [],
   },
+  email: resendAdapter({
+    defaultFromAddress: 'dev@payloadcms.com',
+    defaultFromName: 'AuthSmith',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
 })

@@ -4,14 +4,14 @@ import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { searchPlugin } from '@payloadcms/plugin-search'
-import { Plugin } from 'payload'
+import type { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
-import { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
+import type { GenerateTitle, GenerateURL } from '@payloadcms/plugin-seo/types'
 import { FixedToolbarFeature, HeadingFeature, lexicalEditor } from '@payloadcms/richtext-lexical'
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
 
-import { Page, Post } from '@/payload-types'
+import type { Page, Post } from '@/payload-types'
 import { getServerSideURL } from '@/utilities/getURL'
 import { AdminUsers } from '@/collections/Auth/Admin/Users'
 
@@ -19,6 +19,7 @@ import { authPlugin } from 'payload-auth-plugin'
 import {
   Auth0AuthProvider,
   GoogleAuthProvider,
+  PasswordProvider,
   TwitchAuthProvider,
 } from 'payload-auth-plugin/providers'
 import { AdminAccounts } from '@/collections/Auth/Admin/Accounts'
@@ -111,15 +112,15 @@ export const plugins: Plugin[] = [
     errorRedirectPath: '/auth/signin',
     providers: [
       GoogleAuthProvider({
-        client_id: process.env.GOOGLE_CLIENT_ID!,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
+        client_id: process.env.GOOGLE_CLIENT_ID as string,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
       }),
       TwitchAuthProvider({
-        client_id: process.env.TWITCH_CLIENT_ID!,
-        client_secret: process.env.TWITCH_CLIENT_SECRET!,
+        client_id: process.env.TWITCH_CLIENT_ID as string,
+        client_secret: process.env.TWITCH_CLIENT_SECRET as string,
       }),
+      PasswordProvider(),
     ],
-    secret: process.env.PAYLOAD_AUTH_SECRET!,
   }),
   authPlugin({
     name: 'admin',
@@ -131,19 +132,14 @@ export const plugins: Plugin[] = [
     errorRedirectPath: '/admin/auth/signin',
     providers: [
       GoogleAuthProvider({
-        client_id: process.env.GOOGLE_CLIENT_ID!,
-        client_secret: process.env.GOOGLE_CLIENT_SECRET!,
-      }),
-      TwitchAuthProvider({
-        client_id: process.env.TWITCH_CLIENT_ID!,
-        client_secret: process.env.TWITCH_CLIENT_SECRET!,
+        client_id: process.env.GOOGLE_CLIENT_ID as string,
+        client_secret: process.env.GOOGLE_CLIENT_SECRET as string,
       }),
       Auth0AuthProvider({
-        domain: process.env.AUTH0_DOMAIN!,
-        client_id: process.env.AUTH0_CLIENT_ID!,
-        client_secret: process.env.AUTH0_CLIENT_SECRET!,
+        domain: process.env.AUTH0_DOMAIN as string,
+        client_id: process.env.AUTH0_CLIENT_ID as string,
+        client_secret: process.env.AUTH0_CLIENT_SECRET as string,
       }),
     ],
-    secret: process.env.PAYLOAD_AUTH_SECRET!,
   }),
 ]

@@ -15,7 +15,13 @@ export const AppUsers = withUsersCollection({
       label: 'Email',
     },
     {
-      name: 'lastName',
+      name: 'last_name',
+      label: 'Last Name',
+      type: 'text',
+    },
+    {
+      name: 'first_name',
+      label: 'First Name',
       type: 'text',
     },
   ],

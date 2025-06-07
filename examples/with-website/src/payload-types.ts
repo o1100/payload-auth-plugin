@@ -783,7 +783,8 @@ export interface AppUser {
   hashSalt?: string | null;
   hashIterations?: number | null;
   email: string;
-  lastName?: string | null;
+  last_name?: string | null;
+  first_name?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1421,7 +1422,8 @@ export interface AppUsersSelect<T extends boolean = true> {
   hashSalt?: T;
   hashIterations?: T;
   email?: T;
-  lastName?: T;
+  last_name?: T;
+  first_name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
