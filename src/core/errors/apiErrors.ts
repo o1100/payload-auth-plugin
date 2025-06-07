@@ -45,7 +45,7 @@ export class UserNotFoundAPIError extends AuthAPIError {
 
 export class EmailNotFoundAPIError extends AuthAPIError {
   constructor() {
-    super("Now user found with this email", ErrorKind.BadRequest)
+    super("No user found with this email", ErrorKind.BadRequest)
   }
 }
 

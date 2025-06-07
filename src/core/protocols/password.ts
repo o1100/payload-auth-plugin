@@ -84,8 +84,11 @@ export const PasswordSignin = async (
   if (docs.length !== 1) {
     return new UserNotFoundAPIError()
   }
-
   const userRecord = docs[0]
+  if (!userRecord.hashedPassword) {
+    return new InvalidCredentials()
+  }
+
   const isVerifed = await verifyPassword(
     body.password,
     userRecord.hashedPassword,
@@ -156,7 +159,7 @@ export const PasswordSignup = async (
     iterations,
   } = await hashPassword(body.password)
 
-  await payload.create({
+  const userRecord = await payload.create({
     collection: internal.usersCollectionSlug,
     data: {
       email: body.email,
@@ -168,8 +171,6 @@ export const PasswordSignup = async (
   })
 
   if (body.allowAutoSignin) {
-    const userRecord = docs[0]
-
     const cookieName = useAdmin
       ? `${payload.config.cookiePrefix}-token`
       : `__${pluginType}-${APP_COOKIE_SUFFIX}`
