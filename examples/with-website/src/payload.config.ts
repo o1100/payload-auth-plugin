@@ -31,6 +31,7 @@ export default buildConfig({
     //   login: '/auth/signin',
     // },
     components: {
+      afterLogin: ['@/components/AfterLogin/index#AdminLogin'],
       views: {
         login: {
           Component: '@/views/AdminLogin/index#AdminLoginView',
