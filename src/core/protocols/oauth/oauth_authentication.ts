@@ -1,8 +1,7 @@
 import {
-  BasePayload,
-  JsonObject,
+  type JsonObject,
   parseCookies,
-  TypeWithID,
+  type TypeWithID,
   type PayloadRequest,
 } from "payload"
 import {
@@ -28,15 +27,16 @@ export async function OAuthAuthentication(
   request: PayloadRequest,
 ): Promise<Response> {
   const sub = request.searchParams.get("sub")
-  const email = request.searchParams.get("email")
+  let email = request.searchParams.get("email")
   const name = request.searchParams.get("name")
   const scope = request.searchParams.get("scope")
-  const issuer = request.searchParams.get("issuer")
-  const picture = request.searchParams.get("picture")
-
+  const issuer = decodeURIComponent(request.searchParams.get("issuer") ?? "")
+  const picture = decodeURIComponent(request.searchParams.get("picture") ?? "")
   if (!sub || !email || !scope || !issuer) {
     return new InvalidRequestBodyError()
   }
+
+  email = decodeURIComponent(email)
 
   const { payload } = request
   const userRecords = await payload.find({
@@ -48,7 +48,6 @@ export async function OAuthAuthentication(
     },
   })
   let userRecord: JsonObject & TypeWithID
-
   if (userRecords.docs.length === 1) {
     userRecord = userRecords.docs[0]
   } else if (allowOAuthAutoSignUp) {
@@ -88,7 +87,7 @@ export async function OAuthAuthentication(
     scope,
     name: name,
     picture: picture,
-    issuer,
+    issuerName: issuer,
   }
 
   const accountRecords = await payload.find({
@@ -97,7 +96,6 @@ export async function OAuthAuthentication(
       sub: { equals: sub },
     },
   })
-
   if (accountRecords.docs && accountRecords.docs.length === 1) {
     await payload.update({
       collection: collections.accountsCollection,

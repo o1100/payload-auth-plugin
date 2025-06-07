@@ -85,7 +85,7 @@ importers:
         version: 3.29.0(graphql@16.10.0)(typescript@5.7.3)
       payload-auth-plugin:
         specifier: file:../..
-        version: file:../..(payload@3.29.0(graphql@16.10.0)(typescript@5.7.3))
+        version: '@decked/payload-auth-plugin@file:../..(payload@3.29.0(graphql@16.10.0)(typescript@5.7.3))'
       prism-react-renderer:
         specifier: ^2.3.1
         version: 2.4.1(react@19.0.0)
@@ -385,6 +385,11 @@ packages:
 
   '@date-fns/tz@1.2.0':
     resolution: {integrity: sha512-LBrd7MiJZ9McsOgxqWX7AaxrDjcFVjWH/tIKJd7pnR7McaslGYOP1QmmiBXdJH/H/yLCT+rcQ7FaPBUxRGUtrg==}
+
+  '@decked/payload-auth-plugin@file:../..':
+    resolution: {directory: ../.., type: directory}
+    peerDependencies:
+      payload: latest
 
   '@dnd-kit/accessibility@3.1.1':
     resolution: {integrity: sha512-2P+YgaXF+gRsIihwwY1gCsQSYnu9Zyj2py8kY5fFvUM1qm2WA2u639R6YNVfU4GWr+ZM5mqEsfHZZLoRONbemw==}
@@ -3402,11 +3407,6 @@ packages:
     resolution: {integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==}
     engines: {node: '>=8'}
 
-  payload-auth-plugin@file:../..:
-    resolution: {directory: ../.., type: directory}
-    peerDependencies:
-      payload: latest
-
   payload@3.29.0:
     resolution: {integrity: sha512-Y/QPIMEagxo2tbfZs8Z7Nn4Uq2m+JziGMtwYpGr0ACzj625xdOy6FE4tR5lJ1ekTfEo+k1gzTHmCiMJ22sZgUQ==}
     engines: {node: ^18.20.2 || >=20.9.0}
@@ -4936,6 +4936,15 @@ snapshots:
   '@corex/deepmerge@4.0.43': {}
 
   '@date-fns/tz@1.2.0': {}
+
+  '@decked/payload-auth-plugin@file:../..(payload@3.29.0(graphql@16.10.0)(typescript@5.7.3))':
+    dependencies:
+      '@simplewebauthn/browser': 13.1.0
+      '@simplewebauthn/server': 13.1.1
+      jose: 6.0.8
+      oauth4webapi: 3.3.1
+      payload: 3.29.0(graphql@16.10.0)(typescript@5.7.3)
+      qs-esm: 7.0.2
 
   '@dnd-kit/accessibility@3.1.1(react@19.0.0)':
     dependencies:
@@ -8467,15 +8476,6 @@ snapshots:
   path-to-regexp@6.3.0: {}
 
   path-type@4.0.0: {}
-
-  payload-auth-plugin@file:../..(payload@3.29.0(graphql@16.10.0)(typescript@5.7.3)):
-    dependencies:
-      '@simplewebauthn/browser': 13.1.0
-      '@simplewebauthn/server': 13.1.1
-      jose: 6.0.8
-      oauth4webapi: 3.3.1
-      payload: 3.29.0(graphql@16.10.0)(typescript@5.7.3)
-      qs-esm: 7.0.2
 
   payload@3.29.0(graphql@16.10.0)(typescript@5.7.3):
     dependencies:

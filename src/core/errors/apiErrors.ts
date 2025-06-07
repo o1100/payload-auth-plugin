@@ -90,3 +90,9 @@ export class EmailAlreadyExistError extends AuthAPIError {
     super("Email is already taken", ErrorKind.Conflict)
   }
 }
+
+export class InternalServerError extends AuthAPIError {
+  constructor() {
+    super("Something went wrong. Server failure", ErrorKind.BadRequest)
+  }
+}
