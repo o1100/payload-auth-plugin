@@ -136,9 +136,14 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
   ) {}
   createEndpoints({
     pluginType,
+    useAdmin,
+    successRedirectPath,
+    errorRedirectPath,
   }: {
     pluginType: string
-    sessionCallback: (user: { id: string; email: string }) => Promise<Response>
+    useAdmin: boolean
+    successRedirectPath: string
+    errorRedirectPath: string
   }): Endpoint[] {
     return [
       {
@@ -151,6 +156,9 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
             request.routeParams?.kind as string,
             this.internals,
             request.payload.secret,
+            useAdmin,
+            successRedirectPath,
+            errorRedirectPath,
             stage,
           )
         },

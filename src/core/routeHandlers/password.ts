@@ -17,13 +17,32 @@ export function PasswordAuthHandlers(
     usersCollectionSlug: string
   },
   secret: string,
+  useAdmin: boolean,
+  successRedirectPath: string,
+  errorRedirectPath: string,
   stage?: string | undefined,
 ): Promise<Response> {
   switch (kind) {
     case "signin":
-      return PasswordSignin(pluginType, request, internal, false, secret)
+      return PasswordSignin(
+        pluginType,
+        request,
+        internal,
+        useAdmin,
+        secret,
+        successRedirectPath,
+        errorRedirectPath,
+      )
     case "signup":
-      return PasswordSignup(request, internal)
+      return PasswordSignup(
+        pluginType,
+        request,
+        internal,
+        useAdmin,
+        secret,
+        successRedirectPath,
+        errorRedirectPath,
+      )
     case "forgot-password":
       switch (stage) {
         case "init":

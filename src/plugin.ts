@@ -46,7 +46,6 @@ import {
 } from "./core/endpoints.js"
 import { formatSlug } from "./core/utils/slug.js"
 import { preflightCollectionCheck } from "./core/preflights/collections.js"
-import { AuthSession } from "./core/session.js"
 
 /**
  * Adds authentication to the Payload app.
@@ -157,16 +156,6 @@ export const authPlugin =
     const passkeyProvider = getPasskeyProvider(providers)
     const passwordProvider = getPasswordProvider(providers)
 
-    const session = new AuthSession(
-      name,
-      {
-        usersCollection: usersCollectionSlug,
-        accountsCollection: accountsCollectionSlug,
-      },
-      allowOAuthAutoSignUp ?? false,
-      !!useAdmin,
-    )
-
     const endpointsFactory = new EndpointsFactory(
       name,
       {
@@ -207,10 +196,7 @@ export const authPlugin =
         "password",
         new PasswordAuthEndpointStrategy({ usersCollectionSlug }),
       )
-      passwordEndpoints = endpointsFactory.createEndpoints("password", {
-        sessionCallback: (user: { id: string; email: string }) =>
-          session.passwordSessionCallback(user),
-      })
+      passwordEndpoints = endpointsFactory.createEndpoints("password")
     }
 
     endpointsFactory.registerStrategy(

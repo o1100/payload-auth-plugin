@@ -1,4 +1,9 @@
-import { getCookieExpiration, parseCookies, type PayloadRequest } from "payload"
+import {
+  BasePayload,
+  getCookieExpiration,
+  parseCookies,
+  type PayloadRequest,
+} from "payload"
 import {
   AuthenticationFailed,
   EmailAlreadyExistError,
@@ -22,6 +27,32 @@ import {
 } from "../utils/cookies.js"
 import { revokeSession } from "../utils/session.js"
 
+const redirectWithSession = async (
+  cookieName: string,
+  path: string,
+  secret: string,
+  fields: Record<string, string | number>,
+  request: PayloadRequest,
+) => {
+  let cookies = []
+
+  cookies = [...(await createSessionCookies(cookieName, secret, fields))]
+  cookies = invalidateOAuthCookies(cookies)
+  const successRedirectionURL = new URL(`${request.origin}${path}`)
+  const res = new Response(null, {
+    status: 302,
+    headers: {
+      Location: successRedirectionURL.href,
+    },
+  })
+
+  for (const c of cookies) {
+    res.headers.append("Set-Cookie", c)
+  }
+
+  return res
+}
+
 export const PasswordSignin = async (
   pluginType: string,
   request: PayloadRequest,
@@ -30,6 +61,8 @@ export const PasswordSignin = async (
   },
   useAdmin: boolean,
   secret: string,
+  successRedirectPath: string,
+  errorRedirectPath: string,
 ) => {
   const body =
     request.json &&
@@ -52,39 +85,44 @@ export const PasswordSignin = async (
     return new UserNotFoundAPIError()
   }
 
-  const user = docs[0]
+  const userRecord = docs[0]
   const isVerifed = await verifyPassword(
     body.password,
-    user.hashedPassword,
-    user.hashSalt,
-    user.hashIterations,
+    userRecord.hashedPassword,
+    userRecord.hashSalt,
+    userRecord.hashIterations,
   )
   if (!isVerifed) {
     return new InvalidCredentials()
   }
 
-  let cookies: string[] = []
-
   const cookieName = useAdmin
     ? `${payload.config.cookiePrefix}-token`
     : `__${pluginType}-${APP_COOKIE_SUFFIX}`
-
-  cookies = [
-    ...(await createSessionCookies(cookieName, secret, {
-      id: user.id,
-      email: user.email,
-      collection: internal.usersCollectionSlug,
-    })),
-  ]
-  cookies = invalidateOAuthCookies(cookies)
-  return Response.json({ data: "signin" })
+  const signinFields = {
+    id: userRecord.id,
+    email: body.email,
+    collection: internal.usersCollectionSlug,
+  }
+  return await redirectWithSession(
+    cookieName,
+    successRedirectPath,
+    secret,
+    signinFields,
+    request,
+  )
 }
 
 export const PasswordSignup = async (
+  pluginType: string,
   request: PayloadRequest,
   internal: {
     usersCollectionSlug: string
   },
+  useAdmin: boolean,
+  secret: string,
+  successRedirectPath: string,
+  errorRedirectPath: string,
 ) => {
   const body =
     request.json &&
@@ -118,7 +156,7 @@ export const PasswordSignup = async (
     iterations,
   } = await hashPassword(body.password)
 
-  const user = await payload.create({
+  await payload.create({
     collection: internal.usersCollectionSlug,
     data: {
       email: body.email,
@@ -130,7 +168,23 @@ export const PasswordSignup = async (
   })
 
   if (body.allowAutoSignin) {
-    return Response.json({ data: "signin" })
+    const userRecord = docs[0]
+
+    const cookieName = useAdmin
+      ? `${payload.config.cookiePrefix}-token`
+      : `__${pluginType}-${APP_COOKIE_SUFFIX}`
+    const signinFields = {
+      id: userRecord.id,
+      email: body.email,
+      collection: internal.usersCollectionSlug,
+    }
+    return await redirectWithSession(
+      cookieName,
+      successRedirectPath,
+      secret,
+      signinFields,
+      request,
+    )
   }
 
   return Response.json(
@@ -178,7 +232,7 @@ export const ForgotPasswordInit = async (
   await payload.sendEmail({
     to: body.email,
     subject: "Password recovery",
-    text: "Password recovery code: " + code,
+    text: `Password recovery code: ${code}`,
   })
 
   const res = new Response(
@@ -323,9 +377,9 @@ export const ResetPassword = async (
   const user = docs[0]
   const isVerifed = await verifyPassword(
     body.currentPassword,
-    user["hashedPassword"],
-    user["hashSalt"],
-    user["hashIterations"],
+    user.hashedPassword,
+    user.hashSalt,
+    user.hashIterations,
   )
   if (!isVerifed) {
     return new InvalidCredentials()
@@ -347,7 +401,7 @@ export const ResetPassword = async (
     },
   })
 
-  if (!!body.signoutOnUpdate) {
+  if (body.signoutOnUpdate) {
     let cookies: string[] = []
     cookies = [...invalidateSessionCookies(cookieName, cookies)]
     return revokeSession(cookies)
