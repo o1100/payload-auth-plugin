@@ -1,4 +1,4 @@
-import { getCookieExpiration, parseCookies, PayloadRequest } from "payload"
+import { getCookieExpiration, parseCookies, type PayloadRequest } from "payload"
 import {
   AuthenticationFailed,
   EmailAlreadyExistError,
@@ -10,19 +10,26 @@ import {
 import { hashPassword, verifyPassword } from "../utils/password.js"
 import { SuccessKind } from "../../types.js"
 import { ephemeralCode, verifyEphemeralCode } from "../utils/hash.js"
-import { EPHEMERAL_CODE_COOKIE_NAME } from "../../constants.js"
 import {
+  APP_COOKIE_SUFFIX,
+  EPHEMERAL_CODE_COOKIE_NAME,
+} from "../../constants.js"
+import {
+  createSessionCookies,
+  invalidateOAuthCookies,
   invalidateSessionCookies,
   verifySessionCookie,
 } from "../utils/cookies.js"
 import { revokeSession } from "../utils/session.js"
 
 export const PasswordSignin = async (
+  pluginType: string,
   request: PayloadRequest,
   internal: {
     usersCollectionSlug: string
   },
-  sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
+  useAdmin: boolean,
+  secret: string,
 ) => {
   const body =
     request.json &&
@@ -48,17 +55,29 @@ export const PasswordSignin = async (
   const user = docs[0]
   const isVerifed = await verifyPassword(
     body.password,
-    user["hashedPassword"],
-    user["hashSalt"],
-    user["hashIterations"],
+    user.hashedPassword,
+    user.hashSalt,
+    user.hashIterations,
   )
   if (!isVerifed) {
     return new InvalidCredentials()
   }
-  return sessionCallBack({
-    id: user.id as string,
-    email: body.email,
-  })
+
+  let cookies: string[] = []
+
+  const cookieName = useAdmin
+    ? `${payload.config.cookiePrefix}-token`
+    : `__${pluginType}-${APP_COOKIE_SUFFIX}`
+
+  cookies = [
+    ...(await createSessionCookies(cookieName, secret, {
+      id: user.id,
+      email: user.email,
+      collection: internal.usersCollectionSlug,
+    })),
+  ]
+  cookies = invalidateOAuthCookies(cookies)
+  return Response.json({ data: "signin" })
 }
 
 export const PasswordSignup = async (
@@ -66,7 +85,6 @@ export const PasswordSignup = async (
   internal: {
     usersCollectionSlug: string
   },
-  sessionCallBack: (user: { id: string; email: string }) => Promise<Response>,
 ) => {
   const body =
     request.json &&
@@ -112,10 +130,7 @@ export const PasswordSignup = async (
   })
 
   if (body.allowAutoSignin) {
-    return sessionCallBack({
-      id: user.id as string,
-      email: body.email,
-    })
+    return Response.json({ data: "signin" })
   }
 
   return Response.json(

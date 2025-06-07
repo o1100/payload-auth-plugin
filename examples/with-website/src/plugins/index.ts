@@ -123,6 +123,8 @@ export const plugins: Plugin[] = [
     allowOAuthAutoSignUp: true,
     usersCollectionSlug: AdminUsers.slug,
     accountsCollectionSlug: AdminAccounts.slug,
+    successRedirectPath: '/admin/collections/pages?limit=10',
+    errorRedirectPath: '/admin/auth/signin',
     providers: [
       GoogleAuthProvider({
         client_id: process.env.GOOGLE_CLIENT_ID!,

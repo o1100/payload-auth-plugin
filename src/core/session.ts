@@ -23,7 +23,6 @@ export class AuthSession {
       accountsCollection: string
     },
     private allowOAuthAutoSignUp: boolean,
-    private secret: string,
     private useAdmin: boolean,
   ) {}
 
@@ -130,10 +129,8 @@ export class AuthSession {
       ? `${payload.config.cookiePrefix!}-token`
       : `__${this.appName}-${APP_COOKIE_SUFFIX}`
 
-    const secret = this.useAdmin ? payload.secret : this.secret
-
     cookies = [
-      ...(await createSessionCookies(cookieName, secret, {
+      ...(await createSessionCookies(cookieName, payload.secret, {
         id: userRecord["id"],
         email: oauthAccountInfo.email,
         collection: this.collections.usersCollection,
@@ -153,7 +150,7 @@ export class AuthSession {
     cookies = [
       ...(await createSessionCookies(
         `__${this.appName}-${APP_COOKIE_SUFFIX}`,
-        this.secret,
+        "Dsdsdadasdasd", // dummy
         {
           id: user.id,
           email: user.email,

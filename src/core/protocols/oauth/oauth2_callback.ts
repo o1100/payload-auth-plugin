@@ -43,7 +43,7 @@ export async function OAuth2Callback(
   )
   const as = authorization_server
 
-  const params = oauth.validateAuthResponse(as, client, current_url, state!)
+  const params = oauth.validateAuthResponse(as, client, current_url, state)
 
   const grantResponse = await oauth.authorizationCodeGrantRequest(
     as,
