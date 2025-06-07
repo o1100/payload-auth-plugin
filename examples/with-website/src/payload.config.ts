@@ -17,6 +17,8 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { AdminUsers } from './collections/Auth/Admin/Users'
 import { AdminAccounts } from './collections/Auth/Admin/Accounts'
+import { AppUsers } from './collections/Auth/App/Users'
+import { AppUsersAccounts } from './collections/Auth/App/Accounts'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -67,7 +69,16 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, AdminUsers, AdminAccounts],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    AdminUsers,
+    AdminAccounts,
+    AppUsers,
+    AppUsersAccounts,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [

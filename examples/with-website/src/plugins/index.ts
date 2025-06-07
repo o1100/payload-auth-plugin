@@ -22,6 +22,8 @@ import {
   TwitchAuthProvider,
 } from 'payload-auth-plugin/providers'
 import { AdminAccounts } from '@/collections/Auth/Admin/Accounts'
+import { AppUsers } from '@/collections/Auth/App/Users'
+import { AppUsersAccounts } from '@/collections/Auth/App/Accounts'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -103,8 +105,10 @@ export const plugins: Plugin[] = [
   authPlugin({
     name: 'app',
     allowOAuthAutoSignUp: true,
-    usersCollectionSlug: AdminUsers.slug,
-    accountsCollectionSlug: AdminAccounts.slug,
+    usersCollectionSlug: AppUsers.slug,
+    accountsCollectionSlug: AppUsersAccounts.slug,
+    successRedirectPath: '/private',
+    errorRedirectPath: '/auth/signin',
     providers: [
       GoogleAuthProvider({
         client_id: process.env.GOOGLE_CLIENT_ID!,
