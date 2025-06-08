@@ -22,7 +22,7 @@
  * @packageDocumentation
  */
 
-import type { Config, Endpoint, PayloadRequest, Plugin } from "payload"
+import type { Config, Endpoint, Plugin } from "payload"
 import type {
   PasswordProviderConfig,
   OAuthProviderConfig,
@@ -194,7 +194,12 @@ export const authPlugin =
       }
       endpointsFactory.registerStrategy(
         "password",
-        new PasswordAuthEndpointStrategy({ usersCollectionSlug }),
+        new PasswordAuthEndpointStrategy(
+          {
+            usersCollectionSlug,
+          },
+          passwordProvider,
+        ),
       )
       passwordEndpoints = endpointsFactory.createEndpoints("password")
     }

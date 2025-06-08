@@ -47,8 +47,11 @@ const Page = () => {
     }
   }
   return (
-    <div className="w-full min-h-screen h-full px-24 py-28">
-      <div className="space-y-8 w-full max-w-[440px] mx-auto">
+    <div className="w-full min-h-screen h-full px-16 py-28">
+      <div className="space-y-8 w-full max-w-[440px] mx-auto border border-white/40 rounded-xl overflow-hidden p-6">
+        <div className="flex items-center justify-center pt-5">
+          <h4 className="text-xl font-medium">Sign In</h4>
+        </div>
         <div className="space-y-2">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSignin)} className="space-y-8">
@@ -84,6 +87,9 @@ const Page = () => {
               </Button>
             </form>
           </Form>
+          <div className="flex items-center justify-end pt-4">
+            <a href="/auth/forgot-password">Forgot Password?</a>
+          </div>
         </div>
         <div className="w-full">
           <p className="text-md w-full text-center">OR</p>
@@ -95,6 +101,9 @@ const Page = () => {
           <Button type="button" onClick={handleTwitchSignin} className="w-full">
             Continue with Twitch
           </Button>
+        </div>
+        <div className="flex items-center justify-center pt-5">
+          <a href="/auth/signup">Create Account</a>
         </div>
       </div>
     </div>

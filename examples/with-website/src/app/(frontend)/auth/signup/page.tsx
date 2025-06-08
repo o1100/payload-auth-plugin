@@ -52,8 +52,9 @@ const Page = () => {
     }
   }
   return (
-    <div className="w-full min-h-screen h-full px-24 py-28">
-      <div className="space-y-8 w-full max-w-[440px] mx-auto">
+    <div className="w-full min-h-screen h-full px-16 py-28">
+      <div className="space-y-8 w-full max-w-[440px] mx-auto border border-white/40 rounded-xl overflow-hidden p-6">
+        <h4 className="text-xl font-medium text-center">Sign Up</h4>
         <div className="space-y-2">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSignup)} className="space-y-8">
@@ -115,6 +116,9 @@ const Page = () => {
               </Button>
             </form>
           </Form>
+        </div>
+        <div className="flex items-center justify-center pt-5">
+          <a href="/auth/signin">Already have an account?</a>
         </div>
       </div>
     </div>

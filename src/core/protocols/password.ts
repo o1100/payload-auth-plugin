@@ -9,6 +9,7 @@ import {
   EmailAlreadyExistError,
   InvalidCredentials,
   InvalidRequestBodyError,
+  MissingOrInvalidVerification,
   UnauthorizedAPIRequest,
   UserNotFoundAPIError,
 } from "../errors/apiErrors.js"
@@ -25,7 +26,6 @@ import {
   invalidateSessionCookies,
   verifySessionCookie,
 } from "../utils/cookies.js"
-import { revokeSession } from "../utils/session.js"
 
 const redirectWithSession = async (
   cookieName: string,
@@ -204,6 +204,7 @@ export const ForgotPasswordInit = async (
   internal: {
     usersCollectionSlug: string
   },
+  emailTemplate: any,
 ) => {
   const { payload } = request
 
@@ -233,25 +234,35 @@ export const ForgotPasswordInit = async (
   await payload.sendEmail({
     to: body.email,
     subject: "Password recovery",
-    text: `Password recovery code: ${code}`,
+    html: await emailTemplate({
+      verificationCode: code,
+    }),
   })
 
   const res = new Response(
     JSON.stringify({
-      message: "Password recovery initiated successfully",
+      message: "Verification email sent",
       kind: SuccessKind.Created,
       isSuccess: true,
       isError: false,
     }),
     { status: 201 },
   )
-  const tokenExpiration = getCookieExpiration({
-    seconds: 300,
+  const verification_token_expires = new Date()
+  verification_token_expires.setDate(verification_token_expires.getDate() + 7)
+
+  await payload.update({
+    collection: internal.usersCollectionSlug,
+    id: docs[0].id,
+    data: {
+      verificationHash: hash,
+      verificationCode: code,
+      verificationTokenExpire: Math.floor(
+        verification_token_expires.getTime() / 1000,
+      ),
+      verificationKind: "PASSWORD_RESTORE",
+    },
   })
-  res.headers.append(
-    "Set-Cookie",
-    `${EPHEMERAL_CODE_COOKIE_NAME}=${hash};Path=/;HttpOnly;Secure=true;SameSite=lax;Expires=${tokenExpiration.toUTCString()}`,
-  )
   return res
 }
 
@@ -266,36 +277,37 @@ export const ForgotPasswordVerify = async (
   const body =
     request.json &&
     ((await request.json()) as {
-      email: string
       password: string
       code: string
     })
 
-  if (!body?.email || !body?.password || !body.code) {
+  if (!body?.password || !body.code) {
     return new InvalidRequestBodyError()
-  }
-
-  const cookies = parseCookies(request.headers)
-  const hash = cookies.get(EPHEMERAL_CODE_COOKIE_NAME)
-  if (!hash) {
-    return new UnauthorizedAPIRequest()
-  }
-
-  const isVerified = await verifyEphemeralCode(body.code, hash, payload.secret)
-
-  if (!isVerified) {
-    return new AuthenticationFailed()
   }
   const { docs } = await payload.find({
     collection: internal.usersCollectionSlug,
     where: {
-      email: { equals: body.email },
+      verificationCode: { equals: body.code },
     },
-    limit: 1,
   })
 
-  if (docs.length !== 1) {
-    return new UserNotFoundAPIError()
+  const currentDate = Date.now()
+  if (
+    docs.length === 0 ||
+    docs[0].verificationCode !== body.code ||
+    !docs[0].verificationHash ||
+    Math.floor(currentDate / 1000) > docs[0].verificationTokenExpire ||
+    docs[0].verificationKind !== "PASSWORD_RESTORE"
+  ) {
+    return new MissingOrInvalidVerification()
+  }
+
+  const { verificationHash: hash, id: userId } = docs[0]
+
+  const isVerified = await verifyEphemeralCode(body.code, hash, payload.secret)
+
+  if (!isVerified) {
+    return new MissingOrInvalidVerification()
   }
 
   const {
@@ -306,11 +318,15 @@ export const ForgotPasswordVerify = async (
 
   await payload.update({
     collection: internal.usersCollectionSlug,
-    id: docs[0].id,
+    id: userId,
     data: {
       hashedPassword,
       hashSalt,
       hashIterations: iterations,
+      verificationHash: null,
+      verificationCode: null,
+      verificationTokenExpire: null,
+      verificationKind: null,
     },
   })
 
@@ -322,10 +338,6 @@ export const ForgotPasswordVerify = async (
       isError: false,
     }),
     { status: 201 },
-  )
-  res.headers.append(
-    "Set-Cookie",
-    `${EPHEMERAL_CODE_COOKIE_NAME}=;Path=/;HttpOnly;Secure=true;SameSite=lax;Expires=Thu, 01 Jan 1970 00:00:00 GMT`,
   )
   return res
 }
@@ -402,11 +414,11 @@ export const ResetPassword = async (
     },
   })
 
-  if (body.signoutOnUpdate) {
-    let cookies: string[] = []
-    cookies = [...invalidateSessionCookies(cookieName, cookies)]
-    return revokeSession(cookies)
-  }
+  // if (body.signoutOnUpdate) {
+  //   let cookies: string[] = []
+  //   cookies = [...invalidateSessionCookies(cookieName, cookies)]
+  //   return
+  // }
 
   const res = new Response(
     JSON.stringify({

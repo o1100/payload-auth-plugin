@@ -101,7 +101,6 @@ export const forgotPassword = async (
 }
 
 export interface PasswordRecoverPayload {
-  email: string
   password: string
   code: string
 }

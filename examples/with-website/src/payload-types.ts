@@ -779,12 +779,16 @@ export interface AdminAccount {
  */
 export interface AppUser {
   id: string;
-  hashedPassword?: string | null;
-  hashSalt?: string | null;
-  hashIterations?: number | null;
   email: string;
   last_name?: string | null;
   first_name?: string | null;
+  hashedPassword?: string | null;
+  hashSalt?: string | null;
+  hashIterations?: number | null;
+  verificationCode?: string | null;
+  verificationHash?: string | null;
+  verificationTokenExpire?: number | null;
+  verificationKind?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -1418,12 +1422,16 @@ export interface AdminAccountsSelect<T extends boolean = true> {
  * via the `definition` "appUsers_select".
  */
 export interface AppUsersSelect<T extends boolean = true> {
-  hashedPassword?: T;
-  hashSalt?: T;
-  hashIterations?: T;
   email?: T;
   last_name?: T;
   first_name?: T;
+  hashedPassword?: T;
+  hashSalt?: T;
+  hashIterations?: T;
+  verificationCode?: T;
+  verificationHash?: T;
+  verificationTokenExpire?: T;
+  verificationKind?: T;
   updatedAt?: T;
   createdAt?: T;
 }

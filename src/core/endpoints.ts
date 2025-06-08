@@ -1,5 +1,9 @@
 import type { BasePayload, Endpoint, PayloadRequest } from "payload"
-import type { AccountInfo, OAuthProviderConfig } from "../types.js"
+import type {
+  AccountInfo,
+  OAuthProviderConfig,
+  PasswordProviderConfig,
+} from "../types.js"
 import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
 import { PasswordAuthHandlers } from "./routeHandlers/password.js"
@@ -133,6 +137,7 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
     private internals: {
       usersCollectionSlug: string
     },
+    private providerConfig: PasswordProviderConfig,
   ) {}
   createEndpoints({
     pluginType,
@@ -159,6 +164,7 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
             useAdmin,
             successRedirectPath,
             errorRedirectPath,
+            this.providerConfig,
             stage,
           )
         },

@@ -110,6 +110,9 @@ export interface AccountInfo {
 export type PasswordProviderConfig = {
   id: string
   kind: "password"
+  emailTemplates: {
+    forgotPassword: any
+  }
   // name: string
   // verfiyEmail?: boolean
   // passwordless?: boolean

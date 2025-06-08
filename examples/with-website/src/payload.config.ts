@@ -108,7 +108,7 @@ export default buildConfig({
     tasks: [],
   },
   email: resendAdapter({
-    defaultFromAddress: 'dev@payloadcms.com',
+    defaultFromAddress: 'delivered@resend.dev',
     defaultFromName: 'AuthSmith',
     apiKey: process.env.RESEND_API_KEY || '',
   }),

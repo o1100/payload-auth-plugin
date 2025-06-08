@@ -25,6 +25,7 @@ import {
 import { AdminAccounts } from '@/collections/Auth/Admin/Accounts'
 import { AppUsers } from '@/collections/Auth/App/Users'
 import { AppUsersAccounts } from '@/collections/Auth/App/Accounts'
+import { renderForgotPasswordTemplate } from '@/templates/forgot-password'
 
 const generateTitle: GenerateTitle<Post | Page> = ({ doc }) => {
   return doc?.title ? `${doc.title} | Payload Website Template` : 'Payload Website Template'
@@ -119,7 +120,11 @@ export const plugins: Plugin[] = [
         client_id: process.env.TWITCH_CLIENT_ID as string,
         client_secret: process.env.TWITCH_CLIENT_SECRET as string,
       }),
-      PasswordProvider(),
+      PasswordProvider({
+        emailTemplates: {
+          forgotPassword: renderForgotPasswordTemplate,
+        },
+      }),
     ],
   }),
   authPlugin({
