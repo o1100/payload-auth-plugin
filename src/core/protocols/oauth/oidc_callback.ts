@@ -8,11 +8,21 @@ import {
   MissingEmailAPIError,
   UnVerifiedAccountAPIError,
 } from "../../errors/apiErrors.js"
+import { OAuthAuthentication } from "./oauth_authentication.js"
 
 export async function OIDCCallback(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OIDCProviderConfig,
+  collections: {
+    usersCollection: string
+    accountsCollection: string
+  },
+  allowOAuthAutoSignUp: boolean,
+  useAdmin: boolean,
+  secret: string,
+  successRedirectPath: string,
+  errorRedirectPath: string,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
@@ -102,28 +112,24 @@ export async function OIDCCallback(
     return new MissingEmailAPIError()
   }
 
-  const authenticationURL = new URL(
-    `${request.origin}/api/${pluginType}/oauth/authentication/${providerConfig.id}`,
-  )
+  const userData = {
+    email: result.email,
+    name: result.name ?? "",
+    sub: result.sub,
+    scope: providerConfig.scope,
+    issuer: providerConfig.issuer,
+    picture: result.picture ?? "",
+  }
 
-  authenticationURL.searchParams.set("sub", result.sub)
-  authenticationURL.searchParams.set("email", encodeURIComponent(result.email))
-  authenticationURL.searchParams.set("name", result.name ?? "")
-  authenticationURL.searchParams.set("scope", providerConfig.scope)
-  authenticationURL.searchParams.set(
-    "issuer",
-    encodeURIComponent(providerConfig.issuer),
+  return await OAuthAuthentication(
+    pluginType,
+    collections,
+    allowOAuthAutoSignUp,
+    useAdmin,
+    secret,
+    request,
+    successRedirectPath,
+    errorRedirectPath,
+    userData,
   )
-  authenticationURL.searchParams.set(
-    "picture",
-    encodeURIComponent(result.picture ?? ""),
-  )
-
-  const res = new Response(null, {
-    status: 302,
-    headers: {
-      Location: authenticationURL.href,
-    },
-  })
-  return res
 }
