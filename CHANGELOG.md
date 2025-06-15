@@ -2,7 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
+## [0.7.0] - 2025-06-15
+
+### 🚀 Features
+
+- Auth plugin config and session
+- Oauth new response
+- Pass metadata
+- Add Okta ODIC support
+- Adds oauth options
+- Adds password template flow
+- Adds signout
+
+### 🐛 Bug Fixes
+
+- Shift session
+- Rm auth strategy
+- Merge clients
+- Merge config
+- Change status code
+- Oauth response
+- Add password on auto signup
+- Check collection auth
+- Fields
+- Expire
+- Use hook
+- Oauth flow
+- ClientOrigin
+- Session client origin name
+- Use redirections
+- Collection config
+- Password
+- Password
+- Password
+- Ssr session
+- Client session
+- Render type
+- Client config
+- Client config
+
+### 💼 Other
+
+- Rename field
+- Change option name
+- Use redirect only
+
+### ⚙️ Miscellaneous Tasks
+
+- Cleanup
+- Cleanup
+- Example
+- Fix config
+- Fix collection
+- Custom route and view
+- Cleanup
+- Send success
+- Rm lock
+- Cleanup
+- Updated env
+- Ui
+- Fmt
+
+## [0.6.4] - 2025-03-21
 
 ### 🐛 Bug Fixes
 
@@ -11,6 +72,7 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - Release
+- Logs
 
 ## [0.6.3] - 2025-03-21
 
