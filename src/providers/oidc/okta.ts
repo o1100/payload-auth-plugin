@@ -64,33 +64,32 @@ interface OktaAuthConfig extends OAuthBaseProviderConfig {
  */
 
 function encodeString(s: string): number {
-  let h = 0;
-  const l = s.length;
-  let i = 0;
+  let h = 0
+  const l = s.length
+  let i = 0
   if (l > 0) {
     while (i < l) {
-      h = ((h << 5) - h + s.charCodeAt(i++)) | 0; // Bitwise operations to create a hash
+      h = ((h << 5) - h + s.charCodeAt(i++)) | 0 // Bitwise operations to create a hash
     }
   }
-  return h;
+  return h
 }
 
-
 function OktaAuthProvider(config: OktaAuthConfig): OIDCProviderConfig {
-  const { domain, ...restConfig } = config;
-  
+  const { domain, ...restConfig } = config
+
   const stateCode = encodeString(config.client_id).toString()
-  
+
   return {
     ...restConfig,
-    id: 'okta',
+    id: "okta",
     scope: "email openid profile",
     issuer: `https://${domain}`,
     name: "Okta",
     algorithm: "oidc",
     kind: "oauth",
     params: {
-      state: `state-${stateCode}`
+      state: `state-${stateCode}`,
     },
     profile: (profile): AccountInfo => {
       return {
