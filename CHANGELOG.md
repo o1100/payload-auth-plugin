@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.1] - 2025-06-15
+
+### 🐛 Bug Fixes
+
+- Changes redirection to function call
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v0.7.0
+- Env
+
 ## [0.7.0] - 2025-06-15
 
 ### 🚀 Features
