@@ -5,6 +5,7 @@ import * as qs from "qs-esm"
 interface BaseOptions {
   name: string
   returnTo?: string | undefined
+  baseURL: string
 }
 
 export const signout = async (opts: BaseOptions) => {
@@ -17,7 +18,7 @@ export const signout = async (opts: BaseOptions) => {
   }
 
   const response = await fetch(
-    `/api/${opts.name}/session/signout?${qs.stringify(query)}`,
+    `${opts.baseURL}/api/${opts.name}/session/signout?${qs.stringify(query)}`,
   )
   if (response.redirected) {
     window.location.href = response.url

@@ -1,13 +1,9 @@
 /// <reference lib="dom" />
 /// <reference lib="dom.iterable" />
-import type { AuthPluginOutput, ErrorKind } from "../types.js"
-
 type BaseOptions = {
   name: string
-  returnTo?: string
+  baseURL: string
 }
-
-type Profile = { [key: string]: unknown }
 
 export type OauthProvider =
   | "google"
@@ -26,18 +22,6 @@ export type OauthProvider =
   | "okta"
 
 export const oauth = (options: BaseOptions, provider: OauthProvider): void => {
-  const baseUrl = `http://localhost:3000/api/${options.name}/oauth/authorization/${provider}`
-  const encodeParam = (str: string): string => {
-    let result = ""
-    for (let i = 0; i < str.length; i++) {
-      const char = str[i]
-      if (/[a-zA-Z0-9]/.test(char)) {
-        result += char
-      } else {
-        result += `% + ${char.charCodeAt(0).toString(16).padStart(2, "0")}`
-      }
-    }
-    return result
-  }
-  window.location.href = baseUrl
+  const oauthURL = `${options.baseURL}/api/${options.name}/oauth/authorization/${provider}`
+  window.location.href = oauthURL
 }

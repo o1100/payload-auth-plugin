@@ -4,13 +4,14 @@ import type { AuthPluginOutput } from "../types.js"
 interface BaseOptions {
   name: string
   headers: HeadersInit
+  baseURL: string
 }
 
 export const getSession = async (
   opts: BaseOptions,
 ): Promise<AuthPluginOutput> => {
   const response = await fetch(
-    `http://localhost:3000/api/${opts.name}/session/user`,
+    `${opts.baseURL}/api/${opts.name}/session/user`,
     {
       method: "GET",
       headers: opts.headers,
@@ -27,12 +28,14 @@ export const getSession = async (
   }
 }
 
-export const getClientSession = async (opts: Pick<BaseOptions, "name">) => {
+export const getClientSession = async (
+  opts: Pick<BaseOptions, "name" | "baseURL">,
+) => {
   if (typeof window === "undefined") {
     throw new WrongClientUsage()
   }
 
-  const response = await fetch(`/api/${opts.name}/session/user`)
+  const response = await fetch(`${opts.baseURL}/api/${opts.name}/session/user`)
   const { data, message, kind, isError, isSuccess } =
     (await response.json()) as AuthPluginOutput
   return {
