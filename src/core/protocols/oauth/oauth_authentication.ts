@@ -1,9 +1,4 @@
-import {
-  type JsonObject,
-  parseCookies,
-  type TypeWithID,
-  type PayloadRequest,
-} from "payload"
+import type { JsonObject, TypeWithID, PayloadRequest } from "payload"
 import {
   InvalidRequestBodyError,
   UserNotFoundAPIError,
@@ -14,7 +9,6 @@ import {
   invalidateOAuthCookies,
 } from "../../utils/cookies.js"
 import { APP_COOKIE_SUFFIX } from "../../../constants.js"
-import { SuccessKind } from "../../../types.js"
 
 export async function OAuthAuthentication(
   pluginType: string,
@@ -28,19 +22,16 @@ export async function OAuthAuthentication(
   request: PayloadRequest,
   successRedirectPath: string,
   errorRedirectPath: string,
+  account: {
+    email: string
+    sub: string
+    name: string
+    scope: string
+    issuer: string
+    picture?: string | undefined
+  },
 ): Promise<Response> {
-  const sub = request.searchParams.get("sub")
-  let email = request.searchParams.get("email")
-  const name = request.searchParams.get("name")
-  const scope = request.searchParams.get("scope")
-  const issuer = decodeURIComponent(request.searchParams.get("issuer") ?? "")
-  const picture = decodeURIComponent(request.searchParams.get("picture") ?? "")
-  if (!sub || !email || !scope || !issuer) {
-    return new InvalidRequestBodyError()
-  }
-
-  email = decodeURIComponent(email)
-
+  const { email, sub, name, scope, issuer, picture } = account
   const { payload } = request
   const userRecords = await payload.find({
     collection: collections.usersCollection,

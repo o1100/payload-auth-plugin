@@ -1,13 +1,23 @@
 import { parseCookies, type PayloadRequest } from "payload"
 import * as oauth from "oauth4webapi"
-import type { OAuth2ProviderConfig, AccountInfo } from "../../../types.js"
+import type { OAuth2ProviderConfig } from "../../../types.js"
 import { getCallbackURL } from "../../utils/cb.js"
 import { MissingOrInvalidSession } from "../../errors/consoleErrors.js"
+import { OAuthAuthentication } from "./oauth_authentication.js"
 
 export async function OAuth2Callback(
   pluginType: string,
   request: PayloadRequest,
   providerConfig: OAuth2ProviderConfig,
+  collections: {
+    usersCollection: string
+    accountsCollection: string
+  },
+  allowOAuthAutoSignUp: boolean,
+  useAdmin: boolean,
+  secret: string,
+  successRedirectPath: string,
+  errorRedirectPath: string,
 ): Promise<Response> {
   const parsedCookies = parseCookies(request.headers)
 
@@ -18,13 +28,8 @@ export async function OAuth2Callback(
     throw new MissingOrInvalidSession()
   }
 
-  const {
-    client_id,
-    client_secret,
-    authorization_server,
-    profile,
-    client_auth_type,
-  } = providerConfig
+  const { client_id, client_secret, authorization_server, client_auth_type } =
+    providerConfig
 
   const client: oauth.Client = {
     client_id,
@@ -73,31 +78,24 @@ export async function OAuth2Callback(
   )
   const userInfo = (await userInfoResponse.json()) as Record<string, string>
 
-  const authenticationURL = new URL(
-    `${request.origin}/api/${pluginType}/oauth/authentication/${providerConfig.id}`,
-  )
+  const userData = {
+    email: userInfo.email,
+    name: userInfo.name ?? "",
+    sub: userInfo.sub,
+    scope: providerConfig.scope,
+    issuer: providerConfig.authorization_server.issuer,
+    picture: userInfo.picture ?? "",
+  }
 
-  authenticationURL.searchParams.set("sub", userInfo.sub)
-  authenticationURL.searchParams.set(
-    "email",
-    encodeURIComponent(userInfo.email),
+  return await OAuthAuthentication(
+    pluginType,
+    collections,
+    allowOAuthAutoSignUp,
+    useAdmin,
+    secret,
+    request,
+    successRedirectPath,
+    errorRedirectPath,
+    userData,
   )
-  authenticationURL.searchParams.set("name", userInfo.name ?? "")
-  authenticationURL.searchParams.set("scope", providerConfig.scope)
-  authenticationURL.searchParams.set(
-    "issuer",
-    encodeURIComponent(providerConfig.authorization_server.issuer),
-  )
-  authenticationURL.searchParams.set(
-    "picture",
-    encodeURIComponent(userInfo.picture ?? ""),
-  )
-  const res = new Response(null, {
-    status: 302,
-    headers: {
-      Location: authenticationURL.href,
-    },
-  })
-
-  return res
 }

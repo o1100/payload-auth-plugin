@@ -9,7 +9,6 @@ import { OIDCAuthorization } from "../protocols/oauth/oidc_authorization.js"
 import { OAuth2Authorization } from "../protocols/oauth/oauth2_authorization.js"
 import { OIDCCallback } from "../protocols/oauth/oidc_callback.js"
 import { OAuth2Callback } from "../protocols/oauth/oauth2_callback.js"
-import { OAuthAuthentication } from "../protocols/oauth/oauth_authentication.js"
 
 export function OAuthHandlers(
   pluginType: string,
@@ -43,24 +42,35 @@ export function OAuthHandlers(
       }
     case "callback":
       switch (provider.algorithm) {
-        case "oidc":
-          return OIDCCallback(pluginType, request, provider)
-        case "oauth2":
-          return OAuth2Callback(pluginType, request, provider)
+        case "oidc": {
+          return OIDCCallback(
+            pluginType,
+            request,
+            provider,
+            collections,
+            allowOAuthAutoSignUp,
+            useAdmin,
+            secret,
+            successRedirectPath,
+            errorRedirectPath,
+          )
+        }
+        case "oauth2": {
+          return OAuth2Callback(
+            pluginType,
+            request,
+            provider,
+            collections,
+            allowOAuthAutoSignUp,
+            useAdmin,
+            secret,
+            successRedirectPath,
+            errorRedirectPath,
+          )
+        }
         default:
           throw new InvalidOAuthAlgorithm()
       }
-    case "authentication":
-      return OAuthAuthentication(
-        pluginType,
-        collections,
-        allowOAuthAutoSignUp,
-        useAdmin,
-        secret,
-        request,
-        successRedirectPath,
-        errorRedirectPath,
-      )
     default:
       throw new InvalidOAuthResource()
   }
