@@ -1,12 +1,13 @@
 import type { BasePayload, Endpoint, PayloadRequest } from "payload"
-import type { AccountInfo, OAuthProviderConfig } from "../types.js"
+import type {
+  AccountInfo,
+  OAuthProviderConfig,
+  PasswordProviderConfig,
+} from "../types.js"
 import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
 import { PasswordAuthHandlers } from "./routeHandlers/password.js"
 import { SessionHandlers } from "./routeHandlers/session.js"
-import { UserSession } from "./protocols/session.js"
-import { APP_COOKIE_SUFFIX } from "../constants.js"
-import * as qs from "qs-esm"
 /**
  * Base interface for all endpoint strategies. Useful to keep extending for providers with
  * different requirements to interact with
@@ -17,7 +18,7 @@ import * as qs from "qs-esm"
  *
  */
 interface EndpointStrategy {
-  createEndpoints(config: any): Endpoint[]
+  createEndpoints(config: unknown): Endpoint[]
 }
 
 /**
@@ -35,8 +36,9 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
     pluginType,
     collections,
     allowOAuthAutoSignUp,
-    secret,
     useAdmin,
+    successRedirectPath,
+    errorRedirectPath,
   }: {
     pluginType: string
     collections: {
@@ -44,8 +46,9 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
       accountsCollection: string
     }
     allowOAuthAutoSignUp: boolean
-    secret: string
     useAdmin: boolean
+    successRedirectPath: string
+    errorRedirectPath: string
   }): Endpoint[] {
     return [
       {
@@ -60,11 +63,12 @@ export class OAuthEndpointStrategy implements EndpointStrategy {
             pluginType,
             collections,
             allowOAuthAutoSignUp,
-            secret,
+            request.payload.secret,
             useAdmin,
             request,
-            request.routeParams?.resource as string,
             provider,
+            successRedirectPath,
+            errorRedirectPath,
           )
         },
       },
@@ -108,8 +112,12 @@ export class PasskeyEndpointStrategy implements EndpointStrategy {
             request,
             request.routeParams?.resource as string,
             rpID,
-            (accountInfo: any) => {
-              return sessionCallback(accountInfo, "Passkey", request.payload)
+            (accountInfo: unknown) => {
+              return sessionCallback(
+                accountInfo as AccountInfo,
+                "Passkey",
+                request.payload,
+              )
             },
           )
         },
@@ -126,14 +134,18 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
     private internals: {
       usersCollectionSlug: string
     },
-    private secret: string,
+    private providerConfig: PasswordProviderConfig,
   ) {}
   createEndpoints({
     pluginType,
-    sessionCallback,
+    useAdmin,
+    successRedirectPath,
+    errorRedirectPath,
   }: {
     pluginType: string
-    sessionCallback: (user: { id: string; email: string }) => Promise<Response>
+    useAdmin: boolean
+    successRedirectPath: string
+    errorRedirectPath: string
   }): Endpoint[] {
     return [
       {
@@ -145,8 +157,11 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
             pluginType,
             request.routeParams?.kind as string,
             this.internals,
-            (user) => sessionCallback(user),
-            this.secret,
+            request.payload.secret,
+            useAdmin,
+            successRedirectPath,
+            errorRedirectPath,
+            this.providerConfig,
             stage,
           )
         },
@@ -161,7 +176,6 @@ export class PasswordAuthEndpointStrategy implements EndpointStrategy {
  */
 export class SessionEndpointStrategy implements EndpointStrategy {
   constructor(
-    private secret: string,
     private internals: {
       usersCollectionSlug: string
     },
@@ -169,29 +183,9 @@ export class SessionEndpointStrategy implements EndpointStrategy {
   createEndpoints({ pluginType }: { pluginType: string }): Endpoint[] {
     return [
       {
-        path: `/${pluginType}/session`,
-        handler: (request: PayloadRequest) => {
-          const query = qs.parse(request.searchParams.toString())
-
-          return UserSession(
-            `__${pluginType}-${APP_COOKIE_SUFFIX}`,
-            this.secret,
-            request,
-            this.internals,
-            (query["fields"] as string[]) ?? [],
-          )
-        },
-        method: "get",
-      },
-      {
         path: `/${pluginType}/session/:kind`,
         handler: (request: PayloadRequest) => {
-          return SessionHandlers(
-            request,
-            pluginType,
-            request.routeParams?.kind as string,
-            this.secret,
-          )
+          return SessionHandlers(request, pluginType, this.internals)
         },
         method: "get",
       },
@@ -218,8 +212,9 @@ export class EndpointsFactory {
       accountsCollection: string
     },
     private allowOAuthAutoSignUp: boolean,
-    private secret: string,
     private useAdmin: boolean,
+    private successRedirectPath: string,
+    private errorRedirectPath: string,
   ) {}
 
   registerStrategy(name: Strategies, strategy: EndpointStrategy): void {
@@ -228,7 +223,7 @@ export class EndpointsFactory {
 
   createEndpoints(
     strategyName: Strategies,
-    config?: any | undefined,
+    config?: Record<string, unknown> | undefined,
   ): Endpoint[] {
     const strategy = this.strategies[strategyName]
     if (!strategy) {
@@ -237,9 +232,10 @@ export class EndpointsFactory {
     return strategy.createEndpoints({
       pluginType: this.pluginType,
       allowOAuthAutoSignUp: this.allowOAuthAutoSignUp,
-      secret: this.secret,
       useAdmin: this.useAdmin,
       collections: this.collections,
+      successRedirectPath: this.successRedirectPath,
+      errorRedirectPath: this.errorRedirectPath,
       ...config,
     })
   }

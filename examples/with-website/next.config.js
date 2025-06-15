@@ -22,6 +22,14 @@ const nextConfig = {
   },
   reactStrictMode: true,
   redirects,
+  async headers() {
+    return [
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'Access-Control-Allow-Credentials', value: 'true' }],
+      },
+    ]
+  },
 }
 
 export default withPayload(nextConfig, { devBundleServerPackages: false })
