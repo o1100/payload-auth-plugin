@@ -1,6 +1,10 @@
 import type { PayloadRequest } from "payload"
 import { InvalidAPIRequest } from "../errors/apiErrors.js"
-import { SessionRefresh, SessionUser } from "../protocols/session.js"
+import {
+  SessionRefresh,
+  SessionSignout,
+  SessionUser,
+} from "../protocols/session.js"
 import { APP_COOKIE_SUFFIX } from "../../constants.js"
 
 export function SessionHandlers(
@@ -27,6 +31,8 @@ export function SessionHandlers(
         internals,
         [],
       )
+    case "signout":
+      return SessionSignout(`__${pluginType}-${APP_COOKIE_SUFFIX}`, request)
     default:
       throw new InvalidAPIRequest()
   }

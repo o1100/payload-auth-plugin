@@ -33,10 +33,13 @@ export const getClientSession = async (opts: Pick<BaseOptions, "name">) => {
   }
 
   const response = await fetch(`/api/${opts.name}/session/user`)
-  const { message, kind, data } = (await response.json()) as AuthPluginOutput
+  const { data, message, kind, isError, isSuccess } =
+    (await response.json()) as AuthPluginOutput
   return {
+    data,
     message,
     kind,
-    data,
+    isError,
+    isSuccess,
   }
 }

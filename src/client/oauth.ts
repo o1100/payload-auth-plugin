@@ -39,8 +39,5 @@ export const oauth = (options: BaseOptions, provider: OauthProvider): void => {
     }
     return result
   }
-  const returnTo = options.returnTo
-    ? `?returnTo=${encodeParam(options.returnTo)}`
-    : ""
   window.location.href = baseUrl
 }

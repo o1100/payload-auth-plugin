@@ -109,7 +109,7 @@ export const plugins: Plugin[] = [
     allowOAuthAutoSignUp: true,
     usersCollectionSlug: AppUsers.slug,
     accountsCollectionSlug: AppUsersAccounts.slug,
-    successRedirectPath: '/private',
+    successRedirectPath: '/',
     errorRedirectPath: '/auth/signin',
     providers: [
       GoogleAuthProvider({

@@ -41,8 +41,8 @@ export const SessionRefresh = async (
       status: 201,
     },
   )
-  for (const c of refreshCookies) {
-    res.headers.append("Set-Cookie", c)
+  for (const cookie of refreshCookies) {
+    res.headers.append("Set-Cookie", cookie)
   }
 
   return res
@@ -118,4 +118,45 @@ export const SessionUser = async (
       status: 200,
     },
   )
+}
+
+export const SessionSignout = async (
+  cookieName: string,
+  request: PayloadRequest,
+) => {
+  const searchParams = request.query
+  const expired = "Thu, 01 Jan 1970 00:00:00 GMT"
+
+  const cookies: string[] = []
+  cookies.push(
+    `${cookieName}=; Path=/; HttpOnly; SameSite=Lax; Expires=${expired}`,
+  )
+
+  let res = new Response(
+    JSON.stringify({
+      message: "Signed Out",
+      kind: SuccessKind.Deleted,
+      isSuccess: true,
+      isError: false,
+    }),
+    {
+      status: 200,
+    },
+  )
+
+  if (searchParams.returnTo) {
+    const returnToURL = new URL(`${request.origin}/${searchParams.returnTo}`)
+    res = new Response(null, {
+      status: 302,
+      headers: {
+        Location: returnToURL.href,
+      },
+    })
+  }
+
+  for (const cookie of cookies) {
+    res.headers.append("Set-Cookie", cookie)
+  }
+
+  return res
 }
