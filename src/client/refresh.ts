@@ -1,4 +1,5 @@
-import { AuthPluginOutput } from "../types.js"
+import { WrongClientUsage } from "../core/errors/consoleErrors.js"
+import type { AuthPluginOutput } from "../types.js"
 
 interface BaseOptions {
   name: string
@@ -6,8 +7,11 @@ interface BaseOptions {
 export const refresh = async (
   options: BaseOptions,
 ): Promise<AuthPluginOutput> => {
-  const base = process.env.NEXT_PUBLIC_SERVER_URL
-  const response = await fetch(`${base}/api/${options.name}/session/refresh`)
+  if (typeof window === "undefined") {
+    throw new WrongClientUsage()
+  }
+
+  const response = await fetch(`/api/${options.name}/session/refresh`)
   const { message, kind, data, isError, isSuccess } =
     (await response.json()) as AuthPluginOutput
   return {
