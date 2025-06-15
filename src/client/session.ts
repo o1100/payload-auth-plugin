@@ -1,3 +1,4 @@
+import { WrongClientUsage } from "../core/errors/consoleErrors.js"
 import type { AuthPluginOutput } from "../types.js"
 
 interface BaseOptions {
@@ -23,5 +24,19 @@ export const getSession = async (
     kind,
     isError,
     isSuccess,
+  }
+}
+
+export const getClientSession = async (opts: Pick<BaseOptions, "name">) => {
+  if (typeof window === "undefined") {
+    throw new WrongClientUsage()
+  }
+
+  const response = await fetch(`/api/${opts.name}/session/user`)
+  const { message, kind, data } = (await response.json()) as AuthPluginOutput
+  return {
+    message,
+    kind,
+    data,
   }
 }

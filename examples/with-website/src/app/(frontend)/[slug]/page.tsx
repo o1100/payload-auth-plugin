@@ -75,6 +75,7 @@ export default async function Page({ params: paramsPromise }: Args) {
   return (
     <article className="pt-16 pb-24 px-20">
       <h1 className="text-5xl font-bold">Hi, {session.data.user.email} </h1>
+      <PageClient />
     </article>
   )
 }
