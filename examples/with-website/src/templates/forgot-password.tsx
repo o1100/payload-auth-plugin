@@ -1,3 +1,4 @@
+import { getClientSideURL } from '@/utilities/getURL'
 import {
   Body,
   Button,
@@ -33,7 +34,7 @@ export const ForgotPasswordTemplate = ({ verificationCode }: Props) => (
         <Section style={buttonContainer}>
           <Button
             style={button}
-            href={`http://localhost:3000/auth/restore-password?restore_code=${verificationCode}`}
+            href={`${getClientSideURL()}/auth/restore-password?restore_code=${verificationCode}`}
           >
             Verify
           </Button>

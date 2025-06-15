@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { forgotPassword, recoverPassword, register } from 'payload-auth-plugin/client'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -17,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
 import { useRouter, useSearchParams } from 'next/navigation'
+import { appAuthClient } from '@/lib/auth'
 
 const formSchema = z
   .object({
@@ -51,13 +51,10 @@ const Page = () => {
   }
 
   const handleSubmit = async (value: z.infer<typeof formSchema>) => {
-    const res = await recoverPassword(
-      { name: 'app' },
-      {
-        password: value.password,
-        code,
-      },
-    )
+    const res = await appAuthClient.recoverPassword({
+      password: value.password,
+      code,
+    })
     if (res.isError) {
       toast.error(res.message)
     }

@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { forgotPassword, register } from 'payload-auth-plugin/client'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -16,6 +15,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { appAuthClient } from '@/lib/auth'
 
 const formSchema = z.object({
   email: z.string().min(2).max(50),
@@ -30,12 +30,9 @@ const Page = () => {
   })
 
   const handleSubmit = async (value: z.infer<typeof formSchema>) => {
-    const res = await forgotPassword(
-      { name: 'app' },
-      {
-        email: value.email,
-      },
-    )
+    const res = await appAuthClient.forgotPassword({
+      email: value.email,
+    })
     if (res.isError) {
       toast.error(res.message)
     }

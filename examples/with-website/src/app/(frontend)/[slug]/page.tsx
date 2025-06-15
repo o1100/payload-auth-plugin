@@ -12,8 +12,8 @@ import { RenderHero } from '@/heros/RenderHero'
 import { generateMeta } from '@/utilities/generateMeta'
 import PageClient from './page.client'
 import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { getSession } from 'payload-auth-plugin/client'
 import { redirect } from 'next/navigation'
+import { appAuthClient } from '@/lib/auth'
 
 export async function generateStaticParams() {
   const payload = await getPayload({ config: configPromise })
@@ -47,7 +47,7 @@ type Args = {
 }
 
 export default async function Page({ params: paramsPromise }: Args) {
-  const session = await getSession({ name: 'app', headers: await headers() })
+  const session = await appAuthClient.getSession({ headers: await headers() })
 
   if (session.isError) {
     redirect('/auth/signin')
