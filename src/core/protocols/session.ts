@@ -8,22 +8,26 @@ import { ErrorKind, SuccessKind } from "../../types.js"
 
 export const SessionRefresh = async (
   cookieName: string,
-  secret: string,
   request: PayloadRequest,
 ) => {
+  const { payload } = request
   const cookies = parseCookies(request.headers)
   const token = cookies.get(cookieName)
   if (!token) {
     return new UnauthorizedAPIRequest()
   }
 
-  const jwtResponse = await verifySessionCookie(token, secret)
+  const jwtResponse = await verifySessionCookie(token, payload.secret)
   if (!jwtResponse.payload) {
     return new UnauthorizedAPIRequest()
   }
   let refreshCookies: string[] = []
   refreshCookies = [
-    ...(await createSessionCookies(cookieName, secret, jwtResponse.payload)),
+    ...(await createSessionCookies(
+      cookieName,
+      payload.secret,
+      jwtResponse.payload,
+    )),
   ]
 
   const res = new Response(
@@ -44,15 +48,16 @@ export const SessionRefresh = async (
   return res
 }
 
-export const UserSession = async (
+export const SessionUser = async (
   cookieName: string,
-  secret: string,
   request: PayloadRequest,
   internal: {
     usersCollectionSlug: string
   },
   fields: string[],
 ) => {
+  const { payload } = request
+
   const cookies = parseCookies(request.headers)
   const token = cookies.get(cookieName)
 
@@ -61,9 +66,9 @@ export const UserSession = async (
       JSON.stringify({
         message: "Missing user session",
         kind: ErrorKind.NotAuthenticated,
-        data: {
-          isAuthenticated: false,
-        },
+        data: {},
+        isSuccess: false,
+        isError: true,
       }),
       {
         status: 403,
@@ -71,15 +76,13 @@ export const UserSession = async (
     )
   }
 
-  const jwtResponse = await verifySessionCookie(token, secret)
+  const jwtResponse = await verifySessionCookie(token, payload.secret)
   if (!jwtResponse.payload) {
     return new Response(
       JSON.stringify({
         message: "Invalid user session",
         kind: ErrorKind.NotAuthenticated,
-        data: {
-          isAuthenticated: false,
-        },
+        data: {},
         isSuccess: false,
         isError: true,
       }),
@@ -97,26 +100,22 @@ export const UserSession = async (
     return new UserNotFoundAPIError()
   }
 
-  const queryData: Record<string, unknown> = {}
-  fields.forEach((field) => {
-    if (Object.hasOwn(doc, field)) {
-      queryData[field] = doc[field]
-    }
-  })
-
   return new Response(
     JSON.stringify({
       message: "Fetched user session",
       kind: SuccessKind.Retrieved,
       data: {
         isAuthenticated: true,
-        ...queryData,
+        user: {
+          id: doc.id,
+          email: doc.email,
+        },
       },
       isSuccess: true,
       isError: false,
     }),
     {
-      status: 201,
+      status: 200,
     },
   )
 }

@@ -8,9 +8,6 @@ import { OAuthHandlers } from "./routeHandlers/oauth.js"
 import { PasskeyHandlers } from "./routeHandlers/passkey.js"
 import { PasswordAuthHandlers } from "./routeHandlers/password.js"
 import { SessionHandlers } from "./routeHandlers/session.js"
-import { UserSession } from "./protocols/session.js"
-import { APP_COOKIE_SUFFIX } from "../constants.js"
-import * as qs from "qs-esm"
 /**
  * Base interface for all endpoint strategies. Useful to keep extending for providers with
  * different requirements to interact with
@@ -186,29 +183,9 @@ export class SessionEndpointStrategy implements EndpointStrategy {
   createEndpoints({ pluginType }: { pluginType: string }): Endpoint[] {
     return [
       {
-        path: `/${pluginType}/session`,
-        handler: (request: PayloadRequest) => {
-          const query = qs.parse(request.searchParams.toString())
-
-          return UserSession(
-            `__${pluginType}-${APP_COOKIE_SUFFIX}`,
-            request.payload.secret,
-            request,
-            this.internals,
-            (query.fields as string[]) ?? [],
-          )
-        },
-        method: "get",
-      },
-      {
         path: `/${pluginType}/session/:kind`,
         handler: (request: PayloadRequest) => {
-          return SessionHandlers(
-            request,
-            pluginType,
-            request.routeParams?.kind as string,
-            request.payload.secret,
-          )
+          return SessionHandlers(request, pluginType, this.internals)
         },
         method: "get",
       },
