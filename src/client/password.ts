@@ -2,6 +2,7 @@ import { SuccessKind, type AuthPluginOutput } from "../types.js"
 
 interface BaseOptions {
   name: string
+  baseURL: string
 }
 
 export interface PasswordSigninPayload {
@@ -12,7 +13,7 @@ export const passwordSignin = async (
   opts: BaseOptions,
   payload: PasswordSigninPayload,
 ): Promise<AuthPluginOutput> => {
-  const response = await fetch(`/api/${opts.name}/auth/signin`, {
+  const response = await fetch(`${opts.baseURL}/api/${opts.name}/auth/signin`, {
     method: "POST",
     body: JSON.stringify(payload),
   })
@@ -49,7 +50,7 @@ export const passwordSignup = async (
   opts: BaseOptions,
   payload: PasswordSignupPayload,
 ): Promise<AuthPluginOutput> => {
-  const response = await fetch(`/api/${opts.name}/auth/signup`, {
+  const response = await fetch(`${opts.baseURL}/api/${opts.name}/auth/signup`, {
     method: "POST",
     body: JSON.stringify(payload),
   })
@@ -82,7 +83,7 @@ export const forgotPassword = async (
   payload: ForgotPasswordPayload,
 ): Promise<AuthPluginOutput> => {
   const response = await fetch(
-    `/api/${opts.name}/auth/forgot-password?stage=init`,
+    `${opts.baseURL}/api/${opts.name}/auth/forgot-password?stage=init`,
     {
       method: "POST",
       body: JSON.stringify(payload),
@@ -109,7 +110,7 @@ export const recoverPassword = async (
   payload: PasswordRecoverPayload,
 ): Promise<AuthPluginOutput> => {
   const response = await fetch(
-    `/api/${opts.name}/auth/forgot-password?stage=verify`,
+    `${opts.baseURL}/api/${opts.name}/auth/forgot-password?stage=verify`,
     {
       method: "POST",
       body: JSON.stringify(payload),
@@ -135,10 +136,13 @@ export const resetPassword = async (
   opts: BaseOptions,
   payload: PasswordResetPayload,
 ): Promise<AuthPluginOutput> => {
-  const response = await fetch(`/api/${opts.name}/auth/reset-password`, {
-    method: "POST",
-    body: JSON.stringify(payload),
-  })
+  const response = await fetch(
+    `${opts.baseURL}/api/${opts.name}/auth/reset-password`,
+    {
+      method: "POST",
+      body: JSON.stringify(payload),
+    },
+  )
 
   const { data, message, kind, isError, isSuccess } =
     (await response.json()) as AuthPluginOutput

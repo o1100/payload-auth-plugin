@@ -3,7 +3,7 @@ import { useHeaderTheme } from '@/providers/HeaderTheme'
 import React, { useEffect } from 'react'
 import { useSession } from '@/hooks/session'
 import { Button } from '@/components/ui/button'
-import { signout } from 'payload-auth-plugin/client'
+import { appAuthClient } from '@/lib/auth'
 
 const PageClient: React.FC = () => {
   /* Force the header to be dark mode while we have an image behind it */
@@ -11,7 +11,7 @@ const PageClient: React.FC = () => {
   const { isSuccess, loading } = useSession()
 
   const handleSignOut = async () => {
-    await signout({ name: 'app', returnTo: '/auth/signin' })
+    await appAuthClient.signout({ returnTo: '/auth/signin' })
   }
 
   useEffect(() => {

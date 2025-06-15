@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { register } from 'payload-auth-plugin/client'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -16,6 +15,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { appAuthClient } from '@/lib/auth'
 
 const signupFormSchema = z.object({
   email: z.string().min(2).max(50),
@@ -35,7 +35,7 @@ const Page = () => {
     },
   })
 
-  const { password } = register({ name: 'app' })
+  const { password } = appAuthClient.register()
 
   const handleSignup = async (value: z.infer<typeof signupFormSchema>) => {
     const res = await password({

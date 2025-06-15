@@ -1,5 +1,5 @@
+import { appAuthClient } from '@/lib/auth'
 import { useEffect, useState } from 'react'
-import { getClientSession } from 'payload-auth-plugin/client'
 
 export const useSession = () => {
   const [loading, setLoading] = useState<boolean>()
@@ -12,7 +12,7 @@ export const useSession = () => {
   useEffect(() => {
     setLoading(true)
     const fetchSession = async () => {
-      const { data, isSuccess, message } = await getClientSession({ name: 'app' })
+      const { data, isSuccess, message } = await appAuthClient.getClientSession()
       if (!isSuccess) {
         setSession({
           data: {},

@@ -7,6 +7,11 @@ class PluginError extends Error {
     this.stack = ""
   }
 }
+export class MissingPayloadAuthBaseURL extends PluginError {
+  constructor() {
+    super("Missing or invalid Payload Auth base URL")
+  }
+}
 export class InvalidServerURL extends PluginError {
   constructor() {
     super(

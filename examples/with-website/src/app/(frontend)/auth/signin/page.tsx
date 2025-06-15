@@ -1,7 +1,6 @@
 'use client'
 
 import React from 'react'
-import { signin } from 'payload-auth-plugin/client'
 import { Button } from '@/components/ui/button'
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
@@ -16,6 +15,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { toast } from 'sonner'
+import { appAuthClient } from '@/lib/auth'
 
 const signinFormSchema = z.object({
   email: z.string().min(2).max(50),
@@ -31,13 +31,13 @@ const Page = () => {
     },
   })
 
-  const { oauth, password } = signin({ name: 'app' })
+  const { oauth, password } = appAuthClient.signin()
 
-  const handleGoogleSignin = async () => {
-    await oauth('google')
+  const handleGoogleSignin = () => {
+    oauth('google')
   }
-  const handleTwitchSignin = async () => {
-    await oauth('twitch')
+  const handleTwitchSignin = () => {
+    oauth('twitch')
   }
 
   const handleSignin = async (value: z.infer<typeof signinFormSchema>) => {

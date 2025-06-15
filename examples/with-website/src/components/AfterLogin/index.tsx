@@ -1,17 +1,17 @@
 'use client'
 import React from 'react'
-import { signin } from 'payload-auth-plugin/client'
-import { Button, Gutter } from '@payloadcms/ui'
+import { Button } from '@payloadcms/ui'
 import './styles.scss'
+import { adminAuthClient } from '@/lib/auth'
 
 export const AdminLogin = () => {
-  const { oauth } = signin({ name: 'admin' })
+  const { oauth } = adminAuthClient.signin()
 
   const handleGoogleSignin = async () => {
-    await oauth('google')
+    oauth('google')
   }
   const handleAuth0Signin = async () => {
-    await oauth('auth0')
+    oauth('auth0')
   }
   return (
     <div className="oauth-container">
