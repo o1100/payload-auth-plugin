@@ -13,45 +13,21 @@ interface OktaAuthConfig extends OAuthBaseProviderConfig {
  *
  * #### Callback or Redirect URL pattern
  *
- * - For Admin
  * ```
- * https://example.com/api/admin/oauth/callback/{name}
- * ```
- *
- * - For App
- * ```
- * https://example.com/api/{app_name}/oauth/callback/{name}
+ * https://example.com/api/{name}/oauth/callback/{name}
  * ```
  *
  * #### Plugin Setup
  *
  * ```ts
  * import { Plugin } from 'payload'
- * import {adminAuthPlugin, appAuthPlugin} from "payload-auth-plugin"
+ * import {authPlugin} from "payload-auth-plugin"
  * import {OktaAuthProvider} from "payload-auth-plugin/providers"
  *
- * export const plugins: Plugins[] = [
- *  //For Admin
- *  adminAuthPlugin({
- *    accountsCollectionSlug: 'adminAccounts',
+ * export const plugins: Plugin[] = [
+ *  authPlugin({
  *    providers:[
  *      OktaAuthProvider({g,
- *          domain: process.env.KEYCLOAK_DOMAIN as string,
- *          client_id: process.env.KEYCLOAK_CLIENT_ID as string,
- *          client_secret: process.env.KEYCLOAK_CLIENT_SECRET as string,
- *      })
- *    ]
- *  })
- *
- *  // For App
- *  appAuthPlugin({
- *    name: 'app'
- *    secret: process.env.APP_AUTH_SECRET,
- *    accountsCollectionSlug: 'adminAccounts',
- *    usersCollectionSlug: 'appUsers',
- *    accountsCollectionSlug: 'appAccounts',
- *    providers:[
- *      OktaAuthProvider({
  *          domain: process.env.KEYCLOAK_DOMAIN as string,
  *          client_id: process.env.KEYCLOAK_CLIENT_ID as string,
  *          client_secret: process.env.KEYCLOAK_CLIENT_SECRET as string,
