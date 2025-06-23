@@ -1,11 +1,10 @@
 import { parseCookies, type PayloadRequest } from "payload"
 import * as oauth from "oauth4webapi"
-import type { AccountInfo, OIDCProviderConfig } from "../../../types.js"
+import type { OIDCProviderConfig } from "../../../types.js"
 import { getCallbackURL } from "../../utils/cb.js"
 import { MissingOrInvalidSession } from "../../errors/consoleErrors.js"
 import {
   InternalServerError,
-  MissingEmailAPIError,
   UnVerifiedAccountAPIError,
 } from "../../errors/apiErrors.js"
 import { OAuthAuthentication } from "./oauth_authentication.js"
@@ -88,7 +87,7 @@ export async function OIDCCallback(
 
   const claims = oauth.getValidatedIdTokenClaims(token_result)
   if (!claims?.sub) {
-    return new InternalServerError()
+    return new UnVerifiedAccountAPIError()
   }
 
   const userInfoResponse = await oauth.userInfoRequest(
@@ -104,10 +103,6 @@ export async function OIDCCallback(
     userInfoResponse,
   )
 
-  if (!result.email_verified) {
-    return new UnVerifiedAccountAPIError()
-  }
-
   if (!result.email) {
     return new UnVerifiedAccountAPIError()
   }
@@ -115,7 +110,7 @@ export async function OIDCCallback(
   const userData = {
     email: result.email,
     name: result.name ?? "",
-    sub: result.sub,
+    sub: claims.sub,
     scope: providerConfig.scope,
     issuer: providerConfig.issuer,
     picture: result.picture ?? "",
