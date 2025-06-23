@@ -14,43 +14,19 @@ interface Auth0AuthConfig extends OAuthBaseProviderConfig {
  *
  * #### Callback or Redirect URL pattern
  *
- * - For Admin
  * ```
- * https://example.com/api/admin/oauth/callback/auth0
- * ```
- *
- * - For App
- * ```
- * https://example.com/api/{app_name}/oauth/callback/auth0
+ * https://example.com/api/{name}/oauth/callback/auth0
  * ```
  *
  * #### Plugin Setup
  *
  * ```ts
  * import { Plugin } from 'payload'
- * import {adminAuthPlugin, appAuthPlugin} from "payload-auth-plugin"
+ * import {authPlugin} from "payload-auth-plugin"
  * import {Auth0AuthProvider} from "payload-auth-plugin/providers"
  *
- * export const plugins: Plugins[] = [
- *  //For Admin
- *  adminAuthPlugin({
- *    accountsCollectionSlug: 'adminAccounts',
- *    providers:[
- *      Auth0AuthProvider({
- *          client_id: process.env.AUTH0_CLIENT_ID as string,
- *          client_secret: process.env.AUTH0_CLIENT_SECRET as string,
- *          domain: process.env.AUTH0_DOMAIN as string,
- *      })
- *    ]
- *  })
- *
- *  // For App
- *  appAuthPlugin({
- *    name: 'app'
- *    secret: process.env.APP_AUTH_SECRET,
- *    accountsCollectionSlug: 'adminAccounts',
- *    usersCollectionSlug: 'appUsers',
- *    accountsCollectionSlug: 'appAccounts',
+ * export const plugins: Plugin[] = [
+ *  authPlugin({
  *    providers:[
  *      Auth0AuthProvider({
  *          client_id: process.env.AUTH0_CLIENT_ID as string,
