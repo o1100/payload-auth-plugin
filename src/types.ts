@@ -80,6 +80,7 @@ export interface OIDCProviderConfig
   issuer: string
   algorithm: "oidc"
   kind: "oauth"
+  skip_email_verification?: boolean | undefined
 }
 
 export interface OAuth2ProviderConfig

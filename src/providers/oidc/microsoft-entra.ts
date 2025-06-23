@@ -6,6 +6,10 @@ import type {
 
 type MicrosoftEntraAuthConfig = OAuthBaseProviderConfig & {
   tenant_id: string
+  /*
+   * This will skip the `email_verified` check if enabled. Please use it at your own discretion.
+   */
+  skip_email_verification?: boolean | undefined
 }
 
 /**

@@ -104,11 +104,11 @@ export async function OIDCCallback(
     userInfoResponse,
   )
 
-  if (!result.email_verified) {
-    return new UnVerifiedAccountAPIError()
+  if (!result.email) {
+    return new MissingEmailAPIError()
   }
 
-  if (!result.email) {
+  if (!providerConfig.skip_email_verification && !result.email_verified) {
     return new UnVerifiedAccountAPIError()
   }
 
