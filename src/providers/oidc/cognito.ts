@@ -44,8 +44,8 @@ function CognitoAuthProvider(config: CognitoAuthConfig): OIDCProviderConfig {
   return {
     ...restConfig,
     id: "cognito",
-    scope: scope || "email openid profile",
-    issuer: `https://${domain}/${region}`,
+    scope: "email openid profile",
+    issuer: domain,
     name: "Congnito",
     algorithm: "oidc",
     kind: "oauth",
