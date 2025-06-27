@@ -72,6 +72,10 @@ export interface OAuthBaseProviderConfig {
    * Additional parameters you would like to add to query for the provider
    */
   params?: Record<string, string>
+  /**
+   * Override default scope of the provider
+   */
+  overrideScope?: string | undefined
 }
 
 export interface OIDCProviderConfig

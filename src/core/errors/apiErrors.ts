@@ -100,7 +100,7 @@ export class InternalServerError extends AuthAPIError {
 export class MissingOrInvalidVerification extends AuthAPIError {
   constructor() {
     super(
-      "Verifcation failed. Missing or invalid verification code.",
+      "Verification failed. Missing or invalid verification code.",
       ErrorKind.BadRequest,
     )
   }

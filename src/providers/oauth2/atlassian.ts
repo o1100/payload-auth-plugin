@@ -49,13 +49,14 @@ type AtlassianAuthConfig = OAuthBaseProviderConfig
 function AtlassianAuthProvider(
   config: AtlassianAuthConfig,
 ): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
   return {
-    ...config,
+    ...restConfig,
     id: "atlassian",
     authorization_server,
     name: "Atlassian",
     algorithm,
-    scope: "read:me read:account",
+    scope: overrideScope ?? "read:me read:account",
     kind: "oauth",
     profile: (profile): AccountInfo => {
       return {

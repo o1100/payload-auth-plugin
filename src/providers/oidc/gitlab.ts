@@ -37,14 +37,15 @@ type GitLabAuthConfig = OAuthBaseProviderConfig
  */
 
 function GitLabAuthProvider(config: GitLabAuthConfig): OIDCProviderConfig {
-  const algorithm = "oidc"
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "gitlab",
-    scope: "openid email profile",
+    scope: overrideScope ?? "openid email profile",
     issuer: "https://gitlab.com",
     name: "GitLab",
-    algorithm,
+    algorithm: "oidc",
     kind: "oauth",
     profile: (profile): AccountInfo => {
       return {

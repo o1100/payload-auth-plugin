@@ -46,11 +46,12 @@ interface KeyCloakAuthConfig extends OAuthBaseProviderConfig {
  */
 
 function KeyCloakAuthProvider(config: KeyCloakAuthConfig): OIDCProviderConfig {
-  const { realm, domain, identifier, name, ...restConfig } = config
+  const { realm, domain, identifier, name, overrideScope, ...restConfig } =
+    config
   return {
     ...restConfig,
     id: identifier,
-    scope: "email openid profile",
+    scope: overrideScope ?? "email openid profile",
     issuer: `https://${domain}/realms/${realm}`,
     name,
     algorithm: "oidc",

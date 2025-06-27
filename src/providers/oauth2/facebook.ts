@@ -47,10 +47,12 @@ type FacebookAuthConfig = OAuthBaseProviderConfig
 function FacebookAuthProvider(
   config: FacebookAuthConfig,
 ): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "facebook",
-    scope: "email",
+    scope: overrideScope ?? "email",
     authorization_server,
     name: "Facebook",
     algorithm: "oauth2",

@@ -44,16 +44,18 @@ type TwitchAuthConfig = OAuthBaseProviderConfig
  */
 
 function TwitchAuthProvider(config: TwitchAuthConfig): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "twitch",
-    scope: "openid user:read:email",
+    scope: overrideScope ?? "openid user:read:email",
     authorization_server,
     name: "Twitch",
     algorithm: "oauth2",
     kind: "oauth",
     params: {
-      scope: "openid user:read:email",
+      scope: overrideScope ?? "openid user:read:email",
       claims: JSON.stringify({
         id_token: { email: null, picture: null, preferred_username: null },
         userinfo: { email: null, picture: null, preferred_username: null },
