@@ -7,8 +7,6 @@ import type {
 
 type AppleAuthConfig = OAuthBaseProviderConfig
 
-const algorithm = "oauth2"
-
 const authorization_server: AuthorizationServer = {
   issuer: "https://appleid.apple.com",
   authorization_endpoint: "https://appleid.apple.com/auth/authorize",
@@ -47,13 +45,15 @@ const authorization_server: AuthorizationServer = {
  */
 
 function AppleOAuth2Provider(config: AppleAuthConfig): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "apple",
-    scope: "name email",
+    scope: overrideScope ?? "name email",
     authorization_server,
     name: "Apple",
-    algorithm,
+    algorithm: "oauth2",
     params: {
       ...config.params,
       response_mode: "form_post",

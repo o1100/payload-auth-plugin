@@ -34,10 +34,12 @@ type GoogleAuthConfig = OAuthBaseProviderConfig
  */
 
 function GoogleAuthProvider(config: GoogleAuthConfig): OIDCProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
     ...config,
     id: "google",
-    scope: "openid email profile",
+    scope: overrideScope ?? "openid email profile",
     issuer: "https://accounts.google.com",
     name: "Google",
     algorithm: "oidc",

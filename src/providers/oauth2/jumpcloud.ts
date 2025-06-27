@@ -45,10 +45,12 @@ type JumpCloudAuthConfig = OAuthBaseProviderConfig
 function JumpCloudAuthProvider(
   config: JumpCloudAuthConfig,
 ): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "jumpcloud",
-    scope: "openid email profile",
+    scope: overrideScope ?? "openid email profile",
     authorization_server,
     name: "Jump Cloud",
     algorithm: "oauth2",

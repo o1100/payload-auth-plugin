@@ -42,10 +42,12 @@ type DiscordAuthConfig = OAuthBaseProviderConfig
  */
 
 function DiscordAuthProvider(config: DiscordAuthConfig): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "discord",
-    scope: "identify email",
+    scope: overrideScope ?? "identify email",
     authorization_server,
     name: "Discord",
     algorithm: "oauth2",

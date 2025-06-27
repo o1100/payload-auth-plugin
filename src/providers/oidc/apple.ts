@@ -1,6 +1,10 @@
-import type { AccountInfo, OIDCProviderConfig } from "../../types.js"
+import type {
+  AccountInfo,
+  OAuthBaseProviderConfig,
+  OIDCProviderConfig,
+} from "../../types.js"
 
-type AppleAuthConfig = {
+interface AppleAuthConfig extends OAuthBaseProviderConfig {
   client_id: string
   params?: Record<string, string>
 }
@@ -34,10 +38,11 @@ type AppleAuthConfig = {
  */
 
 function AppleOIDCAuthProvider(config: AppleAuthConfig): OIDCProviderConfig {
+  const { overrideScope, ...restConfig } = config
   return {
-    ...config,
+    ...restConfig,
     id: "apple",
-    scope: "openid name email",
+    scope: overrideScope ?? "openid name email",
     issuer: "https://appleid.apple.com",
     name: "Apple",
     algorithm: "oidc",

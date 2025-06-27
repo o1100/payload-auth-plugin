@@ -46,10 +46,12 @@ type MicrosoftEntraAuthConfig = OAuthBaseProviderConfig & {
 function MicrosoftEntraAuthProvider(
   config: MicrosoftEntraAuthConfig,
 ): OIDCProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "msft-entra",
-    scope: "openid profile email offline_access",
+    scope: overrideScope ?? "openid profile email offline_access",
     issuer: `https://login.microsoftonline.com/${config.tenant_id}/v2.0`,
     name: "Microsoft Entra",
     algorithm: "oidc",

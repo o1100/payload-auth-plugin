@@ -37,10 +37,12 @@ type SlackAuthConfig = OAuthBaseProviderConfig
  */
 
 function SlackAuthProvider(config: SlackAuthConfig): OIDCProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "slack",
-    scope: "openid email profile",
+    scope: overrideScope ?? "openid email profile",
     issuer: "https://slack.com",
     name: "Slack",
     algorithm: "oidc",

@@ -41,7 +41,7 @@ interface Auth0AuthConfig extends OAuthBaseProviderConfig {
  */
 
 function Auth0AuthProvider(config: Auth0AuthConfig): OAuth2ProviderConfig {
-  const { domain, ...restConfig } = config
+  const { domain, overrideScope, ...restConfig } = config
   const authorization_server: oauth.AuthorizationServer = {
     issuer: `https://${domain}/`,
     authorization_endpoint: `https://${domain}/authorize`,
@@ -52,7 +52,7 @@ function Auth0AuthProvider(config: Auth0AuthConfig): OAuth2ProviderConfig {
   return {
     ...restConfig,
     id: "auth0",
-    scope: "openid email profile",
+    scope: overrideScope ?? "openid email profile",
     authorization_server,
     name: "Auth0",
     algorithm: "oauth2",

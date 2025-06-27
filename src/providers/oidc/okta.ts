@@ -52,14 +52,14 @@ function encodeString(s: string): number {
 }
 
 function OktaAuthProvider(config: OktaAuthConfig): OIDCProviderConfig {
-  const { domain, ...restConfig } = config
+  const { domain, overrideScope, ...restConfig } = config
 
   const stateCode = encodeString(config.client_id).toString()
 
   return {
     ...restConfig,
     id: "okta",
-    scope: "email openid profile",
+    scope: overrideScope ?? "email openid profile",
     issuer: `https://${domain}`,
     name: "Okta",
     algorithm: "oidc",

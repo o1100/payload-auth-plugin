@@ -45,10 +45,12 @@ type GitHubAuthConfig = OAuthBaseProviderConfig
  */
 
 function GitHubAuthProvider(config: GitHubAuthConfig): OAuth2ProviderConfig {
+  const { overrideScope, ...restConfig } = config
+
   return {
-    ...config,
+    ...restConfig,
     id: "github",
-    scope: "openid email profile",
+    scope: overrideScope ?? "openid email profile",
     authorization_server,
     name: "GitHub",
     algorithm: "oauth2",
