@@ -31,8 +31,11 @@ export async function OAuthAuthentication(
     picture?: string | undefined
   },
 ): Promise<Response> {
-  const { email, sub, name, scope, issuer, picture } = account
+  const { email: _email, sub, name, scope, issuer, picture } = account
   const { payload } = request
+
+  const email = _email.toLowerCase()
+
   const userRecords = await payload.find({
     collection: collections.usersCollection,
     where: {
