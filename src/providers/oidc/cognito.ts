@@ -7,6 +7,7 @@ import type {
 interface CognitoAuthConfig extends OAuthBaseProviderConfig {
   domain: string
   region: string
+  scope?: string
 }
 
 /**
@@ -39,11 +40,11 @@ interface CognitoAuthConfig extends OAuthBaseProviderConfig {
  */
 
 function CognitoAuthProvider(config: CognitoAuthConfig): OIDCProviderConfig {
-  const { domain, region, ...restConfig } = config
+  const { domain, region, scope, ...restConfig } = config
   return {
     ...restConfig,
     id: "cognito",
-    scope: "email openid profile",
+    scope: scope || "email openid profile",
     issuer: `https://${domain}/${region}`,
     name: "Congnito",
     algorithm: "oidc",
