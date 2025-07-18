@@ -56,6 +56,7 @@ export async function OAuthAuthentication(
   } else if (allowOAuthAutoSignUp) {
     const data: Record<string, unknown> = {
       email,
+      name,
     }
     const hasAuthEnabled = Boolean(
       payload.collections[collections.usersCollection].config.auth,
