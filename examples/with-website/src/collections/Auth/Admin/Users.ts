@@ -3,7 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { deleteLinkedAccounts } from 'payload-auth-plugin/collection/hooks'
 import { AdminAccounts } from './Accounts'
 export const AdminUsers: CollectionConfig = {
-  slug: 'adminUsers',
+  slug: 'users',
   access: {
     admin: authenticated,
     create: authenticated,
