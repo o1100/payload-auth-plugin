@@ -2,6 +2,50 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.7.4] - 2025-07-19
+
+### 🚀 Features
+
+- Add access_token support for oauth authentication
+
+### 🐛 Bug Fixes
+
+- Include name in user creation data for OAuth auto sign-up
+- Make use of sessions
+
+### ⚙️ Miscellaneous Tasks
+
+- Update example
+
+## [0.7.3] - 2025-06-27
+
+### 🚀 Features
+
+- Adds option to override the default scope
+
+### 🐛 Bug Fixes
+
+- Update success redirection URL to use server configuration
+- Use lower cased email
+- Type
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v0.7.2
+- Prepare 0.7.3
+
+## [0.7.2] - 2025-06-23
+
+### 🐛 Bug Fixes
+
+- Error type
+- Updates validation pattern
+- Updates validation pattern
+
+### 📚 Documentation
+
+- Updated jsdoc
+
 ## [0.7.1] - 2025-06-15
 
 ### 🐛 Bug Fixes
@@ -12,6 +56,7 @@ All notable changes to this project will be documented in this file.
 
 - Release v0.7.0
 - Env
+- Release v0.7.1
 
 ## [0.7.0] - 2025-06-15
 
