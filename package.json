@@ -89,6 +89,7 @@
     "@simplewebauthn/server": "^13.1.0",
     "jose": "6.0.8",
     "oauth4webapi": "^3.1.4",
-    "qs-esm": "7.0.2"
+    "qs-esm": "7.0.2",
+    "uuid": "11.1.0"
   }
 }

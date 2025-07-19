@@ -5,14 +5,17 @@ export async function createSessionCookies(
   name: string,
   secret: string,
   fieldsToSign: Record<string, unknown>,
+  expiration?: number,
 ) {
-  const tokenExpiration = getCookieExpiration({
-    seconds: 7200,
-  })
+  const tokenExpiration =
+    expiration ??
+    getCookieExpiration({
+      seconds: 7200,
+    }).getTime()
 
   const secretKey = new TextEncoder().encode(secret)
   const issuedAt = Math.floor(Date.now() / 1000)
-  const exp = issuedAt + tokenExpiration.getTime()
+  const exp = issuedAt + tokenExpiration
   const token = await new jwt.SignJWT(fieldsToSign)
     .setProtectedHeader({ alg: "HS256", typ: "JWT" })
     .setIssuedAt(issuedAt)
@@ -21,7 +24,7 @@ export async function createSessionCookies(
 
   const cookies: string[] = []
   cookies.push(
-    `${name}=${token};Path=/;HttpOnly;Secure;SameSite=lax;Expires=${tokenExpiration.toUTCString()}`,
+    `${name}=${token};Path=/;HttpOnly;SameSite=lax;Expires=${getCookieExpiration({ seconds: expiration! }).toUTCString()}`,
   )
   return cookies
 }

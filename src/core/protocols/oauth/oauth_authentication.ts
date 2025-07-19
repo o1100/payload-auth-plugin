@@ -1,12 +1,17 @@
 import * as jose from "jose"
 import type { JsonObject, PayloadRequest, TypeWithID } from "payload"
 import { APP_COOKIE_SUFFIX } from "../../../constants.js"
-import { UserNotFoundAPIError } from "../../errors/apiErrors.js"
+import {
+  MissingCollection,
+  UserNotFoundAPIError,
+} from "../../errors/apiErrors.js"
 import {
   createSessionCookies,
   invalidateOAuthCookies,
 } from "../../utils/cookies.js"
 
+import { v4 as uuid } from "uuid"
+import { removeExpiredSessions } from "../../utils/session.js"
 export async function OAuthAuthentication(
   pluginType: string,
   collections: {
@@ -106,15 +111,49 @@ export async function OAuthAuthentication(
 
   let cookies: string[] = []
 
+  const collectionConfig = payload.config.collections.find(
+    (collection) => collection.slug === collections.usersCollection,
+  )
+  if (!collectionConfig) {
+    return new MissingCollection()
+  }
+
+  const sessionID = collectionConfig?.auth.useSessions ? uuid() : null
+
+  if (collectionConfig?.auth.useSessions) {
+    const now = new Date()
+    const tokenExpInMs = collectionConfig.auth.tokenExpiration * 1000
+    const expiresAt = new Date(now.getTime() + tokenExpInMs)
+    const session = { id: sessionID, createdAt: now, expiresAt }
+    if (!userRecord["sessions"]?.length) {
+      userRecord["sessions"] = [session]
+    } else {
+      userRecord.sessions = removeExpiredSessions(userRecord.sessions)
+      userRecord.sessions.push(session)
+    }
+    await payload.db.updateOne({
+      id: userRecord.id,
+      collection: collections.usersCollection,
+      data: userRecord,
+      req: request,
+      returning: false,
+    })
+  }
   const cookieName = useAdmin
     ? `${payload.config.cookiePrefix}-token`
     : `__${pluginType}-${APP_COOKIE_SUFFIX}`
   cookies = [
-    ...(await createSessionCookies(cookieName, secret, {
-      id: userRecord.id,
-      email: email,
-      collection: collections.usersCollection,
-    })),
+    ...(await createSessionCookies(
+      cookieName,
+      secret,
+      {
+        id: userRecord.id,
+        email: email,
+        sid: sessionID,
+        collection: collections.usersCollection,
+      },
+      useAdmin ? collectionConfig?.auth.tokenExpiration : undefined,
+    )),
   ]
   cookies = invalidateOAuthCookies(cookies)
   const successRedirectionURL = new URL(

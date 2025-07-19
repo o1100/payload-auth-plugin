@@ -143,3 +143,9 @@ export type ProvidersConfig =
   | PasswordProviderConfig
 
 export type AuthenticationStrategy = "Cookie"
+
+export type UserSession = {
+  createdAt: Date | string
+  expiresAt: Date | string
+  id: string
+}

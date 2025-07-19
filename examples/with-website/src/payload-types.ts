@@ -63,7 +63,7 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
-    adminUsers: AdminUserAuthOperations;
+    users: UserAuthOperations;
   };
   blocks: {};
   collections: {
@@ -71,8 +71,8 @@ export interface Config {
     posts: Post;
     media: Media;
     categories: Category;
-    adminUsers: AdminUser;
-    adminAccounts: AdminAccount;
+    users: User;
+    accounts: Account;
     appUsers: AppUser;
     appUserAccounts: AppUserAccount;
     redirects: Redirect;
@@ -90,8 +90,8 @@ export interface Config {
     posts: PostsSelect<false> | PostsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     categories: CategoriesSelect<false> | CategoriesSelect<true>;
-    adminUsers: AdminUsersSelect<false> | AdminUsersSelect<true>;
-    adminAccounts: AdminAccountsSelect<false> | AdminAccountsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    accounts: AccountsSelect<false> | AccountsSelect<true>;
     appUsers: AppUsersSelect<false> | AppUsersSelect<true>;
     appUserAccounts: AppUserAccountsSelect<false> | AppUserAccountsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -115,8 +115,8 @@ export interface Config {
     footer: FooterSelect<false> | FooterSelect<true>;
   };
   locale: null;
-  user: AdminUser & {
-    collection: 'adminUsers';
+  user: User & {
+    collection: 'users';
   };
   jobs: {
     tasks: {
@@ -129,7 +129,7 @@ export interface Config {
     workflows: unknown;
   };
 }
-export interface AdminUserAuthOperations {
+export interface UserAuthOperations {
   forgotPassword: {
     email: string;
     password: string;
@@ -247,7 +247,7 @@ export interface Post {
     description?: string | null;
   };
   publishedAt?: string | null;
-  authors?: (string | AdminUser)[] | null;
+  authors?: (string | User)[] | null;
   populatedAuthors?:
     | {
         id?: string | null;
@@ -375,9 +375,9 @@ export interface Category {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "adminUsers".
+ * via the `definition` "users".
  */
-export interface AdminUser {
+export interface User {
   id: string;
   firstName?: string | null;
   lastName?: string | null;
@@ -390,6 +390,13 @@ export interface AdminUser {
   hash?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
   password?: string | null;
 }
 /**
@@ -736,13 +743,13 @@ export interface Form {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "adminAccounts".
+ * via the `definition` "accounts".
  */
-export interface AdminAccount {
+export interface Account {
   id: string;
   name?: string | null;
   picture?: string | null;
-  user: string | AdminUser;
+  user: string | User;
   issuerName: string;
   scope?: string | null;
   sub: string;
@@ -1020,12 +1027,12 @@ export interface PayloadLockedDocument {
         value: string | Category;
       } | null)
     | ({
-        relationTo: 'adminUsers';
-        value: string | AdminUser;
+        relationTo: 'users';
+        value: string | User;
       } | null)
     | ({
-        relationTo: 'adminAccounts';
-        value: string | AdminAccount;
+        relationTo: 'accounts';
+        value: string | Account;
       } | null)
     | ({
         relationTo: 'appUsers';
@@ -1057,8 +1064,8 @@ export interface PayloadLockedDocument {
       } | null);
   globalSlug?: string | null;
   user: {
-    relationTo: 'adminUsers';
-    value: string | AdminUser;
+    relationTo: 'users';
+    value: string | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -1070,8 +1077,8 @@ export interface PayloadLockedDocument {
 export interface PayloadPreference {
   id: string;
   user: {
-    relationTo: 'adminUsers';
-    value: string | AdminUser;
+    relationTo: 'users';
+    value: string | User;
   };
   key?: string | null;
   value?:
@@ -1378,9 +1385,9 @@ export interface CategoriesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "adminUsers_select".
+ * via the `definition` "users_select".
  */
-export interface AdminUsersSelect<T extends boolean = true> {
+export interface UsersSelect<T extends boolean = true> {
   firstName?: T;
   lastName?: T;
   updatedAt?: T;
@@ -1392,12 +1399,19 @@ export interface AdminUsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "adminAccounts_select".
+ * via the `definition` "accounts_select".
  */
-export interface AdminAccountsSelect<T extends boolean = true> {
+export interface AccountsSelect<T extends boolean = true> {
   name?: T;
   picture?: T;
   user?: T;
@@ -1835,7 +1849,7 @@ export interface TaskSchedulePublish {
           value: string | Post;
         } | null);
     global?: string | null;
-    user?: (string | null) | AdminUser;
+    user?: (string | null) | User;
   };
   output?: unknown;
 }

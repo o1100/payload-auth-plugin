@@ -3,6 +3,7 @@ import {
   EmailAlreadyExistError,
   InvalidCredentials,
   InvalidRequestBodyError,
+  MissingCollection,
   MissingOrInvalidVerification,
   UnauthorizedAPIRequest,
   UserNotFoundAPIError,
@@ -16,17 +17,27 @@ import {
   invalidateOAuthCookies,
   verifySessionCookie,
 } from "../utils/cookies.js"
+import { v4 as uuid } from "uuid"
+import { removeExpiredSessions } from "../utils/session.js"
 
 const redirectWithSession = async (
   cookieName: string,
   path: string,
   secret: string,
-  fields: Record<string, string | number>,
+  fields: Record<string, string | number | null>,
   request: PayloadRequest,
+  tokenExpiration?: number,
 ) => {
   let cookies = []
 
-  cookies = [...(await createSessionCookies(cookieName, secret, fields))]
+  cookies = [
+    ...(await createSessionCookies(
+      cookieName,
+      secret,
+      fields,
+      tokenExpiration,
+    )),
+  ]
   cookies = invalidateOAuthCookies(cookies)
   const successRedirectionURL = new URL(`${request.origin}${path}`)
   const res = new Response(null, {
@@ -91,12 +102,42 @@ export const PasswordSignin = async (
     return new InvalidCredentials()
   }
 
+  const collectionConfig = payload.config.collections.find(
+    (collection) => collection.slug === internal.usersCollectionSlug,
+  )
+  if (!collectionConfig) {
+    return new MissingCollection()
+  }
+
+  const sessionID = collectionConfig?.auth.useSessions ? uuid() : null
+
+  if (collectionConfig?.auth.useSessions) {
+    const now = new Date()
+    const tokenExpInMs = collectionConfig.auth.tokenExpiration * 1000
+    const expiresAt = new Date(now.getTime() + tokenExpInMs)
+    const session = { id: sessionID, createdAt: now, expiresAt }
+    if (!userRecord["sessions"]?.length) {
+      userRecord["sessions"] = [session]
+    } else {
+      userRecord.sessions = removeExpiredSessions(userRecord.sessions)
+      userRecord.sessions.push(session)
+    }
+    await payload.db.updateOne({
+      id: userRecord.id,
+      collection: internal.usersCollectionSlug,
+      data: userRecord,
+      req: request,
+      returning: false,
+    })
+  }
+
   const cookieName = useAdmin
     ? `${payload.config.cookiePrefix}-token`
     : `__${pluginType}-${APP_COOKIE_SUFFIX}`
   const signinFields = {
     id: userRecord.id,
     email,
+    sid: sessionID,
     collection: internal.usersCollectionSlug,
   }
   return await redirectWithSession(
@@ -105,6 +146,7 @@ export const PasswordSignin = async (
     secret,
     signinFields,
     request,
+    useAdmin ? collectionConfig.auth.tokenExpiration : undefined,
   )
 }
 
@@ -164,12 +206,42 @@ export const PasswordSignup = async (
   })
 
   if (body.allowAutoSignin) {
+    const collectionConfig = payload.config.collections.find(
+      (collection) => collection.slug === internal.usersCollectionSlug,
+    )
+    if (!collectionConfig) {
+      return new MissingCollection()
+    }
+
+    const sessionID = collectionConfig?.auth.useSessions ? uuid() : null
+
+    if (collectionConfig?.auth.useSessions) {
+      const now = new Date()
+      const tokenExpInMs = collectionConfig.auth.tokenExpiration * 1000
+      const expiresAt = new Date(now.getTime() + tokenExpInMs)
+      const session = { id: sessionID, createdAt: now, expiresAt }
+      if (!userRecord["sessions"]?.length) {
+        userRecord["sessions"] = [session]
+      } else {
+        userRecord.sessions = removeExpiredSessions(userRecord.sessions)
+        userRecord.sessions.push(session)
+      }
+      await payload.db.updateOne({
+        id: userRecord.id,
+        collection: internal.usersCollectionSlug,
+        data: userRecord,
+        req: request,
+        returning: false,
+      })
+    }
+
     const cookieName = useAdmin
       ? `${payload.config.cookiePrefix}-token`
       : `__${pluginType}-${APP_COOKIE_SUFFIX}`
     const signinFields = {
       id: userRecord.id,
       email,
+      sid: sessionID,
       collection: internal.usersCollectionSlug,
     }
     return await redirectWithSession(
@@ -178,6 +250,7 @@ export const PasswordSignup = async (
       secret,
       signinFields,
       request,
+      useAdmin ? collectionConfig.auth.tokenExpiration : undefined,
     )
   }
 

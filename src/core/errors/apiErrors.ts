@@ -105,3 +105,9 @@ export class MissingOrInvalidVerification extends AuthAPIError {
     )
   }
 }
+
+export class MissingCollection extends AuthAPIError {
+  constructor() {
+    super("Missing collection", ErrorKind.NotFound)
+  }
+}
